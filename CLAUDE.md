@@ -6,12 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 这是 **GitHub Pages 个人博客的已生成静态产物**，部署在自定义域名 `sbrave.cn`（见 `CNAME`）。
 
-仓库**只包含渲染后的 HTML/CSS/JS/图片**，没有源 Markdown、没有构建脚本、没有 `package.json` / `_config.yml` / `Makefile`。博客背后的生成器是作者自研的 Go 框架（参见 `/post/77a668/index.html` "我的博客演进历程"），但**框架源码不在本仓库内**。
+仓库**只包含渲染后的 HTML/CSS/JS/图片**，没有源 Markdown、没有构建脚本、没有 `package.json` / `_config.yml` / `Makefile`。博客背后的生成器是作者自研的 Go 框架 **gobog**，源码托管在 [`github.com/sbraveyoung/gobog`](https://github.com/sbraveyoung/gobog)（参见 `/post/77a668/index.html` "我的博客演进历程"）。**生成器源码不在本仓库内**——本仓库只放产物。
 
 实际后果：
-- 没有 build / lint / test 命令可以运行；任何 "运行测试" 的请求都不适用。
+- 没有 build / lint / test 命令可以在本仓库运行；任何 "运行测试" 的请求都不适用。如需重新生成，需克隆 `gobog` 仓库并使用其工作流。
 - 本地预览只能用任意静态文件服务器（例如 `python3 -m http.server` 在仓库根目录运行后访问 `http://localhost:8000`）。
-- 修改内容时必须**直接编辑生成后的 HTML**——不能依赖重新生成，因为生成器不在仓库里。
+- 修改内容时必须**直接编辑生成后的 HTML**——除非同时同步更新 gobog 中对应的 Markdown 源文件，否则下次生成器全量重生成会覆盖手工修改。
 
 ## 目录结构与页面模板
 
@@ -24,6 +24,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `js/prism.js` — 代码高亮。
 - `image/` — 所有文章引用的图片资源。
 - `CNAME` — GitHub Pages 自定义域名（`sbrave.cn`），不要随意改动。
+- `.nojekyll` — 空文件，告诉 GitHub Pages 跳过 Jekyll 处理，按纯静态文件直接发布。
+- `robots.txt` — 允许全部抓取，并指向 `sitemap.xml`。
+- `sitemap.xml` — 全站 URL 索引，由 find 列出所有 `index.html` 路径生成，新增 / 删除文章时需要同步更新。
+- `atom.xml` — RSS 订阅源，对应首页 25 条顶层入口。新增 / 删除顶层条目时需要同步更新。
+- `404.html` — 自定义 404 页，套列表页模板。
 
 页面分两类模板，添加 / 修改时必须保持一致：
 
@@ -42,9 +47,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 添加 / 修改文章时的关键约束
 
 - 新文章目录名必须是新的不透明 hash（与生成器一致）；不要使用语义化 slug，否则与现有命名风格不符。
-- 新增文章后，**必须手动同步首页索引**（`index.html` 中的 `<ul class="list-group">`）；如果是专栏内文章，还要同步该专栏的 `index.html`。这两处是文章的唯一入口，没有自动索引。
+- 新增文章后，**必须手动同步以下入口**：
+  1. `index.html` 中的 `<ul class="list-group">`（顶级文章 / 专栏入口）；
+  2. 如果是专栏内文章，还要同步该专栏的 `index.html`；
+  3. `sitemap.xml` 加 `<url>` 条目（顶级和子文章都要）；
+  4. 顶级新条目额外加到 `atom.xml` 的 `<entry>`（专栏内子文章按惯例不加 atom）。
 - 文章内的相对链接均以 `/post/<hash>` / `/image/<file>` 等绝对路径写入，不要改成相对路径。
-- `index.html` 里有 `<link ... href="/atom.xml">`，但仓库中没有 `atom.xml` 文件——这是正常的，不要"修复"成移除该 link 或新建空文件，除非明确要求。
 - 页面底部的 `anti-baidu-latest.min.js` 引入是有意为之（防百度抓取），不要删除。
 
 ## Git 与发布
