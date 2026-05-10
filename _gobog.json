@@ -1,0 +1,13 @@
+{
+  "_comment": "Edit this file to change how sbraveyoung.github.io is built. The deploy workflow reads it on every run; commit + push to apply.",
+
+  "theme": "minimal",
+  "_theme_options": ["minimal", "sepia", "ocean"],
+
+  "domain": "https://sbrave.cn",
+  "title": "sbraveyoung 的代码笔记",
+  "subtitle": "阅读 · 实践 · 思考",
+  "author": "sbraveyoung",
+  "description": "一个程序员的笔记本：技术拆解、踩坑总结、生活随笔。",
+  "cname": "sbrave.cn"
+}
