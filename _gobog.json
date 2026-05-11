@@ -1,0 +1,26 @@
+{
+  "_comment": "Edit this file to change how sbraveyoung.github.io is built. The deploy workflow reads it on every run; commit + push to apply.",
+
+  "theme": "minimal",
+  "_theme_options": ["minimal", "sepia", "ocean"],
+
+  "domain": "https://sbrave.cn",
+  "title": "sbraveyoung · 字里行间",
+  "subtitle": "阅读 · 实践 · 思考",
+  "author": "sbraveyoung",
+  "description": "一个程序员的笔记本：技术拆解、踩坑总结、生活随笔。",
+  "cname": "sbrave.cn",
+
+  "_comments_doc": "Set comments.enabled=true and fill the four IDs from https://giscus.app to turn on GitHub Discussions comments. Repo must be public and have Discussions enabled.",
+  "comments": {
+    "enabled": false,
+    "provider": "giscus",
+    "repo": "",
+    "repo_id": "",
+    "category": "General",
+    "category_id": "",
+    "mapping": "pathname",
+    "reactions_enabled": "1",
+    "input_position": "bottom"
+  }
+}

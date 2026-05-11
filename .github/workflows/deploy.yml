@@ -1,0 +1,208 @@
+name: Deploy
+
+# Renders sbraveyoung/blog into this repo's working tree using gobog, then
+# commits + pushes the result so GitHub Pages picks it up. Triggered by:
+#   - repository_dispatch (event_type=blog-update) — fired by the blog
+#     repo's notify workflow on every push to master.
+#   - workflow_dispatch — manual run, optionally with a theme override.
+#   - schedule — nightly safety-net rebuild.
+#
+# Required secret: GH_PAT — Fine-grained PAT with Contents: Read on
+# sbraveyoung/blog and sbraveyoung/gobog, and Read & Write on this repo.
+# (When all three repos are public, the default GITHUB_TOKEN suffices for
+#  read; the PAT is mainly needed for the cross-repo checkouts when any
+#  side is private and for the commit back into this repo.)
+
+on:
+  repository_dispatch:
+    types: [blog-update]
+  workflow_dispatch:
+    inputs:
+      theme:
+        description: 'Theme name (minimal | sepia | ocean). Empty → use _gobog.json.'
+        required: false
+        default: ''
+  schedule:
+    - cron: '0 6 * * *'   # 06:00 UTC nightly
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout sbraveyoung.github.io
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Read deploy config
+        id: cfg
+        run: |
+          # Resolve theme: workflow input wins, then _gobog.json, then default.
+          theme="${{ github.event.inputs.theme }}"
+          if [ -z "$theme" ] && [ -f _gobog.json ]; then
+            theme=$(jq -r '.theme // empty' _gobog.json)
+          fi
+          if [ -z "$theme" ]; then
+            theme=minimal
+          fi
+          # Allow only the themes we ship — refuse any user-supplied junk.
+          case "$theme" in
+            minimal|sepia|ocean) ;;
+            *) echo "::error::unknown theme '$theme' (valid: minimal | sepia | ocean)"; exit 1 ;;
+          esac
+          echo "theme=$theme" >> "$GITHUB_OUTPUT"
+
+          # Optional knobs.
+          domain=$(jq -r '.domain // empty' _gobog.json 2>/dev/null || echo "")
+          title=$(jq -r '.title // empty' _gobog.json 2>/dev/null || echo "")
+          subtitle=$(jq -r '.subtitle // empty' _gobog.json 2>/dev/null || echo "")
+          author=$(jq -r '.author // empty' _gobog.json 2>/dev/null || echo "")
+          description=$(jq -r '.description // empty' _gobog.json 2>/dev/null || echo "")
+          cname=$(jq -r '.cname // empty' _gobog.json 2>/dev/null || echo "")
+          echo "domain=$domain" >> "$GITHUB_OUTPUT"
+          echo "title=$title" >> "$GITHUB_OUTPUT"
+          echo "subtitle=$subtitle" >> "$GITHUB_OUTPUT"
+          echo "author=$author" >> "$GITHUB_OUTPUT"
+          echo "description=$description" >> "$GITHUB_OUTPUT"
+          echo "cname=$cname" >> "$GITHUB_OUTPUT"
+
+          # Comments (giscus). Each field defaults to empty so the
+          # gobog config block stays valid even with comments off.
+          comments_enabled=$(jq -r '.comments.enabled // false'    _gobog.json 2>/dev/null || echo false)
+          comments_repo=$(jq -r    '.comments.repo // empty'       _gobog.json 2>/dev/null || echo "")
+          comments_repo_id=$(jq -r '.comments.repo_id // empty'    _gobog.json 2>/dev/null || echo "")
+          comments_cat=$(jq -r     '.comments.category // empty'   _gobog.json 2>/dev/null || echo "")
+          comments_cat_id=$(jq -r  '.comments.category_id // empty' _gobog.json 2>/dev/null || echo "")
+          comments_mapping=$(jq -r '.comments.mapping // "pathname"' _gobog.json 2>/dev/null || echo "pathname")
+          comments_reactions=$(jq -r '.comments.reactions_enabled // "1"' _gobog.json 2>/dev/null || echo "1")
+          comments_input=$(jq -r   '.comments.input_position // "bottom"' _gobog.json 2>/dev/null || echo "bottom")
+          {
+            echo "comments_enabled=$comments_enabled"
+            echo "comments_repo=$comments_repo"
+            echo "comments_repo_id=$comments_repo_id"
+            echo "comments_cat=$comments_cat"
+            echo "comments_cat_id=$comments_cat_id"
+            echo "comments_mapping=$comments_mapping"
+            echo "comments_reactions=$comments_reactions"
+            echo "comments_input=$comments_input"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Checkout sbraveyoung/blog
+        uses: actions/checkout@v4
+        with:
+          repository: sbraveyoung/blog
+          path: _blog
+          fetch-depth: 1
+          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Checkout sbraveyoung/gobog
+        uses: actions/checkout@v4
+        with:
+          repository: sbraveyoung/gobog
+          path: _gobog
+          fetch-depth: 1
+          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+          cache: true
+          cache-dependency-path: _gobog/go.sum
+
+      - name: Build gobog binary
+        working-directory: _gobog
+        run: go build -o ../_bin/gobog ./src
+
+      - name: Write gobog config
+        env:
+          THEME: ${{ steps.cfg.outputs.theme }}
+          DOMAIN: ${{ steps.cfg.outputs.domain }}
+          TITLE: ${{ steps.cfg.outputs.title }}
+          SUBTITLE: ${{ steps.cfg.outputs.subtitle }}
+          AUTHOR: ${{ steps.cfg.outputs.author }}
+          DESCRIPTION: ${{ steps.cfg.outputs.description }}
+          CNAME: ${{ steps.cfg.outputs.cname }}
+          COMMENTS_ENABLED: ${{ steps.cfg.outputs.comments_enabled }}
+          COMMENTS_REPO: ${{ steps.cfg.outputs.comments_repo }}
+          COMMENTS_REPO_ID: ${{ steps.cfg.outputs.comments_repo_id }}
+          COMMENTS_CAT: ${{ steps.cfg.outputs.comments_cat }}
+          COMMENTS_CAT_ID: ${{ steps.cfg.outputs.comments_cat_id }}
+          COMMENTS_MAPPING: ${{ steps.cfg.outputs.comments_mapping }}
+          COMMENTS_REACTIONS: ${{ steps.cfg.outputs.comments_reactions }}
+          COMMENTS_INPUT: ${{ steps.cfg.outputs.comments_input }}
+        run: |
+          cat > _gobog.toml <<EOF
+          [blog]
+          domain = "${DOMAIN:-https://sbrave.cn}"
+          title = "${TITLE:-sbraveyoung · 字里行间}"
+          subtitle = "${SUBTITLE:-阅读 · 实践 · 思考}"
+          description = "${DESCRIPTION:-一个程序员的笔记本：技术拆解、踩坑总结、生活随笔。}"
+          author = "${AUTHOR:-sbraveyoung}"
+          theme = "_gobog/themes/${THEME}"
+          source = "_blog/source"
+          cname = "${CNAME}"
+          include_drafts = false
+          include_hidden = false
+          [http]
+          addr = ""
+          addrs = ""
+          [data]
+          dir = "_data"
+          [comments]
+          enabled = ${COMMENTS_ENABLED:-false}
+          provider = "giscus"
+          repo = "${COMMENTS_REPO}"
+          repo_id = "${COMMENTS_REPO_ID}"
+          category = "${COMMENTS_CAT}"
+          category_id = "${COMMENTS_CAT_ID}"
+          mapping = "${COMMENTS_MAPPING:-pathname}"
+          reactions_enabled = "${COMMENTS_REACTIONS:-1}"
+          input_position = "${COMMENTS_INPUT:-bottom}"
+          EOF
+          cat _gobog.toml
+
+      - name: Render site
+        run: ./_bin/gobog -config _gobog.toml -export _dist
+
+      - name: Sanity check rendered output
+        # Warnings only by default — dead links / orphan images don't
+        # block the deploy. To make findings fatal, set the env var
+        # CHECK_EXPORT_FATAL=1 above this step.
+        env:
+          CHECK_EXPORT_FATAL: '0'
+        run: bash scripts/check-export.sh _dist
+
+      - name: Replace working tree with rendered output
+        run: |
+          # Wipe everything except .git, .github, _gobog.json, scripts/
+          # and the temporary build dirs so the commit reflects the
+          # rendered site exactly. scripts/ holds check-export.sh, which
+          # the previous step needs to survive across deploys.
+          shopt -s extglob
+          rm -rf !(\.git|\.github|_gobog.json|scripts|_dist|_blog|_gobog|_bin|_data|_gobog.toml)
+          # Move rendered files into the repo root.
+          shopt -s dotglob
+          cp -a _dist/. .
+          shopt -u dotglob
+          # Clean up build artefacts so they don't end up committed.
+          rm -rf _dist _blog _gobog _bin _data _gobog.toml
+
+      - name: Commit + push if changed
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name  "gobog-deploy"
+          git config user.email "gobog-deploy@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "no changes — nothing to commit"
+            exit 0
+          fi
+          msg="deploy: theme=${{ steps.cfg.outputs.theme }} blog=${{ github.event.client_payload.sha || 'manual' }}"
+          git commit -m "$msg"
+          git push
