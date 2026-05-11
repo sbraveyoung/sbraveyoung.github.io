@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一个简单的List实现 · sbraveyoung · 字里行间</title>
+<meta name="description" content="list 和 vector 是 STL 库中两个最基本的容器，以下代码模拟实现一个简单的 list： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Lis…">
+<meta property="og:title" content="一个简单的List实现">
+<meta property="og:description" content="list 和 vector 是 STL 库中两个最基本的容器，以下代码模拟实现一个简单的 list： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Lis…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/3896b050">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2016 · NO. §464</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · July 21, 2016
+      </div>
+      <h1 class="article-title">一个简单的List实现</h1>
+      <p class="article-lede">list 和 vector 是 STL 库中两个最基本的容器，以下代码模拟实现一个简单的 list： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Lis…</p>
+      <div class="article-meta">
+        <span>2 min read</span>
+        <span>·</span>
+        <span>464 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>一个简单的List实现</h2>
+<p>list 和 vector 是 STL 库中两个最基本的容器，以下代码模拟实现一个简单的 list：</p>
+<pre><code class="language-C++">#ifndef _MYLIST_
+#define _MYLIST_
+
+#include&lt;iostream&gt;
+using namespace std;
+
+class ListIsEmpty{};
+class ArgIsIll{};
+
+template&lt;typename T&gt;
+class Node{
+public:
+    Node(const T&amp; d=T()):data(d),prev(NULL),next(NULL)
+    {}
+
+    ~Node()
+    {}
+
+private:
+    Node(const Node&amp; n);
+    Node&amp; operator=(const Node&amp; n);
+
+public:
+    T data;
+    Node* prev;
+    Node* next;
+};
+
+template&lt;typename T&gt;
+class List{
+public:
+    List():front(NULL),tail(NULL),cur_size(0)
+    {}
+
+    ~List()
+    {
+        while(!this-&gt;empty())
+        {
+            this-&gt;pop_front();
+        }
+    }
+
+    List&amp; operator=(const List&amp; l)
+    {
+        if(&amp;l!=this)
+        {
+            Node&lt;T&gt;* cur=l.front;
+            List newlist;
+            while(cur!=NULL)
+            {
+                newlist.push_front(cur-&gt;data);
+            }
+        }
+        return newlist;
+    }
+
+    Node&lt;T&gt;* begin()
+    {
+        return front;
+    }
+
+    Node&lt;T&gt;* end()//此处 end 函数与 STL 中稍微有点不同，STL 中 end 返回值指向最后一个元素的下一个，这里指向最后一个元素
+    {
+        return tail;
+    }
+
+    bool empty()
+    {
+        if(cur_size==0)
+            return true;
+        else
+            return false;
+    }
+
+    size_t size()
+    {
+        return cur_size;
+    }
+
+    bool push_front(Node&lt;T&gt;* n)
+    {
+        if(this-&gt;empty())
+        {
+            front=tail=n;
+        }
+        else
+        {
+            n-&gt;next=front;
+            front-&gt;prev=n;
+            n-&gt;prev=tail;
+            tail-&gt;next=n;
+            front=n;
+        }
+        cur_size++;
+        return true;
+    }
+
+    bool pop_front()throw (ListIsEmpty)
+    {
+        if(this-&gt;empty())
+        {
+            throw ListIsEmpty();
+        }
+        else if(this-&gt;size()==1)
+        {
+            delete front;
+            front=tail=NULL;
+        }
+        else
+        {
+            Node&lt;T&gt;* s=front;
+            front=front-&gt;next;
+            front-&gt;prev=tail;
+            tail-&gt;next=front;
+            delete s;
+        }
+        cur_size--;
+        return true;
+    }
+
+    bool push_front(const T&amp; t)
+    {
+        Node&lt;T&gt; *s=new Node&lt;T&gt;(t);
+        return push_front(s);
+    }
+
+    bool push_back(Node&lt;T&gt;* n)
+    {
+        if(this-&gt;empty())
+        {
+            front=tail=n;
+        }
+        else
+        {
+            tail-&gt;next=n;
+            n-&gt;prev=tail;
+            n-&gt;next=front;
+            front-&gt;prev=n;
+            tail=n;
+        }
+        cur_size++;
+        return true;
+    }
+
+    bool pop_back()throw (ListIsEmpty)
+    {
+        if(this-&gt;empty())
+        {
+            throw ListIsEmpty();
+        }
+        else if(this-&gt;size()==1)
+        {
+            delete tail;
+            front=tail=NULL;
+        }
+        else
+        {
+            Node&lt;T&gt;* s=tail;
+            tail=tail-&gt;prev;
+            front-&gt;prev=tail;
+            tail-&gt;next=front;
+            delete s;
+        }
+        cur_size--;
+        return true;
+    }
+
+    bool push_back(const T&amp; t)
+    {
+        Node&lt;T&gt; *s=new Node&lt;T&gt;(t);
+        return push_back(s);
+    }
+
+    bool insert(size_t pos,Node&lt;T&gt;* n)throw (ArgIsIll)
+    {
+        if(pos&gt;this-&gt;size())
+        {
+            throw ArgIsIll();
+        }
+        else if(pos==this-&gt;size())
+        {
+            return push_back(n);
+        }
+        else if(pos==0)
+        {
+            return push_front(n);
+        }
+        else
+        {
+            size_t i=0;
+            Node&lt;T&gt;* cur=front;
+            for(i=0;i&lt;pos-1;++i)
+            {
+                cur=cur-&gt;next;
+            }
+            n-&gt;next=cur-&gt;next;
+            cur-&gt;next-&gt;prev=n;
+            n-&gt;prev=cur;
+            cur-&gt;next=n;
+            cur_size++;
+            return true;
+        }
+    }
+
+    bool insert(size_t pos,const T&amp; t)throw (ArgIsIll)
+    {
+        Node&lt;T&gt;* s=new Node&lt;T&gt;(t);
+        return insert(pos,s);
+    }
+
+    bool erase(size_t pos)
+    {
+        if(pos&gt;this-&gt;size())
+        {
+            throw ArgIsIll();
+        }
+        else if(pos==this-&gt;size())
+        {
+            return pop_back();
+        }
+        else if(pos==0)
+        {
+            return pop_front();
+        }
+        else
+        {
+            size_t i=0;
+            Node&lt;T&gt;* cur=front;
+            for(i=0;i&lt;pos-1;++i)
+            {
+                cur=cur-&gt;next;
+            }
+            cur-&gt;next-&gt;prev=cur-&gt;prev;
+            cur-&gt;prev-&gt;next=cur-&gt;next;
+            delete cur;
+            cur_size--;
+            return true;
+        }
+    }
+
+    void print()const
+    {
+        Node&lt;T&gt;* cur=front;
+        while(true)
+        {
+            cout&lt;&lt;cur-&gt;data&lt;&lt;&quot; &quot;;
+            if(cur==tail)
+                break;
+            cur=cur-&gt;next;
+        }
+        cout&lt;&lt;endl;
+    }
+
+private:
+    List(const List&amp; l);
+
+private:
+    Node&lt;T&gt;* front;
+    Node&lt;T&gt;* tail;
+    size_t cur_size;
+};
+
+#endif
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/List">点我前往</a>
+)</p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2016-07-21<br>
+          <em>read in</em> 2 min<br>
+          <em>words</em> 464<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2016 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/e660f1d5/3896b050">https://sbrave.cn/post/e660f1d5/3896b050</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

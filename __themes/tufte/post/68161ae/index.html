@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>配置文件五分钟入门 · sbraveyoung · 字里行间</title>
+<meta name="description" content="作为一名开发者，我们总是避免不了和代码打交道。人们总是过多地关注整个系统的架构，以及性能优化等方面，而忽视了许多基本的东西，认为学习这些东西没有太多的意义，其中就比如配置文件。 但其实，很多正规软件，包括大公司商业化软件和开源软件，启动时第一件事情就是去加载配置文件，以初始化相关运行环境及控制软件的行为。很多初级程序员…">
+<meta property="og:title" content="配置文件五分钟入门">
+<meta property="og:description" content="作为一名开发者，我们总是避免不了和代码打交道。人们总是过多地关注整个系统的架构，以及性能优化等方面，而忽视了许多基本的东西，认为学习这些东西没有太多的意义，其中就比如配置文件。 但其实，很多正规软件，包括大公司商业化软件和开源软件，启动时第一件事情就是去加载配置文件，以初始化相关运行环境及控制软件的行为。很多初级程序员…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/68161ae">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2018 · NO. §1743</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · July 11, 2018
+      </div>
+      <h1 class="article-title">配置文件五分钟入门</h1>
+      <p class="article-lede">作为一名开发者，我们总是避免不了和代码打交道。人们总是过多地关注整个系统的架构，以及性能优化等方面，而忽视了许多基本的东西，认为学习这些东西没有太多的意义，其中就比如配置文件。 但其实，很多正规软件，包括大公司商业化软件和开源软件，启动时第一件事情就是去加载配置文件，以初始化相关运行环境及控制软件的行为。很多初级程序员…</p>
+      <div class="article-meta">
+        <span>7 min read</span>
+        <span>·</span>
+        <span>1743 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>配置文件五分钟入门</h2>
+<p>作为一名开发者，我们总是避免不了和代码打交道。人们总是过多地关注整个系统的架构，以及性能优化等方面，而忽视了许多基本的东西，认为学习这些东西没有太多的意义，其中就比如配置文件。</p>
+<p>但其实，很多正规软件，包括大公司商业化软件和开源软件，启动时第一件事情就是去加载配置文件，以初始化相关运行环境及控制软件的行为。很多初级程序员，比如刚开始学习编程的新手，往往不会写相关配置，或者一把梭将配置硬编码在程序里。这样不仅导致每次系统稍微改动，就得重新编译程序，而且在代码可读性及可维护性上都不是特别好。</p>
+<p>常见的配置文件格式有 JSON、XML、YAML/YML、TOML、HCL、properties、props、prop 等。本文重点介绍下前四种更常用的格式。</p>
+<h4>JSON</h4>
+<p>JSON 是一种轻量级的数据交换格式，全称为 JavaScript Object Notation。其便于人们读写，也便于计算机解析和生成。JSON 是 Javascript 的一个子集，但 JSON 是独立于语言的文本格式，并且采用了类似于 C 语言家族的一些习惯，这些属性使 JSON 成为一个理想的数据交换语言。</p>
+<p>JSON 有两种结构：</p>
+<ul>
+<li>一个键值对的集合。在许多语言中，这被实现为一个对象、结构体、字典、哈希表等。</li>
+<li>一个序列化的值列表。在许多语言中，这被实现为一个数组、向量、链表等。</li>
+</ul>
+<p>在 JSON 中，一个对象就是一个未排序的键/值对集合。起始于<code>{</code>并结束于<code>}</code>，每个键后跟一个<code>:</code>，每个键/值对以<code>,</code>分隔。</p>
+<p><img src="../../image/json_object.png" alt="" /></p>
+<p>数组是值的有序集合，以<code>[</code>开始并以<code>]</code>结束，每个元素以<code>,</code>分隔。</p>
+<p><img src="../../image/json_array.png" alt="" /></p>
+<p>一个值可以是双引号括起来的字符串、数字、true、false、null，或者是一个对象或数组。这种结构是可以嵌套的。</p>
+<p><img src="../../image/json_value.png" alt="" /></p>
+<p>字符串是以双引号括起来的零或多个 Unicode 字符的序列，使用反斜杠进行转义。字符相当于只有一个字符的字符串。</p>
+<p><img src="../../image/json_string.png" alt="" /></p>
+<p>数字很像 C 或 Java 中的数字，只是不使用八进制和十六进制。</p>
+<p><img src="../../image/json_number.png" alt="" /></p>
+<h4>XML</h4>
+<p>XML 是一种自描述型、易于阅读、创建、扩展的标记语言。XML 文档形成了一种树结构，从根部开始，然后扩展到枝叶。一个简单的 XML 文档例子如下：</p>
+<pre><code class="language-XML">&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
+&lt;note&gt;
+&lt;to&gt;George&lt;/to&gt;
+&lt;from&gt;John&lt;/from&gt;
+&lt;heading&gt;Reminder&lt;/heading&gt;
+&lt;body&gt;Don't forget the meeting!&lt;/body&gt;
+&lt;/note&gt;
+</code></pre>
+<p>其中，第一行是 XML 声明，它定义了所使用的 XML 版本和字符集。</p>
+<p>note、to、from、heading、body 等都是自定义标签，可以根据具体需求来选择不同的标签，以说明其值所代表的意义，这一点体现了 XML 良好的自我描述性。需要注意的是，标签可以嵌套，且每个标签都必须是闭合的。</p>
+<p>一些常见需要注意的地方：</p>
+<ul>
+<li>标签对大小写敏感。</li>
+<li>标签必须被正确地嵌套。</li>
+<li>XML 文档必须要跟标签。</li>
+<li>标签的属性值必须加引号。</li>
+<li>XML 中，预定义了 <code>&gt;</code>、<code>&lt;</code>、<code>&amp;</code>、<code>&quot;</code>、<code>'</code> 五个实体引用，当 XML 元素中需要出现这些实体时，需要分别用<code>&amp;lt;</code>、<code>&amp;gt;</code>、<code>&amp;amp;</code>、<code>&amp;quot;</code>、<code>&amp;apos;</code>代替，否则会出现错误。</li>
+<li>XML 的注释与 HTML 类似：<code>&lt;!-- something --&gt;</code>。</li>
+<li>标签命名和 C 类似，但不能包含 &quot;XML&quot; 和空格。</li>
+</ul>
+<h4>YAML/YML</h4>
+<p>YAML(/ˈjæməl/) 是 &quot;YAML Ain't Markup Language&quot;（YAML 不是标记语言）的递归缩写，是一种人类友好的数据序列化标准，支持所有编程语言。他们的<a href="http://yaml.org">官网</a>很有新意，采用 YAML 本身编写，上面列出了所支持的编程语言对应的库，可以去看看。</p>
+<h5>语法</h5>
+<p>YAML 提供缩进／区块以及内置（inline）两种格式，来表示数组和对象。另外，YAML 还支持单个变量。<code>#</code>表示注释。</p>
+<h6>数组</h6>
+<p>数组也称为列表、清单。习惯上数组比较常用区块格式（block format）表示，也就是用短杠+空白字符作为起始。</p>
+<pre><code class="language-YAML">--- # fruit list
+- apple
+- banana
+- watermelon
+</code></pre>
+<p>另外还有一种内置格式（inline format）可以选择──用方括号围住，并用逗号+空白区隔（类似 JSON 的语法）。</p>
+<pre><code class="language-YAML">--- # color list
+[red, blue, yellow]
+</code></pre>
+<p>也可以写一个子数组：</p>
+<pre><code class="language-YAML">- animal
+ - cat
+ - dog
+ - fish
+- plant
+ - flower
+ - grass
+ - tree
+</code></pre>
+<h6>对象</h6>
+<p>对象通常也称为字典、映射、哈希。键值和数据由冒号及空白字符分开。区块形式（常使用于 YAML 数据文档中）使用缩进和换行符分隔 key: value 对。内置形式（常使用于 YAML 数据流中）在大括号中使用逗号+空白字符分隔 key: value 对。</p>
+<pre><code class="language-YAML">--- # 区块形式
+name: sbrave
+age: 18
+sex: male
+
+--- # 内置形式
+{name: sbrave, age: 18, sex: male}
+</code></pre>
+<h6>符合结构</h6>
+<p>对象和数组可以结合使用，也可以嵌套，形成符合结构：</p>
+<pre><code class="language-YAML">author:
+ - smart
+ - brave
+</code></pre>
+<h6>纯量</h6>
+<p>纯量是最基本的、不可再分的变量。包括：字符串、布尔值、整数、浮点数、NULL、时间、日期。</p>
+<pre><code class="language-YAML">str: hello world # not need quotation marks
+number: 100 # int number
+fnumber: 3.14 # float number
+flag: true # bool value
+point: ~ # NULL
+time: 2018-07-11t11:28:50.10-05:00
+day: 2018-07-11
+</code></pre>
+<h6>引用</h6>
+<p>锚点 <code>&amp;</code> 和别名 <code>*</code> 可以用来引用：</p>
+<pre><code class="language-YAML">people:&amp;people
+ - name
+ - age
+ - sex
+XiaoMing:
+ &lt;&lt;: *people
+</code></pre>
+<p><code>&amp;</code> 用来建立锚点，<code>&lt;&lt;</code> 表示合并到当前数据，<code>*</code> 用来引用锚点。</p>
+<h4>TOML</h4>
+<p><a href="https://github.com/toml-lang/toml">TOML</a> 全称为 Tom's Obvious, Minimal Language。其语法广泛地由 key = &quot;value&quot;、[节名]与 # 注释构成，支持以下数据类型：字符串、整形、浮点型、布尔型、日期时间、数组和图表。</p>
+<p>这是一个例子：</p>
+<pre><code class="language-TOML"># This is a TOML document.
+
+title = &quot;TOML Example&quot;
+
+[owner]
+name = &quot;Tom Preston-Werner&quot;
+dob = 1979-05-27T07:32:00-08:00 # First class dates
+
+[database]
+server = &quot;192.168.1.1&quot;
+ports = [ 8001, 8001, 8002  ]
+connection_max = 5000
+enabled = true
+
+[servers]
+    # Indentation (tabs and/or spaces) is allowed but not required
+    [servers.alpha]
+    ip = &quot;10.0.0.1&quot;
+    dc = &quot;eqdc10&quot;
+
+    [servers.beta]
+    ip = &quot;10.0.0.2&quot;
+    dc = &quot;eqdc10&quot;
+
+[clients]
+data = [ [&quot;gamma&quot;, &quot;delta&quot;], [1, 2]  ]
+
+# Line breaks are OK when inside arrays
+hosts = [
+    &quot;alpha&quot;,
+    &quot;omega&quot;
+
+]
+</code></pre>
+<!--
+### 我该选用哪种格式 && 各种格式的比较
+-->
+<p>&amp;&amp; 各种格式的比较
+--&gt;</p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2018-07-11<br>
+          <em>read in</em> 7 min<br>
+          <em>words</em> 1743<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2018 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/68161ae">https://sbrave.cn/post/68161ae</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

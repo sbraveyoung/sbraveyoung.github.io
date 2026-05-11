@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一些常见的协议详解 · sbraveyoung · 字里行间</title>
+<meta name="description" content="TCP/IP 协议族里面有众多的协议，分别分布在各个不同的层次上。现将跟 TCP 有关的部分协议详解如下： ARP协议 ARP 协议处于 TCP/IP 协议族的最底层，即网络接口层。它的主要用途就是实现一台主机的 IP 地址到 MAC 地址的转换。 以太网 ARP 请求/应答报文的格式如下图所示： ![](../../…">
+<meta property="og:title" content="一些常见的协议详解">
+<meta property="og:description" content="TCP/IP 协议族里面有众多的协议，分别分布在各个不同的层次上。现将跟 TCP 有关的部分协议详解如下： ARP协议 ARP 协议处于 TCP/IP 协议族的最底层，即网络接口层。它的主要用途就是实现一台主机的 IP 地址到 MAC 地址的转换。 以太网 ARP 请求/应答报文的格式如下图所示： ![](../../…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/afe65937/9eddd0c8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2016 · NO. §1531</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · August 20, 2016
+      </div>
+      <h1 class="article-title">一些常见的协议详解</h1>
+      <p class="article-lede">TCP/IP 协议族里面有众多的协议，分别分布在各个不同的层次上。现将跟 TCP 有关的部分协议详解如下： ARP协议 ARP 协议处于 TCP/IP 协议族的最底层，即网络接口层。它的主要用途就是实现一台主机的 IP 地址到 MAC 地址的转换。 以太网 ARP 请求/应答报文的格式如下图所示： ![](../../…</p>
+      <div class="article-meta">
+        <span>7 min read</span>
+        <span>·</span>
+        <span>1531 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>一些常见的协议详解</h2>
+<p>TCP/IP 协议族里面有众多的协议，分别分布在各个不同的层次上。现将跟 TCP 有关的部分协议详解如下：</p>
+<h2>ARP协议</h2>
+<p>ARP 协议处于 TCP/IP 协议族的最底层，即网络接口层。它的主要用途就是实现一台主机的 IP 地址到 MAC 地址的转换。</p>
+<h4>以太网 ARP 请求/应答报文的格式如下图所示：</h4>
+<p><img src="../../images/9eddd0c8-1.png" alt="" /></p>
+<ul>
+<li>硬件类型字段表示物理地址的类型，它的值为 1 表示 MAC 地址。</li>
+<li>协议类型字段表示要映射的协议地址类型，它的值为 0x800，表示 IP 地址。</li>
+<li>硬件地址长度和协议地址长度表明 MAC 地址或 IP 地址的长度，对 MAC 地址来说，它的值为 6，对 IP 地址来说，IPv4 长度为 4，IPv6 长度为 16。</li>
+<li>操作字段指出 4 种操作类型：ARP 请求（值为 1），ARP 应答（值为 2），RARP 请求（值为 3）和RARP 应答（值为 4）。</li>
+<li>最后 4  个字段指定通信双方的以太网地址和 IP 地址。</li>
+</ul>
+<h4>ARP 协议的工作过程如下：</h4>
+<ul>
+<li>发送端填充除目的端以太网地址之外的其他所有字段，构建一个 ARP 请求报文并发送。</li>
+<li>发送主机所处的网络上的所有主机均可收到该报文，但只有 IP 地址和报文中「目的端 IP 地址」相同的那台主机才响应该报文，其他主机均忽略。</li>
+<li>目的主机将自己的 MAC 地址填充到该报文中的目的端以太网地址上，然后交换两个目的端地址和两个发送端地址，将操作字段的值更改为 2，构建 ARP 应答报文并发送。</li>
+<li>发送主机收到该 ARP 应答报文，从中取出对端的 MAC 地址即可。</li>
+</ul>
+<h2>DNS 协议</h2>
+<p>我们平常访问网站时都是直接输入域名的，而因特网上的主机都是通过 IP 地址来标示的。所以就需要 DNS 协议来实现域名到 IP 地址的转换工作。</p>
+<p>DNS 是一套分布式的域名解析系统。工作原理如下：</p>
+<ul>
+<li>客户程序拿到域名后，通过系统调用 gethostbyname() 来向 DNS 服务器请求该域名对应的 IP 地址。</li>
+<li>DNS 服务器通过某种方式查询到 IP 地址后，将其返回给客户程序即可。</li>
+</ul>
+<p>需要声明的是，DNS 底层采用的是 UDP 协议。</p>
+<p>DNS 服务器的查询有两个方式：迭代和递归。</p>
+<p>迭代方式就是当该 DNS 服务器上没有该域名对应的 IP 地址时，DNS 服务器就返回给客户程序另一台 DNS 服务器的地址，告诉客户程序到这台 DNS 服务器上去查询。</p>
+<p>递归方式就是当该 DNS 服务器上没有该域名对应的 IP 地址时，DNS 服务器自身去另一台 DNS 服务器上去查询，查到之后再返回给客户程序。</p>
+<h2>IP 协议</h2>
+<p>IP 协议处于网络层，几乎所有上层协议都会使用到 IP 协议。</p>
+<h4>IP协议的报文格式如下：</h4>
+<p><img src="../../images/9eddd0c8-2.png" alt="" /></p>
+<p>解释如下：</p>
+<ul>
+<li>版本号指定 IP 协议的版本，长度为 4bit。对于 IPv4 来说，其值为 4。</li>
+<li>头部长度该 IP 头部包括选项在内共有多少个 4 字节。</li>
+<li>服务类型包括一个 3 位的优先权字段（现已被弃用），4 位的 TOS 字段和 1 位保留字段（必须置0）。4 位 TOS 字段分别表示最小延时、最大吞吐量、最高可靠性和最小费用。</li>
+<li>总长度表示整个 IP 数据报的长度，以字节为单位。</li>
+<li>标示字段唯一的标示主机发送的每一个 IP 数据报，初始值有系统随机生成。</li>
+<li>标志的第一位保留，第二位表示「禁止分片」。如果设置了这个位，系统不对 IP 报文分片。在这种请求下，如果 IP 数据报的长度超过 MTU（Max Transfer Unit，最大传输单元），IP 模块将丢弃该数据报并返回一个 ICMP 差错报文。第三位表示「更多分片」，如果为 1，表示后续还有该 IP 报文的分片。</li>
+<li>分片偏移是分片相对原始 IP 数据报开始处的偏移，在接收端组合分片时，根据这个字段决定各分片的先后顺序。</li>
+<li>生存时间是数据报到达目的地之前允许经过的路由器跳数。</li>
+<li>协议字段用来区分上层的协议，其中 ICMP 是 1，TCP 是6，UDP是 17。更多可查看 /etc/protocols 文件。</li>
+<li>头部校验和由发送端填充，接收端使用 CRC 循环冗余校验算法检查 IP 数据报是否损坏。</li>
+<li>接下来两个字段源端 IP 和目的端 IP 表示发送端和接收端的 IP 地址。</li>
+<li>选项部分长度最大为 40 字节，因为头部长度字段最大可表示 15，也就是说 IP 数据报的报头最大可以有 60 字节。而前面这些已经占了 20 字节。故选项部分只能有 40 字节。</li>
+</ul>
+<h4>IP分片</h4>
+<p>当要发送的数据大于 MTU 的时候，通常需要进行 IP 分片，将数据分成多个 IP 数据报发送。MTU 一般为 1500 字节。</p>
+<p>由上文可知，在 3 位的标志字段中，如果允许分片，则相同的 16 位的标识字段标识这些分片属于同一个数据块，片偏移标识这些分片的先后顺序。</p>
+<p>【完】</p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2016-08-20<br>
+          <em>read in</em> 7 min<br>
+          <em>words</em> 1531<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2016 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/afe65937/9eddd0c8">https://sbrave.cn/post/afe65937/9eddd0c8</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

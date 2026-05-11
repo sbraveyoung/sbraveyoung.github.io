@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题9：斐波那契数列 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目一：写一个函数，输入n，求斐波那契数列的第n项。斐波那契数列的定义如下： $$f(n)=\begin{cases}0 & &{n=0} \\\ 1 & &{n=1} \\\ f(n-1)+f(n-2) & &{n>1} \end{cases} $$ 分析 根据上述公式，我们可以很容易地写出如下递归代码： 不过递归方…">
+<meta property="og:title" content="面试题9：斐波那契数列">
+<meta property="og:description" content="题目一：写一个函数，输入n，求斐波那契数列的第n项。斐波那契数列的定义如下： $$f(n)=\begin{cases}0 & &{n=0} \\\ 1 & &{n=1} \\\ f(n-1)+f(n-2) & &{n>1} \end{cases} $$ 分析 根据上述公式，我们可以很容易地写出如下递归代码： 不过递归方…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/c44c0724">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Saturday, May 28, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · May 28, 2016</div>
+    <h1 class="press-article-title">
+      面试题9：斐波那契数列
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目一：写一个函数，输入n，求斐波那契数列的第n项。斐波那契数列的定义如下： $$f(n)=\begin{cases}0 & &{n=0} \\\ 1 & &{n=1} \\\ f(n-1)+f(n-2) & &{n>1} \end{cases} $$ 分析 根据上述公式，我们可以很容易地写出如下递归代码： 不过递归方…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 3 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题9：斐波那契数列</h2>
+<h3>题目一：写一个函数，输入n，求斐波那契数列的第n项。斐波那契数列的定义如下：</h3>
+<p>$$f(n)=\begin{cases}0 & &{n=0} \\\ 1 & &{n=1} \\\ f(n-1)+f(n-2) & &{n>1} \end{cases} $$</p>
+<h3>分析</h3>
+<p>根据上述公式，我们可以很容易地写出如下递归代码：</p>
+<pre><code class="language-c">long long Fib(int x)
+{
+    if(x==0 || x==1)
+        return x;
+    return Fib(x-1)+Fib(x-2);
+}
+</code></pre>
+<p>不过递归方式的时间复杂度是 $O(2^n)$，空间复杂度都是是 $O(n)$，增长地很厉害，用来解释递归原理还可以，是无法应用的实际中去的。</p>
+<p>那我们就可以把递归改成循环，使时间复杂度降到 $O(n)$。</p>
+<h3>代码如下</h3>
+<pre><code class="language-c">long long Fib(int x)
+{
+    if(x&lt;=1)
+        return x;
+    int a=0,b=1,res;
+    int i;
+    for(i=0;i&lt;x-1;++i)
+    {
+        res=a+b;
+        a=b;
+        b=res;
+    }
+    return res;
+}
+</code></pre>
+<p>一般到这里就可以了，但我们现在有一个时间复杂度为 $O(\log N)$ 的方法，讲解如下：</p>
+<p>有一个数学公式(设 $f(n)$ 为斐波那契数列的第 $n$ 项值)：</p>
+<p>$$\left[\begin{matrix} f(n) & f(n-1) \\\ f(n-1) & f(n-2) \end{matrix} \right] = {\left[ \begin{matrix} 1 & 1 \\\ 1 & 0 \end{matrix} \right]}^{n-1}$$</p>
+<p>这个公式在此不做证明，有兴趣的读者可以自己用数学归纳法试着证明一下。</p>
+<p>现在我们就将斐波那契问题转化矩阵乘法的问题了。但如果还是以普通乘法来计算的话，时间复杂度甚至比循环方法还要高。所以需要对其优化。</p>
+<ol>
+<li>对于矩阵乘方，常规算法需要 $O(n^3)$ 时间，《算法导论》上介绍了一种 Strassen 算法，可以将计算的时间复杂度压缩到 $O(n^{\lg 7})$，($\lg 7$ 的值在 2.80 到 2.81 之间)，在此不做验证。</li>
+<li>若 $n$ 为偶数，$a^n=a^{\frac{n}{2}}\times a^{\frac{n}{2}}$；若 $n$ 为奇数，$a^n=a \times a^{\frac{n-1}{2}}\times a^{\frac{n-1}{2}}$。所以我们可以利用乘方的这种性质来计算，时间复杂度缩减到 $O(\log N)$。</li>
+</ol>
+<h3>代码如下:</h3>
+<pre><code class="language-c">vector&lt;vector&lt;unsigned long long int&gt; &gt; MultiMatrix(vector&lt;vector&lt;unsigned long long int&gt; &gt; matrix1,vector&lt;vector&lt;unsigned long long int&gt; &gt; matrix2)
+{
+    if(matrix1.size()&lt;=0 || matrix2.size()&lt;=0)
+        return vector&lt;vector&lt;unsigned long long int&gt; &gt;();
+    vector&lt;vector&lt;unsigned long long int&gt; &gt; res;
+    int i,j,k;
+    res.resize(matrix1.size());
+    for(i=0;i&lt;matrix1.size();++i)
+    {
+        res[i].resize(matrix2[0].size());
+        for(j=0;j&lt;matrix2[0].size();++j)
+        {
+            res[i][j]=0;
+            for(k=0;k&lt;matrix2.size();++k)
+            {
+                res[i][j]+=matrix1[i][k]*matrix2[k][j];
+            }
+        }
+    }
+    return res;
+}
+
+vector&lt;vector&lt;unsigned long long int&gt; &gt; calc(vector&lt;vector&lt;unsigned long long int&gt; &gt; matrix,int x)
+{
+    int i;
+    vector&lt;vector&lt;unsigned long long int&gt; &gt; res=matrix;
+    for(i=0;i&lt;x-1;++i)
+    {
+        res=MultiMatrix(matrix,res);
+    }
+    return res;
+}
+
+unsigned long long int Fib(int x)
+{
+    if(x==0 || x==1)
+        return x;
+    vector&lt;vector&lt;unsigned long long int&gt; &gt;matrix;
+    matrix.resize(2);
+    matrix[0].resize(2);
+    matrix[1].resize(2);
+    matrix[0][0]=matrix[0][1]=matrix[1][0]=1;
+    matrix[1][1]=0;
+    return calc(matrix,x-1)[0][0];
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/09_Fibonacci/main.cpp">点我前往</a>
+b/master/09_Fibonacci/main.cpp)</p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

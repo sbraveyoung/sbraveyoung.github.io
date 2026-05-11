@@ -1,0 +1,101 @@
+---
+title: 面试题13：在O(1)时间 内删除链表节点
+author: sbrave
+date: 2016-06-03 23:58:17
+url: /posts/684ef0af/a1d0ab79
+id: a1d0ab79
+---
+
+**题目：给定单向链表的头指针和一个节点指针，定义一个函数在O(1)时间删除该节点。链表节点与函数的定义如下：**
+
+```C
+struct ListNode
+{
+	int value;
+	ListNode* next;
+}
+
+void DeleteNode(ListNode* head,ListNode* pToBeDeleted);
+```
+
+### 分析
+
+在单向链表中删除一个节点，通常的做法是从链表头开始遍历，如果某个节点的 next 等于要删除的节点，就将该 next 改为待删除节点的下一个节点，然后删除该链表节点即可。
+
+代码如下：
+
+```C
+void DeleteNode(ListNode* head,ListNode* pToBeDeleted)
+{
+	if(head==NULL || pToBeDeleted==NULL)
+		return;
+	ListNode* cur=head;
+	if(cur==pToBeDeleted)
+	{
+		head=cur->next;
+		delete pToBeDeleted;
+		return head;
+	}
+	while(cur!=NULL)
+	{
+		if(cur->next==pToBeDeleted)
+		{
+			cur->next==pToBeDeleted->next;
+			delete pToBeDeleted;
+			return;
+		}
+		cur=cur->next;
+	}
+}
+```
+
+由于这样的思路需要顺序查找，时间复杂度自然就是 O(n) 了。
+
+因为我们要删除某个节点，如果不是第一个节点的话，就需要更改它前面节点的 next 值。而单链表是无法逆行的，所以我们可以按如下步骤做：
+
+1. 如果待删除节点不是最后一个节点，就用他的 next 节点的 value 覆盖它的 value，然后删掉它的 next 节点。
+2. 如果是最后一个节点，还是老老实实的顺序遍历吧。
+
+But，这种方法会带来一个问题，就是可能会使原来指向待删除节点的 next 节点的指针在删除操作之后失效！任何事物都是有两面性的，将删除操作时间复杂度降到了 O(1)，就要接受这种类似于迭代器失效问题的后果。
+
+代码如下：
+
+```C
+void DeleteNode(ListNode** pListHead,ListNode* pToBeDeleted)
+{
+    if(pListHead==NULL || *pListHead==NULL || pToBeDeleted==NULL)
+        return;
+    if(pToBeDeleted->next!=NULL)
+    {
+        ListNode* tmp=pToBeDeleted->next;
+        pToBeDeleted->value=tmp->value;
+        pToBeDeleted->next=tmp->next;
+        delete tmp;
+    }
+    else
+    {
+        ListNode* cur=*pListHead;
+        if(cur==pToBeDeleted)
+        {
+            *pListHead=cur->next;
+            delete cur;
+            return;
+        }
+        while(cur->next!=NULL)
+        {
+            if(cur->next==pToBeDeleted)
+            {
+                ListNode* tmp=cur->next;
+                cur->next=tmp->next;
+                delete tmp;
+                return;
+            }
+            cur=cur->next;
+        }
+    }
+}
+```
+
+如果你有任何想法或是可以改进的地方，欢迎和我交流！
+
+完整代码及测试用例在github上：[点我前往](https://github.com/SmartBrave/Sword-to-Offer/blob/master/13_DeleteNodeInList/main.cpp)

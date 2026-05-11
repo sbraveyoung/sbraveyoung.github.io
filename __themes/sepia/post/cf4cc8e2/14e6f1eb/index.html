@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>冒泡排序 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/cf4cc8e2/14e6f1eb">
+<meta name="description" content="冒泡排序可以说是最简单的一种排序了，其核心思想是： 每次比较相邻的两个数，若后面的比前面大，则交换之； 重复以上步骤，直到所有数都有序为止。 代码如下： 可以看出，冒泡排序采用了比较相邻数字的做法，所以时间复杂度为O(n&lt;sup&gt;2&lt;/sup&gt;)。事实上，所有基于位置的比较排序的时间复杂度都逃不了O(n&lt;sup&gt;2&lt;/…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="冒泡排序">
+<meta property="og:url" content="https://sbrave.cn/post/cf4cc8e2/14e6f1eb">
+<meta property="og:description" content="冒泡排序可以说是最简单的一种排序了，其核心思想是： 每次比较相邻的两个数，若后面的比前面大，则交换之； 重复以上步骤，直到所有数都有序为止。 代码如下： 可以看出，冒泡排序采用了比较相邻数字的做法，所以时间复杂度为O(n&lt;sup&gt;2&lt;/sup&gt;)。事实上，所有基于位置的比较排序的时间复杂度都逃不了O(n&lt;sup&gt;2&lt;/…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-31 17:10:16</span>
+        <span>· 429 字</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>冒泡排序</h2>
+<p>冒泡排序可以说是最简单的一种排序了，其核心思想是：</p>
+<ul>
+<li>每次比较相邻的两个数，若后面的比前面大，则交换之；</li>
+<li>重复以上步骤，直到所有数都有序为止。</li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-C++">template&lt;typename T&gt;
+void BubbleSort(vector&lt;T&gt;&amp;amp; v)
+{
+    int length=v.size();
+    int i,j;
+    for(i=0;i&lt;length;++i)
+    {
+        for(j=0;j&lt;length-1;++j)
+        {
+            if(1==compair(v[j],v[j+1]))
+            {
+                std::swap(v[j],v[j+1]);
+            }
+        }
+    }
+}
+</code></pre>
+<p>可以看出，冒泡排序采用了比较相邻数字的做法，所以时间复杂度为O(n<sup>2</sup>)。事实上，所有基于位置的比较排序的时间复杂度都逃不了O(n<sup>2</sup>)的厄运。</p>
+<p>我们来看看以上代码还有没有什么可以优化的地方。</p>
+<p><strong>改进一：如果一趟排序中没有发生交换，则表明排序已经完成。</strong></p>
+<p>代码如下：</p>
+<pre><code class="language-C++">template&lt;typename T&gt;
+void BubbleSort(vector&lt;T&gt;&amp;amp; v)
+{
+    bool flag=true;
+    int length=v.size();
+    int i,j;
+    for(i=0;i&lt;length;++i)
+    {
+        flag=true;
+        for(j=0;j&lt;length-1;++j)
+        {
+            if(1==compair(v[j],v[j+1]))
+            {
+                flag=false;
+                std::swap(v[j],v[j+1]);
+            }
+        }
+        if(flag==true)
+            break;
+    }
+}
+</code></pre>
+<p><strong>改进二：每一趟排序，都可将一个当前序列中最大的值”冒泡”到最后面，所以下一次只需要进行到这里就可以结束了。</strong></p>
+<p>代码如下：</p>
+<pre><code class="language-C++">template&lt;typename T&gt;
+void BubbleSort(vector&lt;T&gt;&amp;amp; v)
+{
+    int length=v.size();
+    int i,j;
+    for(i=0;i&lt;length;++i)
+    {
+        for(j=0;j&lt;length-i-1;++j)
+        {
+            if(1==compair(v[j],v[j+1]))
+            {
+                std::swap(v[j],v[j+1]);
+            }
+        }
+    }
+}
+</code></pre>
+<p>值得注意的是，以上虽然对代码做了一些优化，但冒泡排序的算法的时间复杂度在本质上是没有改变的，仍然是2的平方阶。</p>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/DataStruct/blob/master/Sort/BubbleSort/main.cpp">点我前往</a></p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

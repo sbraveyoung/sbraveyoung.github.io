@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>shell语法总结 · sbraveyoung · 字里行间</title>
+<meta name="description" content="众所周知，Linux 的精髓就在于其强大的命令行，命令行的作用就是与系统提供的命令或内核提供的系统调用进行交互，而 shell 就承担了这一任务。 Linux 下常见的 shell 有 ksh,csh,sh,tcsh,bash 等，可在 /etc/shells 文件查看，这里不表。本文以 bash 为例。 shell …">
+<meta property="og:title" content="shell语法总结">
+<meta property="og:description" content="众所周知，Linux 的精髓就在于其强大的命令行，命令行的作用就是与系统提供的命令或内核提供的系统调用进行交互，而 shell 就承担了这一任务。 Linux 下常见的 shell 有 ksh,csh,sh,tcsh,bash 等，可在 /etc/shells 文件查看，这里不表。本文以 bash 为例。 shell …">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/5246c832">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Tuesday, August 30, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · August 30, 2016</div>
+    <h1 class="press-article-title">
+      shell语法总结
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>众所周知，Linux 的精髓就在于其强大的命令行，命令行的作用就是与系统提供的命令或内核提供的系统调用进行交互，而 shell 就承担了这一任务。 Linux 下常见的 shell 有 ksh,csh,sh,tcsh,bash 等，可在 /etc/shells 文件查看，这里不表。本文以 bash 为例。 shell …</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 5 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>shell语法总结</h2>
+<p>众所周知，Linux 的精髓就在于其强大的命令行，命令行的作用就是与系统提供的命令或内核提供的系统调用进行交互，而 shell 就承担了这一任务。</p>
+<p>Linux 下常见的 shell 有 ksh,csh,sh,tcsh,bash 等，可在 /etc/shells 文件查看，这里不表。本文以 bash 为例。</p>
+<p>shell 的工作原理为：</p>
+<ul>
+<li>等待用户输入命令</li>
+<li>当用户输入完成后，分析语句是否合法</li>
+<li>若合法，则 fork 一个新的进程。在子进程中 exec 用户所请求的程序，父进程 wait 子进程。</li>
+<li>处理完成后，再次等待用户输入命令</li>
+</ul>
+<p>接下来讲 shell 的语法</p>
+<h3>变量</h3>
+<p>shell 中变量分为本地变量和环境变量。可以通过 export 命令将一个本地变量更新为环境变量。unset 可以删除一个变量。</p>
+<p>本地变量不用定义，第一次使用时直接拿来用即可。例如 <code>val=10</code>。之后需要取得该变量的值时，前面加一个 <code>$</code> 符号即可，例如 <code>echo $val</code>。</p>
+<p>环境变量是形如 <code>name=val</code> 形式的字符串，可以通过 <code>printenv</code> 命令查看所有的环境变量。</p>
+<h3>命令代换</h3>
+<p>shell 允许一个命令的输出成为另一个命令的一部分，即命令代换。例如 <code>echo `date` </code>，shell 先执行一对反引号中的命令，并用其输出替换命令本身，再执行 <code>echo</code> 命令。反引号可以用 <code>$()</code> 替换。</p>
+<h3>引号</h3>
+<p>shell 中的单引号和双引号都用来表示字符串的定界符，所不同的是单引号中所有字符都表示它本身的意义，包括 <code>\</code> 和回车符号。而双引号中</p>
+<ul>
+<li><code>$</code> 加变量名仍然可以取变量的值</li>
+<li>反引号仍表示命令替换</li>
+<li><code>\</code> 表示转义字符</li>
+</ul>
+<h3>条件语句</h3>
+<h4>条件测试</h4>
+<p>条件测试有两种命令，<code>test</code> 和 <code>[</code>，例如：</p>
+<pre><code class="language-shell">test $a -gt 10 &amp;&amp; echo 'gt 10'
+[ $a -gt 10 ] &amp;&amp; echo 'gt'
+</code></pre>
+<p>可以看出，<code>[</code> 命令需要 <code>]</code> 来配对，并且他们与里面的语句之间必须要有一个空格。</p>
+<p><code>gt</code> 是比较操作，意为大于(Greater Than)，其他比较操作还有小于(Less Than,lt)，等于(EQual,eq)，大于等于(Greater or Equal,ge)，小于等于(Less or Equal,le)，不等于(Not Equal,ne)等。</p>
+<h4>if/then/else/elif/fi</h4>
+<p>if 表示判断条件是否为真，其语法形式如下：</p>
+<pre><code class="language-shell">a=10
+if [ $a -gt 10 ]
+then
+    echo 'gt'
+elif [ $a -lt 10 ]
+then
+    echo 'lt'
+else
+    echo 'eq'
+fi
+</code></pre>
+<h4>分支语句</h4>
+<p>shell 中分支语句为 <code>case/esac</code>，示例如下：</p>
+<pre><code class="language-shell">a=10
+case $a in
+    1)
+        echo 'a is 1'
+    ;;
+    10)
+        echo 'a is 10'
+    ;;
+    100)
+        echo 'a is 100'
+    ;;
+    *）
+        echo 'a is other'
+    ;;
+esac
+</code></pre>
+<p>当 a 为 1 或 10 或 100 时，就会跳转到对应的语句上执行，然后遇到两个分号时跳出。星号代表通配符，类似于 C语言中的 <code>default</code> 语句。</p>
+<h3>循环语句</h3>
+<h4>for循环</h4>
+<p>for 循环有两种形式，如下：</p>
+<pre><code class="language-shell">sum=0
+for i in {1..100}
+do
+    ((sum=$sum+$i))
+done
+echo $sum
+</code></pre>
+<p>或者</p>
+<pre><code class="language-shell">sum=0
+for ((i=0;i&lt;=100;++i))
+do
+    ((sum=$sum+$i))
+done
+echo $sum
+</code></pre>
+<h4>while循环</h4>
+<pre><code class="language-shell">sum=0
+i=0
+while [ $i -le 100 ]
+do
+    ((sum=$sum+$i))
+    ((i++))
+done
+echo $sum
+</code></pre>
+<h3>位置参数和特殊变量</h3>
+<p>shell中的特殊变量有</p>
+<ul>
+<li><code>$0</code>：相当于 argv[0]</li>
+<li><code>$1…</code>：相当于 argv[1]…</li>
+<li><code>$@</code>：表示参数列表，即 $1,$2,…</li>
+<li><code>$#</code>：相当于 argc-1</li>
+<li><code>$?</code>：表示上一条命令的退出码</li>
+<li><code>$$</code>：表示当前 shell 的进程号</li>
+</ul>
+<p>位置参数可以通过 shift 命令左移，若 shift 后面不跟数字，则默认为 1</p>
+<h3>函数</h3>
+<p>函数定义和 C语言差不多，只不过 shell 中函数没有参数和返回值。取而代之的是，参数继续用 <code>$1</code>,<code>$2</code> 来使用，返回值用 <code>return</code> 或 <code>echo</code> 命令返回。下面是一个著名的 fork 炸弹：<code>:(){ :|:&amp;amp; };:</code>。</p>
+<p>它可以分解成：</p>
+<pre><code class="language-shell">:()
+{
+    :|:&amp;amp;
+};
+:
+</code></pre>
+<p>其中 : 是函数名，括号代表是一个函数，一对花括号代表函数的起始和结束，在函数体里面递归调用本身并将输出通过管道传递给另一个该函数，并放入后台执行。所以进程数会以2<sup>n</sup>增长，造成系统无响应，只能重启。解决方法是通过 ulimit 命令限制一个用户最多可以创建的进程数。</p>
+<h3>调试</h3>
+<p>shell 脚本的调试方法为在解释器语句后面加上 <code>-x</code> 选项，在执行时会打印出执行的每一条语句。</p>
+<p>【完】</p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

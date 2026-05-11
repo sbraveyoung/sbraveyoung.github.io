@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题42：反转单词顺序 VS 左旋转字符串 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目一：输入一个英文句子，反转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串”I am a student.”，则输出”student. a am I”。** 分析 解法如下： 1.  先将整个字符串翻转； 2.  将每个单词翻转(以空格分隔)。 代码如下： 题目二：字…">
+<meta property="og:title" content="面试题42：反转单词顺序 VS 左旋转字符串">
+<meta property="og:description" content="题目一：输入一个英文句子，反转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串”I am a student.”，则输出”student. a am I”。** 分析 解法如下： 1.  先将整个字符串翻转； 2.  将每个单词翻转(以空格分隔)。 代码如下： 题目二：字…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/791ef0ca">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-07-09
+    </div>
+    <h1 class="article-title">面试题42：反转单词顺序 VS 左旋转字符串</h1>
+    <p class="article-lede">题目一：输入一个英文句子，反转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串”I am a student.”，则输出”student. a am I”。** 分析 解法如下： 1.  先将整个字符串翻转； 2.  将每个单词翻转(以空格分隔)。 代码如下： 题目二：字…</p>
+    <div class="article-meta">
+      <span>2 min read</span>
+      <span>438 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>面试题42：反转单词顺序 VS 左旋转字符串</h2>
+<p><strong>题目一：输入一个英文句子，反转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串”I am a student.”，则输出”student. a am I”。</strong></p>
+<h3>分析</h3>
+<p>解法如下：</p>
+<ol>
+<li>先将整个字符串翻转；</li>
+<li>将每个单词翻转(以空格分隔)。</li>
+</ol>
+<p>代码如下：</p>
+<pre><code class="language-c">void ReverseSentence(string str)
+{
+    int i,j,tmp;
+    for(i=0,j=str.size()-1;i&lt;j;++i,--j)
+    {
+        swap(str[i],str[j]);
+    }
+    for(i=0;i&lt;str.size();)
+    {
+        j=i;
+        while(j&lt;str.size() &amp;&amp; str[j]!=' ')
+            j++;
+        tmp=j;
+        j--;
+        for(;i&lt;j;++i,--j)
+            swap(str[i],str[j]);
+        while(tmp&lt;str.size() &amp;&amp; str[tmp]==' ')
+            tmp++;
+        i=tmp;
+    }
+}
+</code></pre>
+<p><strong>题目二：字符串的左旋操作时把字符串的前面若干个字符转移到字符串的尾部。请定义一个函数实现字符串左旋操作的功能。比如输入字符串”abcdefg”和数字2，改函数将返回左旋2位得到的结果”cdefgab”。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>由上一道题目我们可以得知，将字符串翻转一次会将单词的顺序也给翻转了。所以我们还需要在将每个单词翻转一次。这题目也一样，我们可以将”abcdefg”的前2位和后5位看成两个单词(只不过不是以空格分隔而已)，也翻转两次即可。</p>
+<p>代码如下：</p>
+<pre><code class="language-c">void LeftRotateString(string&amp; str,int n){
+    if(n&lt;=0)
+        return;
+    n%=str.size();
+    int i,j;
+    for(i=0,j=str.size()-1;i&lt;j;++i,--j)
+        swap(str[i],str[j]);
+    i=0,j=str.size()-n-1;
+    while(i&lt;j)
+        swap(str[i++],str[j--]);
+    i=str.size()-n,j=str.size()-1;
+    while(i&lt;j)
+        swap(str[i++],str[j--]);
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/42_1_ReverseWordsInSentence/main.cpp">点我前往(题目一)</a>  <a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/42_2_LeftRotateString/main.cpp">点我前往(题目二)</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

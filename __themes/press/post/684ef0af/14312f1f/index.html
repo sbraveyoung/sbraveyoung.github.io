@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题36：数组中的逆序对 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：在数组中的两个数字如果前面一个大于后面的数字，则这两个数字组成一个逆序对。输入一个数组，求出这个数组中所有逆序对的总数。** 分析 如果采用简单粗暴的方法，即遍历数组，对每个数，检查后面的每一个数是否小于它。时间复杂度为O(n<sup>2</sup>)。 实际上我们可以采用归并排序来解决这个问题，只需要在归并每一…">
+<meta property="og:title" content="面试题36：数组中的逆序对">
+<meta property="og:description" content="题目：在数组中的两个数字如果前面一个大于后面的数字，则这两个数字组成一个逆序对。输入一个数组，求出这个数组中所有逆序对的总数。** 分析 如果采用简单粗暴的方法，即遍历数组，对每个数，检查后面的每一个数是否小于它。时间复杂度为O(n<sup>2</sup>)。 实际上我们可以采用归并排序来解决这个问题，只需要在归并每一…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/14312f1f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Saturday, July 2, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · July 2, 2016</div>
+    <h1 class="press-article-title">
+      面试题36：数组中的逆序对
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目：在数组中的两个数字如果前面一个大于后面的数字，则这两个数字组成一个逆序对。输入一个数组，求出这个数组中所有逆序对的总数。** 分析 如果采用简单粗暴的方法，即遍历数组，对每个数，检查后面的每一个数是否小于它。时间复杂度为O(n<sup>2</sup>)。 实际上我们可以采用归并排序来解决这个问题，只需要在归并每一…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 3 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题36：数组中的逆序对</h2>
+<p><strong>题目：在数组中的两个数字如果前面一个大于后面的数字，则这两个数字组成一个逆序对。输入一个数组，求出这个数组中所有逆序对的总数。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>如果采用简单粗暴的方法，即遍历数组，对每个数，检查后面的每一个数是否小于它。时间复杂度为O(n<sup>2</sup>)。</p>
+<p>实际上我们可以采用归并排序来解决这个问题，只需要在归并每一个数字时，通过计算而不是遍历的方式得到后面有多少个元素小于它(常数时间)。这样总的时间复杂度就是归并排序的时间复杂度为O(nlgn)，不并且需要额外的O(n)的空间。这又是一个“以空间换时间”的做法。</p>
+<p>而具体的计算方法如下：归并时从后往前归并，如果前面的数大于后面的，说明他们是有序的，不构成逆序对；否则说明前面的数大于后面的数字，并且可以推断出前面的数大于后面中该数字之前的所有数字。例子如下：</p>
+<center>1,4,5,7</center>
+和<center>2,3,6,8</center>
+<ul>
+<li>首先，7&lt;8，此时临时数组中后半部分的数字为8，count加0。</li>
+<li>然后7和6,7&gt;6，构成逆序对，并且6之前的所有元素均和7构成逆序对，count加3。临时数组中值为7,8。</li>
+<li>5&lt;6，不构成逆序对，count加0.临时数组中后半部分值为6,7,8。</li>
+<li>5&gt;3，所以5和2,3都构成逆序对，count加2.临时数组中值为5,6,7,8。</li>
+<li>4&gt;3，所以4和2,3都构成逆序对，count加2，临时数组中值为4,5,6,7,8。</li>
+<li>接下来两步，1&lt;2和3，不构成逆序对，直接放入临时数组即可，值为1,2,3,4,5,6,7,8。</li>
+</ul>
+<p>所以以上1,4,5,7,2,3,6,8数组中共有7组逆序对。</p>
+<p>代码如下：</p>
+<pre><code class="language-void">{
+    int i=mid,j=right,k=right;
+    while(i&gt;=left &amp;amp;&amp;amp; j&gt;mid)
+    {
+        if(v[i]&lt;v[j])
+            tmp[k--]=v[j--];
+        else
+        {
+            tmp[k--]=v[i--];
+            count+=(j-mid);
+        }
+    }
+    while(i&gt;=left)
+        tmp[k--]=v[i--];
+    while(j&gt;mid)
+        tmp[k--]=v[j--];
+    for(i=left;i&lt;=right;++i)
+    {
+        v[i]=tmp[i];
+    }
+}
+
+void MergeSort(vector&lt;int&gt;&amp;amp; v,int left,int right,vector&lt;int&gt;&amp;amp; tmp,int&amp;amp; count)
+{
+    if(right-left&gt;1)
+    {
+        int mid=left+(right-left)/2;
+        MergeSort(v,left,mid,tmp,count);
+        MergeSort(v,mid+1,right,tmp,count);
+        Merge(v,left,mid,right,tmp,count);
+    }
+    else
+    {
+        Merge(v,left,left,right,tmp,count);
+    }
+}
+
+int InversePairs(vector&lt;int&gt; v)
+{
+    int count=0;
+    vector&lt;int&gt; tmp;
+    tmp.resize(v.size());
+    MergeSort(v,0,v.size()-1,tmp,count);
+    return count;
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/36_InversePairs/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

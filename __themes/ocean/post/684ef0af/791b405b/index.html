@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题33：把数组排成最小的数 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/791b405b">
+<meta name="description" content="题目：输入一个正整数数组，把数组中所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。例如输入数组{3,32,321}，则打印出这3个数字能排列成的最小数字321323。** 分析 很容易想到的是求出所有整数的全排列，然后将它们拼接为一个数字，找出最小的一组。但这种方法存在两个问题： 假设数组有n个整数，全…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题33：把数组排成最小的数">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/791b405b">
+<meta property="og:description" content="题目：输入一个正整数数组，把数组中所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。例如输入数组{3,32,321}，则打印出这3个数字能排列成的最小数字321323。** 分析 很容易想到的是求出所有整数的全排列，然后将它们拼接为一个数字，找出最小的一组。但这种方法存在两个问题： 假设数组有n个整数，全…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-06-26 10:15:28</span>
+        <span>· 524 字</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题33：把数组排成最小的数</h2>
+<p><strong>题目：输入一个正整数数组，把数组中所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。例如输入数组{3,32,321}，则打印出这3个数字能排列成的最小数字321323。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>很容易想到的是求出所有整数的全排列，然后将它们拼接为一个数字，找出最小的一组。但这种方法存在两个问题：</p>
+<ul>
+<li>假设数组有n个整数，全排列有n!中可能，求全排列的话，时间复杂度太大。</li>
+<li>整型最大只能表示到2147483647，也就是全部9位数字和部分10位数字。要是拼接出来的整数大于9位的话就可能产生溢出。所以这还是一道大数问题。</li>
+</ul>
+<p>所以我直接跳过这种方法，来看第二种方法：</p>
+<p>先将这些整数转化为字符串存储起来，然后对他们排序，排序的规则就是他们拼接起来的字符串的“大小”。比如两个字符串m和n，可以拼接成mn和nm，由于他们的长度相同，所以可以用strcmp(mn,nm)来比较。如果strcmp函数返回1，表明字符串mn“大于”nm；否则nm“大于”mn。然后将他们顺次拼接起来即可。因为在排序函数中会将字符串两两比较，所以可以确保他们拼接出来的是有序的。</p>
+<p>代码如下：</p>
+<pre><code>bool compair(const string&amp;amp; s1,const string&amp;amp; s2)
+{
+    string news1=s1+s2;
+    string news2=s2+s1;
+    int ret=strcmp(news1.c_str(),news2.c_str());
+    if(ret&lt;=0)
+        return true;
+    else
+        return false;
+}
+
+void PrintMinNumber(vector&lt;int&gt; v)
+{
+    if(v.size()==0)
+        return;
+    vector&lt;string&gt; vs;
+    char tmp[11];
+    int i;
+    for(i=0;i&lt;v.size();++i)
+    {
+        sprintf(tmp,&quot;%d&quot;,v[i]);
+        vs.push_back(string(tmp));
+    }
+    sort(vs.begin(),vs.end(),compair);
+    for(i=0;i&lt;vs.size();++i)
+    {
+        cout&lt;&lt;vs[i];
+    }
+    cout&lt;&lt;endl;
+    return;
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/33_SortArrayForMinNumber/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

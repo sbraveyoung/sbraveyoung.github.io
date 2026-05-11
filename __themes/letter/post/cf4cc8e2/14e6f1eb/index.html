@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>冒泡排序 · sbraveyoung · 字里行间</title>
+<meta name="description" content="冒泡排序可以说是最简单的一种排序了，其核心思想是： 每次比较相邻的两个数，若后面的比前面大，则交换之； 重复以上步骤，直到所有数都有序为止。 代码如下： 可以看出，冒泡排序采用了比较相邻数字的做法，所以时间复杂度为O(n<sup>2</sup>)。事实上，所有基于位置的比较排序的时间复杂度都逃不了O(n<sup>2</…">
+<meta property="og:title" content="冒泡排序">
+<meta property="og:description" content="冒泡排序可以说是最简单的一种排序了，其核心思想是： 每次比较相邻的两个数，若后面的比前面大，则交换之； 重复以上步骤，直到所有数都有序为止。 代码如下： 可以看出，冒泡排序采用了比较相邻数字的做法，所以时间复杂度为O(n<sup>2</sup>)。事实上，所有基于位置的比较排序的时间复杂度都逃不了O(n<sup>2</…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/cf4cc8e2/14e6f1eb">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-07-31
+    </div>
+    <h1 class="article-title">冒泡排序</h1>
+    <p class="article-lede">冒泡排序可以说是最简单的一种排序了，其核心思想是： 每次比较相邻的两个数，若后面的比前面大，则交换之； 重复以上步骤，直到所有数都有序为止。 代码如下： 可以看出，冒泡排序采用了比较相邻数字的做法，所以时间复杂度为O(n<sup>2</sup>)。事实上，所有基于位置的比较排序的时间复杂度都逃不了O(n<sup>2</…</p>
+    <div class="article-meta">
+      <span>2 min read</span>
+      <span>429 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>冒泡排序</h2>
+<p>冒泡排序可以说是最简单的一种排序了，其核心思想是：</p>
+<ul>
+<li>每次比较相邻的两个数，若后面的比前面大，则交换之；</li>
+<li>重复以上步骤，直到所有数都有序为止。</li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-C++">template&lt;typename T&gt;
+void BubbleSort(vector&lt;T&gt;&amp;amp; v)
+{
+    int length=v.size();
+    int i,j;
+    for(i=0;i&lt;length;++i)
+    {
+        for(j=0;j&lt;length-1;++j)
+        {
+            if(1==compair(v[j],v[j+1]))
+            {
+                std::swap(v[j],v[j+1]);
+            }
+        }
+    }
+}
+</code></pre>
+<p>可以看出，冒泡排序采用了比较相邻数字的做法，所以时间复杂度为O(n<sup>2</sup>)。事实上，所有基于位置的比较排序的时间复杂度都逃不了O(n<sup>2</sup>)的厄运。</p>
+<p>我们来看看以上代码还有没有什么可以优化的地方。</p>
+<p><strong>改进一：如果一趟排序中没有发生交换，则表明排序已经完成。</strong></p>
+<p>代码如下：</p>
+<pre><code class="language-C++">template&lt;typename T&gt;
+void BubbleSort(vector&lt;T&gt;&amp;amp; v)
+{
+    bool flag=true;
+    int length=v.size();
+    int i,j;
+    for(i=0;i&lt;length;++i)
+    {
+        flag=true;
+        for(j=0;j&lt;length-1;++j)
+        {
+            if(1==compair(v[j],v[j+1]))
+            {
+                flag=false;
+                std::swap(v[j],v[j+1]);
+            }
+        }
+        if(flag==true)
+            break;
+    }
+}
+</code></pre>
+<p><strong>改进二：每一趟排序，都可将一个当前序列中最大的值”冒泡”到最后面，所以下一次只需要进行到这里就可以结束了。</strong></p>
+<p>代码如下：</p>
+<pre><code class="language-C++">template&lt;typename T&gt;
+void BubbleSort(vector&lt;T&gt;&amp;amp; v)
+{
+    int length=v.size();
+    int i,j;
+    for(i=0;i&lt;length;++i)
+    {
+        for(j=0;j&lt;length-i-1;++j)
+        {
+            if(1==compair(v[j],v[j+1]))
+            {
+                std::swap(v[j],v[j+1]);
+            }
+        }
+    }
+}
+</code></pre>
+<p>值得注意的是，以上虽然对代码做了一些优化，但冒泡排序的算法的时间复杂度在本质上是没有改变的，仍然是2的平方阶。</p>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/DataStruct/blob/master/Sort/BubbleSort/main.cpp">点我前往</a></p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

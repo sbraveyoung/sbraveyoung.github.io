@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skill · 本地预览 + 部署前自检 · sbraveyoung · 字里行间</title>
+<meta name="description" content="何时用**：想在 push 前看一眼最终效果；或者想看看 deploy workflow 报的 warning 都什么意思。 解决什么**：把"本地预览"和"导出审计"两件事说清——一个解决"我写出来到底长啥样"，一个解决"我写的东西有没有死链"。 一、本地预览（gobog-obsidian 插件） 前置条件**：本地…">
+<meta property="og:title" content="Skill · 本地预览 + 部署前自检">
+<meta property="og:description" content="何时用**：想在 push 前看一眼最终效果；或者想看看 deploy workflow 报的 warning 都什么意思。 解决什么**：把"本地预览"和"导出审计"两件事说清——一个解决"我写出来到底长啥样"，一个解决"我写的东西有没有死链"。 一、本地预览（gobog-obsidian 插件） 前置条件**：本地…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/skills/preview-and-validate">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2026 · NO. §821</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · May 11, 2026
+      </div>
+      <h1 class="article-title">Skill · 本地预览 + 部署前自检</h1>
+      <p class="article-lede">何时用**：想在 push 前看一眼最终效果；或者想看看 deploy workflow 报的 warning 都什么意思。 解决什么**：把"本地预览"和"导出审计"两件事说清——一个解决"我写出来到底长啥样"，一个解决"我写的东西有没有死链"。 一、本地预览（gobog-obsidian 插件） 前置条件**：本地…</p>
+      <div class="article-meta">
+        <span>4 min read</span>
+        <span>·</span>
+        <span>821 words</span>
+        
+        <span>·</span><span class="ai">🤖 AI 辅助</span>
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>Skill · 本地预览 + 部署前自检</h2>
+<blockquote>
+<p><strong>何时用</strong>：想在 push 前看一眼最终效果；或者想看看 deploy workflow 报的 warning 都什么意思。</p>
+<p><strong>解决什么</strong>：把&quot;本地预览&quot;和&quot;导出审计&quot;两件事说清——一个解决&quot;我写出来到底长啥样&quot;，一个解决&quot;我写的东西有没有死链&quot;。</p>
+</blockquote>
+<h3>一、本地预览（gobog-obsidian 插件）</h3>
+<p><strong>前置条件</strong>：本地编了 gobog 二进制。</p>
+<pre><code class="language-sh">git clone https://github.com/sbraveyoung/gobog ~/code/gobog
+cd ~/code/gobog
+make build       # 产出 ./gobog
+</code></pre>
+<p><strong>配置插件</strong>：</p>
+<ul>
+<li>设置 → Gobog Sync → Local preview
+<ul>
+<li><code>gobog binary path</code> = <code>/home/&lt;you&gt;/code/gobog/gobog</code></li>
+<li><code>theme path</code> = 留空（默认 <code>&lt;bin-dir&gt;/themes/minimal</code>）</li>
+</ul>
+</li>
+</ul>
+<p><strong>用</strong>：命令面板 → <strong>Gobog Sync: Preview blog locally</strong></p>
+<p>它会：</p>
+<ol>
+<li>把当前 vault 的 <code>Blog/</code> 目录作为 source；</li>
+<li>写一个临时 <code>gobog.toml</code> 到 tmpdir；</li>
+<li><code>gobog -export</code> 到 <code>&lt;vault&gt;/.obsidian/plugins/gobog-obsidian/preview/</code>；</li>
+<li>用 <code>file://</code> URL 把渲染结果在系统默认浏览器里打开。</li>
+</ol>
+<p><strong>贴心</strong>：如果你当前打开的是某篇文章（且在 blog 文件夹下），它会直接跳到这篇文章的渲染页，不需要你从首页往里点。</p>
+<h3>二、部署前自检（github.io 的 deploy workflow）</h3>
+<p><code>scripts/check-export.sh</code> 在每次 deploy 跑 <code>gobog -export</code> 之后自动跑一遍。三类警告：</p>
+<h4>1. dead internal link</h4>
+<p><code>/post/X</code> 或 <code>/image/X</code> 在 HTML 里出现，但导出树里没那个文件。</p>
+<pre><code>::warning::dead internal link: /post/cf4cc8e2/e66fb74
+</code></pre>
+<p>常见原因：</p>
+<ul>
+<li>文章里硬写了 <code>/post/&lt;旧 id&gt;</code>，那篇文章已经被删了 / 改了 url。</li>
+<li>老 wikilink 指向已不存在的笔记。</li>
+<li>手敲 markdown 链接的时候 typo 了。</li>
+</ul>
+<p><strong>修法</strong>：在 vault 里 grep 一下那个 URL，找到引用它的 .md，要么改对，要么删掉。</p>
+<h4>2. orphan resource</h4>
+<p><code>image/X</code> 文件存在，但没有任何 HTML 引用它。</p>
+<pre><code>::warning::orphan resource: image/旧截图.png
+</code></pre>
+<p>常见原因：</p>
+<ul>
+<li>某篇文章删了，引用的图片留下了。</li>
+<li>早期上传过但从未引用的素材。</li>
+</ul>
+<p><strong>修法</strong>：要么找一篇文章把它用起来，要么 <code>git rm</code>。两种都行——警告<strong>不阻断发布</strong>，留着只是为了让你知道你在多送几 KB 字节。</p>
+<h4>3. suspicious URL</h4>
+<p>HTML 里出现了 <code>file:///</code>、<code>localhost</code>、<code>127.0.0.1</code> 这种<strong>只在你本地有意义的 URL</strong>。</p>
+<pre><code>::warning::suspicious URL leaked into HTML: file:///D:/temp/...
+</code></pre>
+<p>常见原因：从 Typora / 别的本地编辑器复制粘贴时把本地路径带进来了。</p>
+<p><strong>修法</strong>：在 vault 里搜那个 URL，替换成线上路径或者改成 <code>/image/...</code>。</p>
+<p>注意：<code>&lt;!-- ... --&gt;</code> HTML 注释里的可疑 URL 不会触发警告（脚本是 comment-aware 的）。</p>
+<h3>三、本地手动跑自检</h3>
+<p>不想等 deploy？本地直接跑：</p>
+<pre><code class="language-sh"># 先用插件预览一遍生成 _dist
+# 然后：
+bash ~/code/sbraveyoung.github.io/scripts/check-export.sh \
+  ~/&lt;vault&gt;/.obsidian/plugins/gobog-obsidian/preview
+</code></pre>
+<p>输出格式跟 GH Actions 里一模一样，只不过没了 <code>::warning::</code> 前缀的 Actions 渲染。</p>
+<h3>四、把警告升级成 fail（可选）</h3>
+<p><code>scripts/check-export.sh</code> 默认只 warn。如果你想让 dead link / orphan 直接阻断 deploy：在 github.io 的 deploy.yml 里把 <code>CHECK_EXPORT_FATAL</code> 设成 <code>'1'</code>：</p>
+<pre><code class="language-yaml">- name: Sanity check rendered output
+  env:
+    CHECK_EXPORT_FATAL: '1'   # 改这里
+  run: bash scripts/check-export.sh _dist
+</code></pre>
+<p>我的建议是<strong>保持默认 warn</strong>——少数派审稿员的角色让自动化干，最终决定权留给自己。</p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2026-05-11<br>
+          <em>read in</em> 4 min<br>
+          <em>words</em> 821<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/skills/preview-and-validate">https://sbrave.cn/post/skills/preview-and-validate</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

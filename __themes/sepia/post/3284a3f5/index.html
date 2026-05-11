@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>继承体系下C++对象模型 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/3284a3f5">
+<meta name="description" content="一直对 C++ 继承体系中对象的内存分布和实现原理不甚了解，故花了点时间复习整理了一下，如下： C++ 的继承关系可分为如下几种情况： 单一的一般继承(带成员变量，虚函数，虚函数覆盖) 多重继承(带成员变量，虚函数，虚函数覆盖) 菱形继承(带成员变量，虚函数，虚函数覆盖) 菱形虚拟继承(带成员变量，虚函数，虚函数覆盖)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="继承体系下C++对象模型">
+<meta property="og:url" content="https://sbrave.cn/post/3284a3f5">
+<meta property="og:description" content="一直对 C++ 继承体系中对象的内存分布和实现原理不甚了解，故花了点时间复习整理了一下，如下： C++ 的继承关系可分为如下几种情况： 单一的一般继承(带成员变量，虚函数，虚函数覆盖) 多重继承(带成员变量，虚函数，虚函数覆盖) 菱形继承(带成员变量，虚函数，虚函数覆盖) 菱形虚拟继承(带成员变量，虚函数，虚函数覆盖)">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-08-14 12:41:15</span>
+        <span>· 1845 字</span>
+        <span>· 8 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>继承体系下C++对象模型</h2>
+<p>一直对 C++ 继承体系中对象的内存分布和实现原理不甚了解，故花了点时间复习整理了一下，如下：</p>
+<p>C++ 的继承关系可分为如下几种情况：</p>
+<ul>
+<li>单一的一般继承(带成员变量，虚函数，虚函数覆盖)</li>
+<li>多重继承(带成员变量，虚函数，虚函数覆盖)</li>
+<li>菱形继承(带成员变量，虚函数，虚函数覆盖)</li>
+<li>菱形虚拟继承(带成员变量，虚函数，虚函数覆盖)</li>
+</ul>
+<p>下面分别来讨论：</p>
+<h4>单一的一般继承</h4>
+<p>这个没什么好说的，基类中有虚函数，所以编译器为其产生了虚表指针，该指针指向一个虚函数表，该虚函数表以 NULL 结尾(windows 下)。子类继承父类，如果符合虚函数覆盖的条件，就会覆盖父类的虚函数，由此产生了多态。如果子类新增了一些虚函数，就会添加在子类对象中父类部分的虚函数表的尾部。</p>
+<p>代码和对应的内存分布图如下：</p>
+<pre><code class="language-C++">//case 1:单一的一般继承(带成员变量，虚函数，虚函数覆盖)
+class parent
+{
+public:
+    virtual void f(void)
+    {
+        cout &lt;&lt; &quot;parent::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g()
+    {
+        cout &lt;&lt; &quot;parent::g()&quot; &lt;&lt; endl;
+    }
+    virtual void h()
+    {
+        cout &lt;&lt; &quot;parent::h()&quot; &lt;&lt; endl;
+    }
+    parent() :pi(10)
+    {}
+private:
+    int pi;
+};
+
+class child :public parent
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;child::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g_child()
+    {
+        cout &lt;&lt; &quot;child::g_child()&quot; &lt;&lt; endl;
+    }
+    virtual void h_child()
+    {
+        cout &lt;&lt; &quot;child::h_child()&quot; &lt;&lt; endl;
+    }
+    child() :ci(100)
+    {}
+private:
+    int ci;
+};
+
+class  grandchild :public child
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;grandchild::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g_child()
+    {
+        cout &lt;&lt; &quot;grandchild::g_child()&quot; &lt;&lt; endl;
+    }
+    virtual void h_grandchild()
+    {
+        cout &lt;&lt; &quot;grandchild::h_grandchild()&quot; &lt;&lt; endl;
+    }
+    grandchild() :gci(1000)
+    {}
+private:
+    int gci;
+};
+void testcase1()
+{
+    grandchild gc;
+    int **p = (int**)&amp;gc;
+    int i = 0;
+    typedef void(*fun)(void);
+    while (*(*p + i) != NULL)
+    {
+        ((fun)*((*p) + i++))();
+    }
+}
+</code></pre>
+<p><img src="../../image/3284a3f5-1.png" alt="" /></p>
+<h4>多重继承</h4>
+<p>多重继承的实现和单一继承的原理差不多，只不过在多重继承里，子类会覆盖所有父类对应的虚函数，并且子类新增的虚函数只添加到第一个被继承的父类的虚函数表尾部，这样主要是为了效率问题。</p>
+<p>代码和内存图如下：</p>
+<pre><code class="language-C++">//case 2:多重继承(带成员变量，虚函数，虚函数覆盖)
+class base1
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;base1::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g()
+    {
+        cout &lt;&lt; &quot;base1::g()&quot; &lt;&lt; endl;
+    }
+    virtual void h()
+    {
+        cout &lt;&lt; &quot;base1::h()&quot; &lt;&lt; endl;
+    }
+    base1() :ba1(10)
+    {}
+private:
+    int ba1;
+
+};
+
+class base2
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;base2::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g()
+    {
+        cout &lt;&lt; &quot;base2::g()&quot; &lt;&lt; endl;
+    }
+    virtual void h()
+    {
+        cout &lt;&lt; &quot;base2::h()&quot; &lt;&lt; endl;
+    }
+    base2() :ba2(100)
+    {}
+private:
+    int ba2;
+
+};
+class base3
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;base3::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g()
+    {
+        cout &lt;&lt; &quot;base3::g()&quot; &lt;&lt; endl;
+    }
+    virtual void h()
+    {
+        cout &lt;&lt; &quot;base3::h()&quot; &lt;&lt; endl;
+    }
+    base3() :ba3(1000)
+    {}
+private:
+    int ba3;
+
+};
+
+class derived : public base1, public base2, public base3
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;derived::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g_derived()
+    {
+        cout &lt;&lt; &quot;derived::g_derived()&quot; &lt;&lt; endl;
+    }
+    derived() :di(10000)
+    {}
+private:
+    int di;
+};
+
+void testcase2()
+{
+    derived d;
+    int** p = (int**)&amp;d;
+    int i = 0;
+    typedef void(*fun)(void);
+    while (*(*p + i) != NULL)
+    {
+        ((fun)*((*p) + i++))();
+    }
+    cout &lt;&lt; endl;
+    i = 0;
+    while (*(*p + 1 + i) != NULL)
+    {
+        ((fun)*((*p) + i++))();
+    }
+    cout &lt;&lt; endl;
+    i = 0;
+    while (*(*p + 2 + i) != NULL)
+    {
+        ((fun)*((*p) + i++))();
+    }
+}
+</code></pre>
+<p><img src="../../image/3284a3f5-2.png" alt="" /></p>
+<h4>菱形继承</h4>
+<p>有时候在逻辑上需要菱形继承。所谓菱形继承，也就是两个或多个派生自同一个父类的类又派生出一个共同的子类。如下：</p>
+<pre><code class="language-C++">class base{};
+class A:public base{};
+class B:public base{};
+class derived:public A,public B{}
+</code></pre>
+<p>但菱形继承有一个问题就是 base 类的部分在一个 derived 对象中会存在两份，这样不仅浪费空间，还会导致数据访问的二义性和不一致问题。二义性可以在前面加上对应类的作用域解决，数据不一致问题可以用下面将要讲的虚拟继承解决。</p>
+<p>代码和内存图如下：</p>
+<pre><code class="language-C++">//case 3:菱形继承(带成员变量，虚函数，虚函数覆盖)
+class base
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;base::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g()
+    {
+        cout &lt;&lt; &quot;base::g()&quot; &lt;&lt; endl;
+    }
+    virtual void h()
+    {
+        cout &lt;&lt; &quot;base::h()&quot; &lt;&lt; endl;
+    }
+    base() :bi(10)
+    {}
+private:
+    int bi;
+};
+
+class base1 :public base
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;base1::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g()
+    {
+        cout &lt;&lt; &quot;base1::g()&quot; &lt;&lt; endl;
+    }
+    virtual void h_base1()
+    {
+        cout &lt;&lt; &quot;base1::h_base1()&quot; &lt;&lt; endl;
+    }
+    base1() :b1i(100)
+    {}
+private:
+    int b1i;
+};
+class base2 :public base
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;base2::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g()
+    {
+        cout &lt;&lt; &quot;base2::g()&quot; &lt;&lt; endl;
+    }
+    virtual void h_base2()
+    {
+        cout &lt;&lt; &quot;base2::h_base2()&quot; &lt;&lt; endl;
+    }
+    base2() :b2i(1000)
+    {}
+private:
+    int b2i;
+};
+
+class derived :public base1, public base2
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;derived::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g()
+    {
+        cout &lt;&lt; &quot;derived::g()&quot; &lt;&lt; endl;
+    }
+    virtual void h_derived()
+    {
+        cout &lt;&lt; &quot;derived::h_derived()&quot; &lt;&lt; endl;
+    }
+    derived() :di(10000)
+    {}
+private:
+    int di;
+};
+
+void testcase3()
+{
+    derived d;
+    int **p = (int**)&amp;d;
+    int i = 0;
+    typedef void(*fun)(void);
+    while (*(*p + i) != NULL)
+    {
+        ((fun)*((*p) + i++))();
+    }
+    cout &lt;&lt; endl;
+    i = 0;
+    while (*(*p + 1 + i) != NULL)
+    {
+        ((fun)*((*p) + i++))();
+    }
+}
+</code></pre>
+<p><img src="../../image/3284a3f5-3.png" alt="" /></p>
+<h4>菱形虚拟继承</h4>
+<p>为了解决菱形继承中数据的不一致问题，可以使用虚拟继承来解决。也就是说虚拟继承是专为菱形继承而生的，在单一继承中使用虚拟继承不会有什么作用，反而会增加运行的开销，拖慢程序速度。这也就是我为什么没有列出单一虚拟继承的原因。</p>
+<p>以如下代码为例子：</p>
+<pre><code class="language-C++">class base{};
+class base1{}:public virtual base{};
+class base2{}:public virtual base{};
+class derived:public base1,public base2{};
+</code></pre>
+<p>在 derived 对象中，只存在一个 base 部分的实例，原因如下：</p>
+<p>base 部分由 derived 构造且 base1 和 base2 对象中各有一个指向刚刚构造出来的 base 对象的指针。因此可以保证 derived 对象中只存在一个 base 的实例。</p>
+<p>在虚继承中，中间层派生类的虚函数不会追加到父类的虚函数表后面，而是有自己单独的虚表指针。最底层派生类新增的虚函数会增加到第一个被继承的类的虚函数表的尾部（base 类在 base1 和 base2 的后面）。</p>
+<p>代码和内存图如下：</p>
+<pre><code class="language-C++">//case 4:菱形虚拟继承(带成员变量，虚函数，虚函数覆盖)
+class base
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;base::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g()
+    {
+        cout &lt;&lt; &quot;base::g()&quot; &lt;&lt; endl;
+    }
+    virtual void h()
+    {
+        cout &lt;&lt; &quot;base::h()&quot; &lt;&lt; endl;
+    }
+    base(int x) :bi(x)
+    {}
+private:
+    int bi;
+};
+
+class base1 :virtual public base
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;base1::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g()
+    {
+        cout &lt;&lt; &quot;base1::g()&quot; &lt;&lt; endl;
+    }
+    virtual void h_base1()
+    {
+        cout &lt;&lt; &quot;base1::h_base1()&quot; &lt;&lt; endl;
+    }
+    base1() :b1i(100),base(100)
+    {}
+private:
+    int b1i;
+};
+class base2 :virtual public base
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;base2::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g()
+    {
+        cout &lt;&lt; &quot;base2::g()&quot; &lt;&lt; endl;
+    }
+    virtual void h_base2()
+    {
+        cout &lt;&lt; &quot;base2::h_base2()&quot; &lt;&lt; endl;
+    }
+    base2() :b2i(1000),base(1000)
+    {}
+private:
+    int b2i;
+};
+
+class derived :public base1, public base2
+{
+public:
+    virtual void f()
+    {
+        cout &lt;&lt; &quot;derived::f()&quot; &lt;&lt; endl;
+    }
+    virtual void g()
+    {
+        cout &lt;&lt; &quot;derived::g()&quot; &lt;&lt; endl;
+    }
+    virtual void h_derived()
+    {
+        cout &lt;&lt; &quot;derived::h_derived()&quot; &lt;&lt; endl;
+    }
+    derived() :di(10000),base(10000)
+    {}
+private:
+    int di;
+};
+
+void testcase4()
+{
+    base b(1);
+    base1 b1;
+    base2 b2;
+    derived d;
+    int **p = (int**)&amp;d;
+    int i = 0;
+    typedef void(*fun)(void);
+    while (*(*p + i) != NULL)
+    {
+        ((fun)*((*p) + i++))();
+    }
+    cout &lt;&lt; endl;
+    i = 0;
+    while (*(*p + 1 + i) != NULL)
+    {
+        ((fun)*((*p) + i++))();
+    }
+}
+</code></pre>
+<p><img src="../../image/3284a3f5-4.png" alt="" /></p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

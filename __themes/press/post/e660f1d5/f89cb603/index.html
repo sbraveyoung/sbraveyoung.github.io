@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>红黑树 · sbraveyoung · 字里行间</title>
+<meta name="description" content="当我们在使用二叉搜索树时，如果树的高度较高，对其的操作并不比对链表操作要快。原因是二叉搜索树在插入顺序基本有序时会退化为一个排序链表，所以说是不平衡的。 对二叉搜索树的改进有 AVL 树和红黑树。先来看红黑树，它广泛应用在 STL 的 set 和 map，Java 库和 Linux 内核中。 红黑树是一颗平衡的二叉搜索…">
+<meta property="og:title" content="红黑树">
+<meta property="og:description" content="当我们在使用二叉搜索树时，如果树的高度较高，对其的操作并不比对链表操作要快。原因是二叉搜索树在插入顺序基本有序时会退化为一个排序链表，所以说是不平衡的。 对二叉搜索树的改进有 AVL 树和红黑树。先来看红黑树，它广泛应用在 STL 的 set 和 map，Java 库和 Linux 内核中。 红黑树是一颗平衡的二叉搜索…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/f89cb603">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Sunday, August 7, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · August 7, 2016</div>
+    <h1 class="press-article-title">
+      红黑树
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>当我们在使用二叉搜索树时，如果树的高度较高，对其的操作并不比对链表操作要快。原因是二叉搜索树在插入顺序基本有序时会退化为一个排序链表，所以说是不平衡的。 对二叉搜索树的改进有 AVL 树和红黑树。先来看红黑树，它广泛应用在 STL 的 set 和 map，Java 库和 Linux 内核中。 红黑树是一颗平衡的二叉搜索…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 4 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>红黑树</h2>
+<p>当我们在使用二叉搜索树时，如果树的高度较高，对其的操作并不比对链表操作要快。原因是二叉搜索树在插入顺序基本有序时会退化为一个排序链表，所以说是不平衡的。</p>
+<p>对二叉搜索树的改进有 AVL 树和红黑树。先来看红黑树，它广泛应用在 STL 的 set 和 map，Java 库和 Linux 内核中。</p>
+<p>红黑树是一颗平衡的二叉搜索树，它在每个节点上增加了一个存储位来表示节点的颜色，可以是 RED 或 BLANK。通过对任何一条从根节点到叶子节点的简单路径上各个节点的颜色进行约束，红黑树确保没有一条路径会比其他路径长出 2 倍，因而是近似平衡的。</p>
+<p>红黑树的约束如下：</p>
+<ul>
+<li>每个节点要么是红色的，要么是黑色的；</li>
+<li>根节点是黑色的；</li>
+<li>如果一个节点是红色的，那么它的两个子节点都是黑色的；</li>
+<li>对每个节点，从该节点到其所有后代叶子节点的简单路径上，均包含数目相同的黑色节点；</li>
+<li>每个叶子节点是黑色的(这里的叶子节点指的是 NIL 节点，即空节点)。</li>
+</ul>
+<p>红黑树的插入操作步骤如下：</p>
+<ul>
+<li>先按照搜索树的步骤将节点插入到相应位置，并置该节点颜色为红色。设该节点指针为 cur；</li>
+<li>如果破坏了以上某些条件，则对该树进行相应的调整，步骤如下：
+<ul>
+<li>情况1：若 cur 的父亲结点和叔叔节点都为红色，则进行红色提升；</li>
+<li>情况2：若父红叔黑或叔叔不存在，且 cur 为其父节点的右孩子，则令 cur = parent 并以父节点为根进行旋转；</li>
+<li>情况3：若父红叔黑或叔叔不存在，且 cur 为其父节点的左孩子，则将父节点变为黑色，祖父节点变为红色并以祖父节点为根进行旋转；</li>
+</ul>
+</li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-C">#pragma once
+
+#include&lt;iostream&gt;
+using namespace std;
+
+enum Color
+{
+    RED,
+    BLANK,
+};
+
+template&lt;typename K,typename V&gt;
+struct RBTreeNode{
+    K _key;
+    V _value;
+
+    RBTreeNode&lt;K,V&gt;* _left;
+    RBTreeNode&lt;K,V&gt;* _right;
+    RBTreeNode&lt;K,V&gt;* _parent;
+
+    Color _color;
+
+    RBTreeNode(const K&amp; key=K(),const V&amp; value=V())
+        :_key(key),_value(value)
+         ,_left(NULL),_right(NULL)
+         ,_parent(NULL)
+         ,_color(RED)
+    {}
+};
+
+template&lt;typename K,typename V&gt;
+class RBTree{
+    typedef RBTreeNode&lt;K,V&gt; Node;
+
+public:
+    RBTree()
+        :_root(nil)
+    {}
+
+    bool Insert(const K&amp; key,const V&amp; value)
+    {
+        Node* s=new Node(key,value);
+        Node* parent=nil;
+        Node* cur=_root;
+        while(cur!=nil)
+        {
+            parent=cur;
+            if(cur-&gt;_key&gt;cur-&gt;_key)
+                cur=cur-&gt;_left;
+            else
+                cur=cur-&gt;_right;
+        }
+        cur-&gt;_parent=parent;
+        if(parent==nil)
+            _root=s;
+        else if(s-&gt;_key&gt;parent-&gt;_key)
+            parent-&gt;_right=s;
+        else 
+            parent-&gt;_left=s;
+        s-&gt;_left=s-&gt;_right=nil;
+        //s-&gt;_color=RED;
+        RB_INSERT_FIX(s);
+    }
+
+    bool Remove(const K&amp; key);
+    Node* Find(const K&amp; key);
+    bool IsBalance();
+
+protected:
+    void RotateL(Node* root)
+    {
+        if(root==NULL)
+            return;
+        Node* parent=root;
+        Node* subR=parent-&gt;_right;
+        Node* subRL=subR-&gt;_left;
+        parent-&gt;_right=subRL;
+        if(subRL!=NULL)
+            subRL-&gt;_parent=parent;
+        Node* ppNode=parent-&gt;_parent;
+        subR-&gt;_left=parent;
+        parent-&gt;_parent=subR;
+        if(ppNode!=NULL)
+        {
+            if(ppNode-&gt;_left==parent)
+                ppNode-&gt;_left=subR;
+            else
+                ppNode-&gt;_right=subR;
+        }
+        else
+        {
+            _root=subR;
+        }
+        subR-&gt;_parent=ppNode;
+        parent-&gt;_bf = subR-&gt;_bf = 0;
+    }
+
+    void RotateR(Node* root)
+    {
+        if(root==NULL)
+            return;
+        Node* parent=root;
+        Node* subL=parent-&gt;_left;
+        Node* subLR=subL-&gt;_right;
+        parent-&gt;_left=subLR;
+        if(subLR!=NULL)
+            subLR-&gt;_parent=parent;
+        Node* ppNode=parent-&gt;_parent;
+        subL-&gt;_right=parent;
+        parent-&gt;_parent=subL;
+        if(ppNode!=NULL)
+        {
+            if(ppNode-&gt;_left==parent)
+                ppNode-&gt;_left=subL;
+            else
+                ppNode-&gt;_right=subL;
+        }
+        else
+        {
+            _root=subL;
+        }
+        subL-&gt;_parent=ppNode;
+        parent-&gt;_bf = subL-&gt;_bf = 0;
+    }
+
+    void RB_INSERT_FIX(Node* cur)
+    {
+        while(cur-&gt;_parent._color==RED)
+        {
+            Node* parent=cur-&gt;_parent;
+            Node* grandfather=parent-&gt;_parent;
+            Node* uncle;
+            if(parent=grandfather-&gt;_left)
+            {
+                uncle=grandfather-&gt;_right;
+                if(uncle-&gt;_color=RED)
+                {
+                    parent-&gt;_color=BLANK;
+                    uncle-&gt;_color=BLANK;
+                    grandfather-&gt;_color=RED;
+                    cur=grandfather;
+                }
+                else if(cur=parent-&gt;_right)
+                {
+                    cur=parent;
+                    rotateL(cur);
+                }
+                else
+                {
+                    parent-&gt;_color=BLANK;
+                    grandfather-&gt;_color=RED;
+                    rotateR(grandfather);
+                }
+            }
+            else
+            {
+                uncle=grandfather-&gt;_left;
+                if(uncle-&gt;_color=RED)
+                {
+                    parent-&gt;_color=BLANK;
+                    uncle-&gt;_color=BLANK;
+                    grandfather-&gt;_color=RED;
+                    cur=grandfather;
+                }
+                else if(cur=parent-&gt;_left)
+                {
+                    cur=parent;
+                    rotateR(cur);
+                }
+                else
+                {
+                    parent-&gt;_color=BLANK;
+                    grandfather-&gt;_color=RED;
+                    rotateL(grandfather);
+                }
+            }
+        }
+        _root-&gt;_color=BLANK;
+    }
+
+private:
+    Node* _root;
+    static Node* nil;
+};
+
+template&lt;typename K,typename V&gt;
+RBTreeNode&lt;K,V&gt;* RBTree&lt;K,V&gt;::nil=new RBTreeNode&lt;K,V&gt;();
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码在github上：<a href="https://github.com/SmartBrave/DataStruct/blob/master/RBTree/RBTree.h">点我前往</a></p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skill · Front-matter 字段速查 · sbraveyoung · 字里行间</title>
+<meta name="description" content="何时用**：忘了某个字段叫啥、或者想知道某个开关有什么效果时翻一下。 解决什么**：把 gobog 认识的 front-matter 字段按"必填 / 常用 / 高级"三档列全。 front-matter 用 YAML，写在 `---` ... `---` 之间。所有字段都可选——gobog 第一次扫到一篇没有 `id…">
+<meta property="og:title" content="Skill · Front-matter 字段速查">
+<meta property="og:description" content="何时用**：忘了某个字段叫啥、或者想知道某个开关有什么效果时翻一下。 解决什么**：把 gobog 认识的 front-matter 字段按"必填 / 常用 / 高级"三档列全。 front-matter 用 YAML，写在 `---` ... `---` 之间。所有字段都可选——gobog 第一次扫到一篇没有 `id…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/skills/front-matter-reference">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2026 · NO. §933</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · May 11, 2026
+      </div>
+      <h1 class="article-title">Skill · Front-matter 字段速查</h1>
+      <p class="article-lede">何时用**：忘了某个字段叫啥、或者想知道某个开关有什么效果时翻一下。 解决什么**：把 gobog 认识的 front-matter 字段按"必填 / 常用 / 高级"三档列全。 front-matter 用 YAML，写在 `---` ... `---` 之间。所有字段都可选——gobog 第一次扫到一篇没有 `id…</p>
+      <div class="article-meta">
+        <span>4 min read</span>
+        <span>·</span>
+        <span>933 words</span>
+        
+        <span>·</span><span class="ai">🤖 AI 辅助</span>
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>Skill · Front-matter 字段速查</h2>
+<blockquote>
+<p><strong>何时用</strong>：忘了某个字段叫啥、或者想知道某个开关有什么效果时翻一下。</p>
+<p><strong>解决什么</strong>：把 gobog 认识的 front-matter 字段按&quot;必填 / 常用 / 高级&quot;三档列全。</p>
+</blockquote>
+<p>front-matter 用 YAML，写在 <code>---</code> ... <code>---</code> 之间。所有字段都可选——gobog 第一次扫到一篇没有 <code>id</code> / <code>url</code> / <code>title</code> / <code>create_time</code> 的文章时会自动补齐并写回原文件。</p>
+<h3>一份典型完整的 front-matter</h3>
+<pre><code class="language-yaml">---
+title: 我的博客演进历程
+author: sbraveyoung
+create_time: 2026-05-09 12:00:00
+updated_time: 2026-05-09 14:30:00
+id: blog-evolve-2
+url: /post/blog-evolve-2
+description: 一段关于 markdown 博客发布链路的折腾笔记
+tags: [博客, gobog, github-actions]
+cover: hero.png
+ai: true
+order: 1
+draft: false
+hidden: false
+private: false
+pin: false
+---
+</code></pre>
+<h3>必填（gobog 没有也会自动填）</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型 / 例子</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td><code>我的博客演进历程</code></td>
+<td>文章标题，渲染在 <code>&lt;h2&gt;</code> 和 <code>&lt;title&gt;</code> 里。</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td><code>blog-evolve-2</code></td>
+<td>短稳定 id。无值时 = 文件 basename slug 化。</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td><code>/post/blog-evolve-2</code></td>
+<td><strong>永久 URL</strong>。一旦写过 gobog 不会改。post 用 <code>/post/&lt;id&gt;</code>，page 用 <code>/&lt;basename&gt;</code>。</td>
+</tr>
+<tr>
+<td><code>create_time</code></td>
+<td><code>2026-05-09 12:00:00</code></td>
+<td>首次创建时间。<strong>用作首页排序键</strong>。</td>
+</tr>
+</tbody>
+</table>
+<h3>常用</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>默认</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>author</code></td>
+<td>无</td>
+<td>作者名，渲染在 atom feed 和元信息里。</td>
+</tr>
+<tr>
+<td><code>updated_time</code></td>
+<td>无</td>
+<td>最后更新时间。Obsidian 插件保存时不会自动改它，需要的话手动写。</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>无</td>
+<td>用于 <code>&lt;meta name=&quot;description&quot;&gt;</code> 和列表页摘要。空 = 自动从正文摘 160 字。</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>无</td>
+<td>数组（<code>[a, b]</code>）或逗号分隔（<code>a, b</code>）都接受。<code>#</code> 前缀会被自动去掉。</td>
+</tr>
+<tr>
+<td><code>cover</code></td>
+<td>无</td>
+<td>顶部头图 + og:image。裸文件名 → <code>/image/&lt;name&gt;</code>；URL 直通。</td>
+</tr>
+<tr>
+<td><code>ai</code></td>
+<td>无</td>
+<td>AI 标识。详见 <a href="/__themes/tufte/post/skills/ai-attribution">skill · ai-attribution</a>。</td>
+</tr>
+</tbody>
+</table>
+<h3>排序 / 可见性开关</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>默认</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pin</code></td>
+<td><code>false</code></td>
+<td>真值时置顶。同分组内 pinned 永远在 date 排序之上。</td>
+</tr>
+<tr>
+<td><code>order</code></td>
+<td>无</td>
+<td>整数。<strong>配合数字前缀文件名 / 共同决定该 group 是否启用 series 升序排序</strong>。</td>
+</tr>
+<tr>
+<td><code>draft</code></td>
+<td><code>false</code></td>
+<td>真值时不进发布列表。除非 <code>[blog].include_drafts = true</code>。</td>
+</tr>
+<tr>
+<td><code>hidden</code></td>
+<td><code>false</code></td>
+<td>跟 draft 一样，但语义是&quot;暂时下线&quot;。</td>
+</tr>
+<tr>
+<td><code>private</code></td>
+<td><code>false</code></td>
+<td>列表里出现，正文要 HTTP Basic auth。静态导出直接跳过。</td>
+</tr>
+</tbody>
+</table>
+<h3>系列排序如何触发</h3>
+<p>满足以下条件，gobog 会把这个 group 当成&quot;系列&quot;（升序读）：</p>
+<ul>
+<li>group 的<strong>所有</strong>叶子 <code>.md</code> 都满足：
+<ul>
+<li>front-matter 里有 <code>order: &lt;数字&gt;</code> ，<strong>或者</strong></li>
+<li>文件名以数字开头（<code>00-foo.md</code>、<code>12_bar.md</code>）</li>
+</ul>
+</li>
+</ul>
+<p>只要有一个不满足，整个 group 退回 date-desc。这条规则的意图是&quot;宁可保守，也别把混合 group 偷偷重排&quot;。</p>
+<p>例：</p>
+<pre><code>post/AI入门到精通系列/
+  00-导读与学习路线.md          ← 数字前缀，触发
+  01-数学基础.md                ← 数字前缀，触发
+  02-编程能力.md                ← 数字前缀，触发
+  → 整个 group 升序：00 → 01 → 02
+</code></pre>
+<pre><code>post/数据结构系列/
+  Heap实现.md                   ← 没数字前缀
+  AVL树.md                      ← 没数字前缀
+  红黑树.md                     ← 没数字前缀
+  → 退回 date-desc，最近写的在最上
+</code></pre>
+<h3>兼容字段（保留但不要新写）</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>category</code></td>
+<td>早期分类字段。新文章用 <code>tags</code> 就够了。</td>
+</tr>
+<tr>
+<td><code>typora-root-url</code></td>
+<td>Typora 编辑器自动写入。无害，gobog 解析后不展示。</td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2026-05-11<br>
+          <em>read in</em> 4 min<br>
+          <em>words</em> 933<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/skills/front-matter-reference">https://sbrave.cn/post/skills/front-matter-reference</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

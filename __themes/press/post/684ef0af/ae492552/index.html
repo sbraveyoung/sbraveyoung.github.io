@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题31：连续子数组的最大和 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：输入一个整型数组，数组中有正数也有负数。数组中一个或连续多个整数组成一个子数组。求所有子数组的和的最大值，要为时间复杂度为O(n)。** 分析 可以这么想，假设这个数组的具有最大和的连续子数组区间为[x,y)，该数组的中间元素的下标是mid。mid和[x,y)的关系又一下三种： mid<x mid>=y x<=m…">
+<meta property="og:title" content="面试题31：连续子数组的最大和">
+<meta property="og:description" content="题目：输入一个整型数组，数组中有正数也有负数。数组中一个或连续多个整数组成一个子数组。求所有子数组的和的最大值，要为时间复杂度为O(n)。** 分析 可以这么想，假设这个数组的具有最大和的连续子数组区间为[x,y)，该数组的中间元素的下标是mid。mid和[x,y)的关系又一下三种： mid<x mid>=y x<=m…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/ae492552">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Friday, June 24, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · June 24, 2016</div>
+    <h1 class="press-article-title">
+      面试题31：连续子数组的最大和
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目：输入一个整型数组，数组中有正数也有负数。数组中一个或连续多个整数组成一个子数组。求所有子数组的和的最大值，要为时间复杂度为O(n)。** 分析 可以这么想，假设这个数组的具有最大和的连续子数组区间为[x,y)，该数组的中间元素的下标是mid。mid和[x,y)的关系又一下三种： mid<x mid>=y x<=m…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 2 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题31：连续子数组的最大和</h2>
+<p><strong>题目：输入一个整型数组，数组中有正数也有负数。数组中一个或连续多个整数组成一个子数组。求所有子数组的和的最大值，要为时间复杂度为O(n)。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>可以这么想，假设这个数组的具有最大和的连续子数组区间为[x,y)，该数组的中间元素的下标是mid。mid和[x,y)的关系又一下三种：</p>
+<ul>
+<li>mid&lt;x</li>
+<li>mid&gt;=y</li>
+<li>x&lt;=mid&lt;y</li>
+</ul>
+<p>所以，对于前两种情况，由于mid并不包含在最大子数组里，所以可使left=x或right=y，然后递归求解。</p>
+<p>对于第三种情况，可从mid分别向左和右遍历，找出边界下标。</p>
+<p>代码如下：</p>
+<pre><code>int _FindMaxCrossSumArray(vector&lt;int&gt; v,int left,int mid,int right)
+{
+    int LeftSum=-2147483647,RightSum=-2147483647;
+    int LeftPos,RightPos;
+    int Sum=0;
+    int i;
+    for(i=mid;i&gt;=left;--i)
+    {
+        Sum+=v[i];
+        if(Sum&gt;LeftSum)
+        {
+            LeftSum=Sum;
+            LeftPos=i;
+        }
+    }
+    Sum=0;
+    for(i=mid+1;i&lt;=right;++i)
+    {
+        Sum+=v[i];
+        if(Sum&gt;RightSum)
+        {
+            RightSum=Sum;
+            RightPos=i;
+        }
+    }
+    Sum=0;
+    for(i=LeftPos;i&lt;=RightPos;++i)
+    {
+        Sum+=v[i];
+    }
+    return Sum;
+}
+
+int _FindGreatestSumOfSubArray(vector&lt;int&gt; v,int left,int right)
+{
+    if(left&gt;=right)
+        return v[left];
+    int mid=left+(right-left)/2;
+    int LeftSum=_FindGreatestSumOfSubArray(v,left,mid);
+    int RightSum=_FindGreatestSumOfSubArray(v,mid+1,right);
+    int MidSum=_FindMaxCrossSumArray(v,left,mid,right);
+    if(LeftSum&gt;=RightSum &amp;amp;&amp;amp; LeftSum&gt;=MidSum)
+        return LeftSum;
+    else if(RightSum&gt;=LeftSum &amp;amp;&amp;amp; RightSum&gt;=MidSum)
+        return RightSum;
+    else
+        return MidSum;
+}
+
+int FindGreatestSumOfSubArray(vector&lt;int&gt; v)
+{
+    if(v.size()&lt;=0)
+        throw new exception();
+    return _FindGreatestSumOfSubArray(v,0,v.size()-1);
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/31_GreatestSumOfSubarrays/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

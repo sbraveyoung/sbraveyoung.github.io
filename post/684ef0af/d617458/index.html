@@ -1,59 +1,76 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题2：实现Singleton模式 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/d617458">
+<meta name="description" content="题目：设计一个类，我们只能生成该类的一个实例 分析 Singleton 即单例模式。既然题目要求只能生成类的一个实例，那我们必须把类的构造函数和拷贝构造函数设置为 private 以阻止类的调用者随意创建对象。 我们来看代码 //单例模式类包含的数据 typedef struct data{ int a; //othe…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题2：实现Singleton模式">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/d617458">
+<meta property="og:description" content="题目：设计一个类，我们只能生成该类的一个实例 分析 Singleton 即单例模式。既然题目要求只能生成类的一个实例，那我们必须把类的构造函数和拷贝构造函数设置为 private 以阻止类的调用者随意创建对象。 我们来看代码 //单例模式类包含的数据 typedef struct data{ int a; //othe…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>面试题2：实现Singleton模式</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>面试题2：实现Singleton模式</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-05-21 21:58:59</span>
+        <span>· 581 字</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题2：实现Singleton模式</h2>
 <h3>题目：设计一个类，我们只能生成该类的一个实例</h3>
-
 <hr />
-
 <h4>分析</h4>
-
 <p>Singleton 即单例模式。既然题目要求只能生成类的一个实例，那我们必须把类的构造函数和拷贝构造函数设置为 private 以阻止类的调用者随意创建对象。</p>
-
 <p>我们来看代码</p>
-
 <pre><code>//单例模式类包含的数据
 typedef struct data{
     int a;
@@ -90,9 +107,7 @@ private:
 };
 data* singleton::instance=NULL;
 </code></pre>
-
 <p>上面的代码可以在单线程环境下顺利运行。但在多线程环境中，如果两个线程同时执行 create 函数中的 if 语句，则以下这种情况是可能发生的：</p>
-
 <table>
 <thead>
 <tr>
@@ -119,11 +134,8 @@ data* singleton::instance=NULL;
 </tr>
 </tbody>
 </table>
-
 <p>由此可见，如果直接以上面的代码在多线程环境下跑时，会有内存泄露的问题。</p>
-
 <p>解决办法就是 Linux 下的 pthread 锁机制。</p>
-
 <pre><code class="language-C">//同步锁，防止了在多线程程序中可能出现的问题
 pthread_mutex_t lock=PTHREAD_MUTEX_INITIALIZER;
 
@@ -159,15 +171,10 @@ private:
 };
 data* singleton::instance=NULL;
 </code></pre>
-
 <p>恩，我们来看看还有没有可以优化的地方。</p>
-
 <p>因为加锁是一个很耗时的操作，频繁的加锁解锁会导致程序性能下降。上面的代码只有在第一次调用 create 函数时的加锁操作才是必要且有效的。所以我们在加锁前先判断一下，如果实例已经被创建，则跳过锁操作。</p>
-
 <p>create 函数代码：</p>
-
-<p><code>data* create(int x)
-{
+<pre><code class="language-data*">{
     if(instance==NULL)
     {
         pthread_mutex_lock(&amp;amp;lock);
@@ -181,24 +188,46 @@ data* singleton::instance=NULL;
     }
     return instance;
 }
-</code></p>
-
+</code></pre>
 <p>[完]</p>
-
 <p>如果你有任何想法或是可以改进的地方，欢迎和我交流！
 完整代码和测试用例在 github 上：<a href="https://github.com/SmartBrave/Sword-to-Offer/tree/master/02_Singleton">点我前往</a></p>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

@@ -1,59 +1,82 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>所有的HTTP返回码 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/afe65937/a452b2f2">
+<meta name="description" content="1xx 消息：请求已被接受，需要继续处理。HTTP/1.0 协议中没有定义任何 1xx 状态码。 100 Continue 客户端应当继续发送剩余请求。 101 Switching Protocols 服务器已经理解了客户端的请求，并将通过 Upgrade 消息头通知客户端采用不同的协议来完成这个请求。 102 Pro…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="所有的HTTP返回码">
+<meta property="og:url" content="https://sbrave.cn/post/afe65937/a452b2f2">
+<meta property="og:description" content="1xx 消息：请求已被接受，需要继续处理。HTTP/1.0 协议中没有定义任何 1xx 状态码。 100 Continue 客户端应当继续发送剩余请求。 101 Switching Protocols 服务器已经理解了客户端的请求，并将通过 Upgrade 消息头通知客户端采用不同的协议来完成这个请求。 102 Pro…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>所有的HTTP返回码</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>所有的HTTP返回码</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-10 15:13:57</span>
+        <span>· 1798 字</span>
+        <span>· 8 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>所有的HTTP返回码</h2>
 <ul>
-<li>1xx 消息：请求已被接受，需要继续处理。HTTP/1.0 协议中没有定义任何 1xx 状态码。
-
+<li>
+<p>1xx 消息：请求已被接受，需要继续处理。HTTP/1.0 协议中没有定义任何 1xx 状态码。</p>
 <ul>
 <li>100 Continue 客户端应当继续发送剩余请求。</li>
 <li>101 Switching Protocols 服务器已经理解了客户端的请求，并将通过 Upgrade 消息头通知客户端采用不同的协议来完成这个请求。</li>
 <li>102 Processing 处理将被继续执行。</li>
-</ul></li>
-<li>2xx 成功：请求已成功被服务器接收、理解并接受。
-
+</ul>
+</li>
+<li>
+<p>2xx 成功：请求已成功被服务器接收、理解并接受。</p>
 <ul>
 <li>200 OK 请求已成功，请求所希望的响应头或数据体将随此响应返回。</li>
 <li>201 Created 请求已被实现，且有一个新的资源已经依请求的需要而创建。</li>
@@ -63,10 +86,10 @@
 <li>205 Reset Content 服务器成功处理了请求，且没有返回任何内容。与 204 响应不同，此状态码的响应要求请求者重置文档视图。</li>
 <li>206 Partial Content 服务器已成功处理了部分 GET 请求。可以实现断点续传。</li>
 <li>207 Multi-Status 代表之后的消息体将是一个XML消息。</li>
-</ul></li>
-
-<li><p>3xx 重定向：</p>
-
+</ul>
+</li>
+<li>
+<p>3xx 重定向：</p>
 <ul>
 <li>300 Multiple Choices 被请求的资源有一系列可供选择的回馈信息，用户自行选择一个进行重定向。</li>
 <li>301 Moved Permanently 被请求的资源已永久移动到新的位置。</li>
@@ -76,10 +99,10 @@
 <li>305 Use Proxy 被请求的资源必须通过指定的代理才能访问。</li>
 <li>306 Switch Proxy 已弃用。</li>
 <li>307 Temporary Redirect 请求的资源现在临时从不同的 URI 响应请求。</li>
-</ul></li>
-
-<li><p>4xx 客户端错误：</p>
-
+</ul>
+</li>
+<li>
+<p>4xx 客户端错误：</p>
 <ul>
 <li>400 Bad Request 请求包含语法错误。</li>
 <li>401 Unauthorized 当前请求需要用户验证。</li>
@@ -108,10 +131,10 @@
 <li>426 Upgrade Required 客户端应当切换到 TLS/1.0。</li>
 <li>449 Retry With 由微软扩展，代表请求应当在执行完适当的操作后进行重试。</li>
 <li>451 Unavailable For Legal Reasons 由 IETF 核准，代表该访问因法律的要求而被拒绝。</li>
-</ul></li>
-
-<li><p>5xx:服务器错误</p>
-
+</ul>
+</li>
+<li>
+<p>5xx:服务器错误</p>
 <ul>
 <li>500 Internal Server Error 服务器遇到了一个未曾预料的状况，导致了它无法完成对请求的处理。</li>
 <li>501 Not Implemented 服务器不支持当前请求所需要的某个功能。</li>
@@ -123,22 +146,46 @@
 <li>507 Insufficient Storage 服务器无法存储完成请求所必须的内容。这个状况被认为是临时的。</li>
 <li>509 Bandwidth Limit Exceeded 服务器达到带宽限制。这不是一个官方的状态码，但是仍被广泛使用。</li>
 <li>510 Not Extended 获取资源所需要的策略并没有被满足。</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <p>【整理自<a href="https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81">维基百科</a>】</p>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

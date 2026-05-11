@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题4：替换空格 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：请实现一个函数，把字符串中的每个空格替换成“%20”。例如输入“We are happy.”，则输出“We%20are%20happy.”。 分析 最容易想到的办法就是从前向后扫描字符串，如果遇到空格，就把它后面的子串向后移动2个字节长度。 代码如下 string ReplaceBlank(string str)">
+<meta property="og:title" content="面试题4：替换空格">
+<meta property="og:description" content="题目：请实现一个函数，把字符串中的每个空格替换成“%20”。例如输入“We are happy.”，则输出“We%20are%20happy.”。 分析 最容易想到的办法就是从前向后扫描字符串，如果遇到空格，就把它后面的子串向后移动2个字节长度。 代码如下 string ReplaceBlank(string str)">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/a202f9ef">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Sunday, May 22, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · May 22, 2016</div>
+    <h1 class="press-article-title">
+      面试题4：替换空格
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目：请实现一个函数，把字符串中的每个空格替换成“%20”。例如输入“We are happy.”，则输出“We%20are%20happy.”。 分析 最容易想到的办法就是从前向后扫描字符串，如果遇到空格，就把它后面的子串向后移动2个字节长度。 代码如下 string ReplaceBlank(string str)</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 3 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题4：替换空格</h2>
+<h3>题目：请实现一个函数，把字符串中的每个空格替换成“%20”。例如输入“We are happy.”，则输出“We%20are%20happy.”。</h3>
+<h3>分析</h3>
+<p>最容易想到的办法就是从前向后扫描字符串，如果遇到空格，就把它后面的子串向后移动2个字节长度。</p>
+<h3>代码如下</h3>
+<pre><code>string ReplaceBlank(string str)
+{
+    int i,j;
+    int len=str.size();
+    for(i=0;i&amp;amp;lt;len;++i)
+    {
+        if(str[i]==&amp;amp;#039; &amp;amp;#039;)
+        {
+            len+=2;
+            str.resize(len);
+            for(j=len-3;j&amp;amp;gt;i;--j)
+            {
+                str[j+2]=str[j];
+            }
+            str[i++]=&amp;amp;#039;%&amp;amp;#039;;
+            str[i++]=&amp;amp;#039;2&amp;amp;#039;;
+            str[i]=&amp;amp;#039;0&amp;amp;#039;;
+        }
+    }
+}
+````
+
+以上代码还可以优化的地方有
+</code></pre>
+<ol>
+<li>
+<p>先扫描一遍字符串，统计空格个数，然后一次性分配足够的空间</p>
+</li>
+<li>
+<p>使用memmove代替一个一个地拷贝（具体效率取决于memmove的效率）</p>
+<p>不过，以上代码的时间复杂度为O(n^2)，在面试中写出这样的代码，妥妥的不通过！</p>
+<p>究其原因，时间主要浪费在了每个空格后面子串的拷贝上了。因为没遇到一个空格，我们都要讲它后面的子串拷贝一次。所以可从这个角度着手改进。</p>
+<p>我们可以从后往前拷贝，这样就可以减少拷贝的次数，每个字符至多移动一次就可以完成。思想是：</p>
+</li>
+<li>
+<p>先扫描一次字符串，统计出空格的个数。然后在尾部分配足够的空间。</p>
+</li>
+<li>
+<p>设两个指针i和j，i指向当前待拷贝的字符，j指向str[i]应拷贝到的位置。</p>
+</li>
+<li>
+<p>从后往前拷贝，如果str[i]不为空格，则str[j--]=str[i--]；</p>
+</li>
+<li>
+<p>否则使i减1，在j及其前面两个字符位置处填充&quot;%20&quot;。</p>
+<h3>代码如下</h3>
+<pre><code>string ReplaceBlank(string str)
+{
+    int len=str.size();
+    if(len==0)
+        return str;
+    int BlankCount=0;
+    int i=0;
+    while(i&amp;amp;lt;len)
+    {
+        if(str[i++]==&amp;amp;#039; &amp;amp;#039;)
+            BlankCount++;
+    }
+    str.resize(len+BlankCount&amp;amp;lt;&amp;amp;lt;1);
+    int j=str.size()-1;
+    i--;
+    while(i&amp;amp;gt;=0)
+    {
+        if(str[i]!=&amp;amp;#039; &amp;amp;#039;)
+        {
+            str[j--]=str[i--];
+        }
+        else
+        {
+            str[j--]=&amp;amp;#039;0&amp;amp;#039;;
+            str[j--]=&amp;amp;#039;2&amp;amp;#039;;
+            str[j--]=&amp;amp;#039;%&amp;amp;#039;;
+            i--;
+        }
+    }
+    return str;
+}
+</code></pre>
+</li>
+</ol>
+<p>这个算法的时间复杂度是O(n)，比上一个要好很多。</p>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：[点我前往]()</p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

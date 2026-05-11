@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题37：两个链表的第一个公共节点 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/4e7da307">
+<meta name="description" content="题目：输入两个链表，找出它们的第一个公共节点。链表节点定义如下：** 分析 解法有两种,分别介绍如下: 第一种，先分别在两个链表上遍历一次，统计出两个链表的长度，假设为length1和length2，且length1&gt;length2。然后在较长的链表上先走(length1-length2)步，然后两个同时走，如果遇到相…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题37：两个链表的第一个公共节点">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/4e7da307">
+<meta property="og:description" content="题目：输入两个链表，找出它们的第一个公共节点。链表节点定义如下：** 分析 解法有两种,分别介绍如下: 第一种，先分别在两个链表上遍历一次，统计出两个链表的长度，假设为length1和length2，且length1&gt;length2。然后在较长的链表上先走(length1-length2)步，然后两个同时走，如果遇到相…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-03 00:08:57</span>
+        <span>· 455 字</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题37：两个链表的第一个公共节点</h2>
+<p><strong>题目：输入两个链表，找出它们的第一个公共节点。链表节点定义如下：</strong></p>
+<pre><code class="language-struct">{
+    int value;
+    ListNode* next;
+}
+</code></pre>
+<hr />
+<h3>分析</h3>
+<p>解法有两种,分别介绍如下:</p>
+<p>第一种，先分别在两个链表上遍历一次，统计出两个链表的长度，假设为length1和length2，且length1&gt;length2。然后在较长的链表上先走(length1-length2)步，然后两个同时走，如果遇到相等的，就表示找到了。</p>
+<p>代码如下：</p>
+<pre><code class="language-ListNode*">{
+    if(head1==NULL || head2==NULL)
+        return NULL;
+    int count1=0,count2=0;
+    int i;
+    ListNode* cur1=head1,*cur2=head2;
+    while(cur1!=NULL)
+    {
+        count1++;
+        cur1=cur1-&gt;next;
+    }
+    while(cur2!=NULL)
+    {
+        count2++;
+        cur2=cur2-&gt;next;
+    }
+    cur1=head1,cur2=head2;
+    if(count1&gt;count2)
+    {
+        for(i=0;i&lt;count1-count2;++i)
+        {
+            cur1=cur1-&gt;next;
+        }
+    }
+    else if(count2&gt;count1)
+    {
+        for(i=0;i&lt;count2-count1;++i)
+        {
+            cur2=cur2-&gt;next;
+        }
+    }
+    while(cur1!=NULL &amp;amp;&amp;amp; cur2!=NULL)
+    {
+        if(cur1==cur2)
+        {
+            return cur1;
+        }
+        else
+        {
+            cur1=cur1-&gt;next;
+            cur2=cur2-&gt;next;
+        }
+    }
+}
+</code></pre>
+<p>以上这种方法会将两个链表都遍历两次，有没有办法治遍历一次呢？答案是有的。我们只需要将每个节点的指针都各自放进一个栈中，然后从栈中逐个弹出。若某一次弹出的两个节点不相等，则上一次弹出的就是他们的第一个公共节点。</p>
+<p>代码如下：</p>
+<pre><code class="language-ListNode*">{
+    if(head1==NULL || head2==NULL)
+        return NULL;
+    stack&lt;ListNode*&gt; s1,s2;
+    ListNode* cur1=head1,*cur2=head2;
+    while(cur1!=NULL || cur2!=NULL)
+    {
+        if(cur1!=NULL)
+        {
+            s1.push(cur1);
+            cur1=cur1-&gt;next;
+        }
+        if(cur2!=NULL)
+        {
+            s2.push(cur2);
+            cur2=cur2-&gt;next;
+        }
+    }
+    while(!s1.empty() || !s2.empty())
+    {
+        if(!s1.empty() &amp;amp;&amp;amp; !s2.empty())
+        {
+            if(s1.top()==s2.top())
+            {
+                s1.pop();
+                s2.pop();
+            }
+            else
+            {
+                return s1.top()-&gt;next;
+            }
+        }
+        else if(!s1.empty())
+        {
+            if(s1.top()-&gt;next==head2)
+            {
+                return head2;
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+        else if(!s2.empty())
+        {
+            if(s2.top()-&gt;next==head1)
+            {
+                return head1;
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+    }
+    if(s1.empty() &amp;amp;&amp;amp; s2.empty())
+        return head1;
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/37_FirstCommenNodesInLists/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

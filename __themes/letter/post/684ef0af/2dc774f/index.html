@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题23：从上往下打印二叉树 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：从上往下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。例如输入下图所示的二叉树，则依次打印出8,6,10,5,7,9,11.** ![](/images/OrderBinTree.png) 二叉树的节点定义如下： 分析 对二叉树而言，第n层最少有1个节点，最多有2<sup>n-1</sup>个节点。…">
+<meta property="og:title" content="面试题23：从上往下打印二叉树">
+<meta property="og:description" content="题目：从上往下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。例如输入下图所示的二叉树，则依次打印出8,6,10,5,7,9,11.** ![](/images/OrderBinTree.png) 二叉树的节点定义如下： 分析 对二叉树而言，第n层最少有1个节点，最多有2<sup>n-1</sup>个节点。…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/2dc774f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-06-11
+    </div>
+    <h1 class="article-title">面试题23：从上往下打印二叉树</h1>
+    <p class="article-lede">题目：从上往下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。例如输入下图所示的二叉树，则依次打印出8,6,10,5,7,9,11.** ![](/images/OrderBinTree.png) 二叉树的节点定义如下： 分析 对二叉树而言，第n层最少有1个节点，最多有2<sup>n-1</sup>个节点。…</p>
+    <div class="article-meta">
+      <span>2 min read</span>
+      <span>433 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>面试题23：从上往下打印二叉树</h2>
+<p><strong>题目：从上往下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。例如输入下图所示的二叉树，则依次打印出8,6,10,5,7,9,11.</strong></p>
+<p><img src="/__themes/letter/images/OrderBinTree.png" alt="" /></p>
+<p>二叉树的节点定义如下：</p>
+<pre><code>struct BinaryTreeNode
+{
+    int value;
+    BinaryTreeNode* left;
+    BinaryTreeNode* right;
+    BinaryTreeNode(int data=int()):value(data),left(NULL),right(NULL)
+    {}
+}
+</code></pre>
+<hr />
+<h3>分析</h3>
+<p>对二叉树而言，第n层最少有1个节点，最多有2<sup>n-1</sup>个节点。很明显，要以层序打印二叉树，就要在遍历时将当前层的节点保存起来，目的有两个，一是为了遍历以当前层节点为跟的子树，二是为了打印这些节点。</p>
+<p>二叉树的层序遍历在广义上可看成是一种“广度优先搜索”策略，由此我们联想的图算法中的广度优先搜索算法，采用“队列”这个数据结构。思想如下：</p>
+<p>先将根节点放入队列，而后在循环中将队列的队首的左右子树放进队列。要注意的是，题目要求按从左到右的顺序打印，所以需要先push右子树，再push左子树。如此循环直到队列为空即可。</p>
+<p>代码如下：</p>
+<pre><code>void PrintFromTopToBottom(BinaryTreeNode* root)
+{
+    if(root==NULL)
+        return;
+    queue&lt;binarytreenode&gt; q;
+    q.push(root);
+    while(!q.empty())
+    {
+        if(q.front()-&gt;left!=NULL)
+            q.push(q.front()-&gt;left);
+        if(q.front()-&gt;right!=NULL)
+            q.push(q.front()-&gt;right);
+        cout&lt;&lt;q.front-&gt;value&lt;&lt;&quot; &quot;;
+        q.pop();
+    }
+    cout&lt;&lt;endl;
+}
+&lt;/q.front-&gt;&lt;/binarytreenode&gt;```
+
+**以上**
+
+如果你有任何想法或是可以改进的地方，欢迎和我交流！
+
+完整代码及测试用例在github上：[点我前往](https://github.com/SmartBrave/Sword-to-Offer/blob/master/23_PrintBinaryTree/main.cpp)
+
+&lt;div&gt;[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 &quot;来自为知笔记(Wiz)&quot;)&lt;/div&gt;
+
+??自为知笔记(Wiz)&quot;)&lt;/div&gt;
+
+</code></pre>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

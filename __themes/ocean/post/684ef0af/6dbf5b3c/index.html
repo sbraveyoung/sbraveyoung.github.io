@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题41：和为S的两个数字VS和为s的连续正数序列 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/6dbf5b3c">
+<meta name="description" content="题目一：输入一个递增排序的数组和一个数字s,在数组中查找两个数，使得他们的和正好是s。如果有多对数字的和等于s,输出任意一对即可。** 分析 今天上课，老师说了，在面试的时候不要一上来就去找最优的解法，因为你一时半会儿可能会找不到最优的。而且就算立即做出来了，面试官会认为你以前刷过这道题。所以可以先将最简单的思路哪怕是…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题41：和为S的两个数字VS和为s的连续正数序列">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/6dbf5b3c">
+<meta property="og:description" content="题目一：输入一个递增排序的数组和一个数字s,在数组中查找两个数，使得他们的和正好是s。如果有多对数字的和等于s,输出任意一对即可。** 分析 今天上课，老师说了，在面试的时候不要一上来就去找最优的解法，因为你一时半会儿可能会找不到最优的。而且就算立即做出来了，面试官会认为你以前刷过这道题。所以可以先将最简单的思路哪怕是…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-08 21:35:16</span>
+        <span>· 783 字</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题41：和为S的两个数字VS和为s的连续正数序列</h2>
+<p><strong>题目一：输入一个递增排序的数组和一个数字s,在数组中查找两个数，使得他们的和正好是s。如果有多对数字的和等于s,输出任意一对即可。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>今天上课，老师说了，在面试的时候不要一上来就去找最优的解法，因为你一时半会儿可能会找不到最优的。而且就算立即做出来了，面试官会认为你以前刷过这道题。所以可以先将最简单的思路哪怕是暴力穷举也可以告诉面试官，然后在逐步去寻找最优解。</p>
+<p>这道题的最简单办法是遍历数组，每到一个数字，就去遍历它后面的数字，直到找到两个数的和等于s即可。</p>
+<p>然而这种方法的时间复杂度是O(n<sup>2</sup>)。并且没有用的排序数组这个特性。</p>
+<p>更好一点的办法是设立两个指针i和j分别指向数组的头和尾。我们比较他们两个数的和，如果大于给定的数字sum，则可推断出j及其后面的数字和i相加都会大于sum，所以我们把j减1，也就是向移动一个数字。同理，如果两个数字之和小于给定的数字，我们就把i加1.</p>
+<p>基于以上分析，写出代码如下：</p>
+<pre><code class="language-bool">{
+    int left=0,right=v.size()-1;
+    while(left&lt;=right)
+    {
+        if(v[left]+v[right]==sum)
+        {
+            n1=v[left];
+            n2=v[right];
+            return true;
+        }
+        else if(v[left]+v[right]&gt;sum)
+        {
+            right--;
+        }
+        else
+        {
+            left++;
+        }
+    }
+    return false;
+}
+</code></pre>
+<p><strong>题目二:输入一个正数s，打印出所有和为s的连续正数序列（至少含有两个数）。例如输入15，由于1+2+3+4+55=4+5+6=7+8=15，所以打印出3个连续序列1~5,4~6和7~8.</strong></p>
+<hr />
+<h3>分析</h3>
+<p>和上一道题一样，我们也可以设置两个指针i和j，只不过他两被初始化为1和2.然后在一个循环中我们判断i+…+j是否等于给定的数字sum？是，就打印从i到j的所有数字.否则，如果i+…+j&gt;sum，就令i加1；否则就令j+1(i+…+j&lt;sum)。循环直到i超过了sum/2就结束。</p>
+<p><img src="/__themes/ocean/images/test.png" alt="" /></p>
+<p>代码如下：</p>
+<pre><code class="language-void">{
+    int i;
+    for(i=left;i&lt;=right;++i)
+    {
+        cout&lt;&lt;i&lt;&lt;&quot; &quot;;
+    }
+    cout&lt;&lt;endl;
+}
+
+bool FindContinuousSequence(int sum)
+{
+    if(sum&lt;3)
+        return false;
+    int middle=(sum+1)/2;
+    int left=1,right=2;
+    int cursum=left+right;
+    while(left&lt;=middle)
+    {
+        if(cursum==sum)
+        {
+            print(left,right);
+            cursum-=left;
+            left++;
+        }
+        else if(cursum&lt;sum)
+        {
+            right++;
+            cursum+=right;
+        }
+        else
+        {
+            cursum-=left;
+            left++;
+        }
+    }
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/41_1_TowNumbersWithSum/main.cpp">点我前往(题目一)</a>  <a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/41_2_ContinuesSequenceWithSum/main.cpp">点我前往(题目二)</a></p>
+<div style="position: absolute; width: 0px; height: 0px; overflow: hidden; padding: 0px; border: 0px; margin: 0px;"><div id="MathJax_Font_Test" style="position: absolute; visibility: hidden; top: 0px; left: 0px; width: auto; padding: 0px; border: 0px; margin: 0px; white-space: nowrap; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; font-size: 40px; font-weight: normal; font-style: normal; font-family: MathJax_Math-italic, sans-serif;"></div></div>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+来自为知笔记(Wiz)")</div>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

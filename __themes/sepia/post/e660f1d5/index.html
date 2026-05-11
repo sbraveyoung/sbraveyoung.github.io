@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>数据结构系列 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-group">
+  <nav class="crumbs"><a href="/__themes/sepia/">Home</a><span>›</span><span>数据结构系列</span></nav>
+  <header class="group-head">
+    <h1>数据结构系列</h1>
+    <p class="group-count">11 篇</p>
+  </header>
+
+  <section class="post-list">
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/e660f1d5/9439fc83">B树</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">B 树是为磁盘或其他直接存取的辅助存取设备而设计的一种多叉平衡搜索树，类似于红黑树，但 B 树在降低磁盘 I/O 操作方面要更好一些。许多数据库系统使用 B 树或 B 树的变种来存储信息。 我们知道，磁盘 I/O 是很慢的，因为要涉及到磁头寻道、定址和数据读取时间。寻道是一种机械运动，速度自然慢；定址的平均时间是磁盘旋…</p>
+      <div class="entry-meta">
+        <span>2016-08-08 11:32:08</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/e660f1d5/f89cb603">红黑树</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">当我们在使用二叉搜索树时，如果树的高度较高，对其的操作并不比对链表操作要快。原因是二叉搜索树在插入顺序基本有序时会退化为一个排序链表，所以说是不平衡的。 对二叉搜索树的改进有 AVL 树和红黑树。先来看红黑树，它广泛应用在 STL 的 set 和 map，Java 库和 Linux 内核中。 红黑树是一颗平衡的二叉搜索…</p>
+      <div class="entry-meta">
+        <span>2016-08-07 11:29:09</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/e660f1d5/edbc2f2d">一个简单的AVL树的实现</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">上一篇文章实现了一个最简单的二叉搜索树，里面有两个成员函数：插入和中序遍历。我觉得，插入应该算是 BSTree 中最核心的一个函数了。 二叉搜索树虽然是一颗排序树，但当数据的插入顺序基本逆序时，BSTree 就退化为一个很近似链表的结构。而链表中查找的时间复杂度为 O(n)，显然这失去了二叉搜索树 O(lg N) 的优…</p>
+      <div class="entry-meta">
+        <span>2016-07-29 15:28:52</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/e660f1d5/8118c33f">一个简单的二叉搜索树的实现</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">上一篇文章简单实现了一个普通的二叉树，参见[这里](/post/e660f1d5/30a3fd3d)。 二叉搜索树是二叉树的一种变体，它相比普通二叉树的特性就是里面的数据都是有序的，中序遍历它就可以得到一个升序数组。 BSTreet实现代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在…</p>
+      <div class="entry-meta">
+        <span>2016-07-28 16:36:19</span>
+        <span>· 1 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/e660f1d5/30a3fd3d">一个简单的二叉树的实现</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">众所周知，二叉树是一种很重要的数据结构，基于二叉树的哈夫曼树可用于文件压缩，BSTreet、AVLTree 可用于排序，RBTree 被广泛用在 STL 中的 map、set 等容器上和 Java 中的 TreeSet 和 TreeMap 上。 二叉树的节点结构： 应用于二叉树的方法主要有：前中后序遍历(递归/非递归)…</p>
+      <div class="entry-meta">
+        <span>2016-07-28 16:09:24</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/e660f1d5/844d020b">一个简单的哈希表实现</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">哈希算法可以说是效率比较高的一种算法了，基本上时间复杂度为 O(1)。但哈希有个坑爹的地方就是碰撞问题。当发生冲突时，有两种解决办法： 线性探测 哈希桶法 具体算法不再解释，以下代码使用 STL 中 vector 和 list 实现了一个基于哈希桶的哈希表。 代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流…</p>
+      <div class="entry-meta">
+        <span>2016-07-27 22:55:20</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/e660f1d5/cfbbceb1">一个简单的Deque实现</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">一个双向队列,底层使用 list 实现，因为 list 在 push\_back，push\_front，pop\_back，pop\_front 这些函数中效率较高。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/Sma…</p>
+      <div class="entry-meta">
+        <span>2016-07-26 13:25:44</span>
+        <span>· 1 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/e660f1d5/40ad7b78">一个简单的Stack实现</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">stack 的特性不用多说了吧，先进后出。底层可以用 vector 或 list 实现。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Stack) )</p>
+      <div class="entry-meta">
+        <span>2016-07-26 13:21:49</span>
+        <span>· 1 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/e660f1d5/d548bd19">一个简单的Heap实现</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">以下代码实现了一个堆，可以传入仿函数来决定生成最大堆或最小堆。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Heap) )</p>
+      <div class="entry-meta">
+        <span>2016-07-23 13:37:53</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/e660f1d5/3896b050">一个简单的List实现</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">list 和 vector 是 STL 库中两个最基本的容器，以下代码模拟实现一个简单的 list： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Lis…</p>
+      <div class="entry-meta">
+        <span>2016-07-21 14:39:49</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/e660f1d5/61d9b4f">一个简单的Vector实现</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">众所周知，STL 库以高效而闻名。而且使用它可以很方便的实现我们的主要逻辑，不需要关心各种底层的实现细节。本文模拟实现了一个简单的 vector 容器。关于 vector 的介绍请移步：[浅谈STL](/post/cf4cc8e2/e66fb74) 代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代…</p>
+      <div class="entry-meta">
+        <span>2016-07-20 11:15:45</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </article>
+    
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

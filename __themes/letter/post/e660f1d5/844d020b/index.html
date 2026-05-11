@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一个简单的哈希表实现 · sbraveyoung · 字里行间</title>
+<meta name="description" content="哈希算法可以说是效率比较高的一种算法了，基本上时间复杂度为 O(1)。但哈希有个坑爹的地方就是碰撞问题。当发生冲突时，有两种解决办法： 线性探测 哈希桶法 具体算法不再解释，以下代码使用 STL 中 vector 和 list 实现了一个基于哈希桶的哈希表。 代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流…">
+<meta property="og:title" content="一个简单的哈希表实现">
+<meta property="og:description" content="哈希算法可以说是效率比较高的一种算法了，基本上时间复杂度为 O(1)。但哈希有个坑爹的地方就是碰撞问题。当发生冲突时，有两种解决办法： 线性探测 哈希桶法 具体算法不再解释，以下代码使用 STL 中 vector 和 list 实现了一个基于哈希桶的哈希表。 代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/844d020b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-07-27
+    </div>
+    <h1 class="article-title">一个简单的哈希表实现</h1>
+    <p class="article-lede">哈希算法可以说是效率比较高的一种算法了，基本上时间复杂度为 O(1)。但哈希有个坑爹的地方就是碰撞问题。当发生冲突时，有两种解决办法： 线性探测 哈希桶法 具体算法不再解释，以下代码使用 STL 中 vector 和 list 实现了一个基于哈希桶的哈希表。 代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流…</p>
+    <div class="article-meta">
+      <span>2 min read</span>
+      <span>339 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>一个简单的哈希表实现</h2>
+<p>哈希算法可以说是效率比较高的一种算法了，基本上时间复杂度为 O(1)。但哈希有个坑爹的地方就是碰撞问题。当发生冲突时，有两种解决办法：</p>
+<ul>
+<li>线性探测</li>
+<li>哈希桶法</li>
+</ul>
+<p>具体算法不再解释，以下代码使用 STL 中 vector 和 list 实现了一个基于哈希桶的哈希表。</p>
+<p>代码如下：</p>
+<pre><code class="language-C++">#pragma once
+
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;list&gt;
+using namespace std;
+
+//template&lt;typename key_type,typename value_type&gt;
+//struct Pair&lt;key_type,value_type&gt;
+//{
+//    key_type _first;
+//    value_type _second;
+//};
+
+template&lt;typename key_type,typename value_type&gt;
+bool operator==(const pair&lt;key_type,value_type&gt;&amp; p1,const pair&lt;key_type,value_type&gt;&amp; p2)
+{
+    if(p1.first==p2.first)
+        return true;
+    return false;
+}
+
+template&lt;typename key_type&gt;
+struct HashFunc{
+    size_t operator()(const key_type* key)
+    {
+        return BKDRHash(key);
+    }
+
+    size_t BKDRHash(const key_type* str)
+    {
+        register size_t hash=0;
+        while(size_t ch=(size_t)*str++)
+        {
+            hash=hash*131+ch;
+        }
+        return hash;
+    }
+};
+
+template&lt;typename key_type,typename value_type,typename Hash=HashFunc&lt;key_type&gt;&gt;
+class HashTable{
+public:
+    HashTable()
+        :_size(0)
+    {
+        HashBase.resize(_GetNextSize());
+    }
+
+    bool Insert(const key_type&amp; key,const value_type&amp; value)
+    {
+        if(Find(key))
+            return false;
+        size_t index=_Hash(key);
+        HashBase[index].insert(pair&lt;key_type,value_type&gt;(key,value));
+        return true;
+    }
+
+    bool Find(const key_type&amp; key)
+    {
+        size_t index=_Hash(key);
+        if(find(HashBase[index].begin(),HashBase[index].end(),key)!=HashBase[index].end())
+            return false;//the key has existed!
+        return true;
+    }
+
+protected:
+    size_t _Hash(const key_type&amp; key)
+    {
+        Hash hs;
+        return hs(key)%_size;
+    }
+
+    size_t _GetNextSize()
+    {
+        enum {__stl_num_primes=28};
+        static const size_t __stl_prime_list[__stl_num_primes] =
+        {
+            53ul,         97ul,         193ul,       389ul,       769ul,
+            1543ul,       3079ul,       6151ul,      12289ul,     24593ul,
+            49157ul,      98317ul,      196613ul,    393241ul,    786433ul,
+            1572869ul,    3145739ul,    6291469ul,   12582917ul,  25165843ul,
+            50331653ul,   100663319ul,  201326611ul, 402653189ul, 805306457ul, 
+            1610612741ul, 3221225473ul, 4294967291ul
+        };
+        size_t size=HashBase.size();
+        int i;
+        for(i=0;i&lt;__stl_num_primes;++i)
+        {
+            if(__stl_prime_list[i]&gt;size)
+                return __stl_prime_list[i];
+        }
+        return __stl_prime_list[__stl_num_primes-1];
+
+    }
+
+private:
+    vector&lt;list&lt;pair&lt;key_type,value_type&gt; &gt; &gt; HashBase;
+    size_t _size;
+};
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/HashTable">点我前往</a></p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

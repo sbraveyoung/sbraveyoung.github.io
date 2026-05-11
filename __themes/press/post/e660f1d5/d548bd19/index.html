@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一个简单的Heap实现 · sbraveyoung · 字里行间</title>
+<meta name="description" content="以下代码实现了一个堆，可以传入仿函数来决定生成最大堆或最小堆。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Heap) )">
+<meta property="og:title" content="一个简单的Heap实现">
+<meta property="og:description" content="以下代码实现了一个堆，可以传入仿函数来决定生成最大堆或最小堆。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Heap) )">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/d548bd19">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Saturday, July 23, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · July 23, 2016</div>
+    <h1 class="press-article-title">
+      一个简单的Heap实现
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>以下代码实现了一个堆，可以传入仿函数来决定生成最大堆或最小堆。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Heap) )</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 2 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>一个简单的Heap实现</h2>
+<p>以下代码实现了一个堆，可以传入仿函数来决定生成最大堆或最小堆。</p>
+<pre><code class="language-C++">#ifndef _HEAP_
+#define _HEAP_
+
+#include&quot;../Vector/Vector.h&quot;
+#include&lt;string&gt;
+using namespace std;
+
+template&lt;typename T&gt;
+class Less{
+public:
+    bool operator()(const T&amp; t1,const T&amp; t2)
+    {
+        return t1&lt;t2;
+    }
+};
+
+template&lt;typename T&gt;
+class Greater{
+public:
+    bool operator()(const T&amp; t1,const T&amp; t2)
+    {
+        return t1&gt;t2;
+    }
+};
+
+template&lt;typename T,typename Compair=Less&lt;T&gt;&gt;
+class heap{
+public:
+    heap():_vector()
+    {}
+
+    heap(const MyVector&lt;T&gt;&amp; v):_vector(v)
+    {
+        make_heap();
+    }
+
+    ~heap()
+    {}
+
+    heap(const heap&amp; h)
+    {
+        _vector=h._vector;
+    }
+
+    heap&amp; operator=(const heap&amp; h)
+    {
+        _vector=h._vector;
+    }
+
+    const T&amp; top()
+    {
+        if(empty())
+            throw new string(&quot;heap is null!&quot;);
+        return _vector[0];
+    }
+
+    void make_heap()
+    {
+        int i;
+        int n=_vector.size();
+        for(i=n/2;i&gt;=0;--i)
+        {
+            _JustDown(i,n);
+        }
+    }
+
+    void push_heap(const T&amp; t)
+    {
+        Compair cp;
+        _vector.push_back(t);
+        int i=_vector.size()-1;
+        for(;i&gt;=0;)
+        {
+            if(cp(_vector[i],_vector[i/2]))
+            {
+                swap(_vector[i],_vector[i/2]);
+                i=i/2;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    bool empty()
+    {
+        return _vector.empty();
+    }
+
+    size_t size()
+    {
+        return _vector.size();
+    }
+
+    T pop_heap()
+    {
+        if(empty())
+            throw new string(&quot;heap is null!&quot;);
+        swap(_vector[0],_vector[_vector.size()-1]);
+        T tmp=_vector[_vector.size()-1];
+        _vector.pop_back();
+        _JustDown(0,_vector.size());
+        return tmp;
+    }
+
+    void sort_heap()
+    {
+        if(empty())
+            throw new string(&quot;heap is null!&quot;);
+        int i=_vector.size()-1;
+        for(;i&gt;0;)
+        {
+            swap(_vector[0],_vector[i]);
+            _JustDown(0,i);
+            i--;
+        }
+    }
+
+    void Print()
+    {
+        int i;
+        for(i=0;i&lt;_vector.size();++i)
+        {
+            cout&lt;&lt;_vector[i]&lt;&lt;&quot; &quot;;
+        }
+        cout&lt;&lt;endl;
+    }
+
+private:
+    void _JustDown(int s,int n)
+    {
+        Compair cp;
+        if(n&lt;=1)
+            return;
+        if(s&gt;=n)
+            return;
+        int i;
+        for(i=s;i&lt;n;)
+        {
+            if(i*2+2&lt;n)
+            {
+                int select=cp(_vector[i*2+1],_vector[i*2+2])?i*2+1:i*2+2;
+                select=cp(_vector[select],_vector[i])?select:i;
+                if(i!=select)
+                {
+                    swap(_vector[i],_vector[select]);
+                    i=select;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else if(i*2+1&lt;n)
+            {
+                if(cp(_vector[i*2+1],_vector[i]))
+                    swap(_vector[i],_vector[i*2+1]);
+                i=i*2+1;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+private:
+    MyVector&lt;T&gt; _vector;
+};
+#endif
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/Heap">点我前往</a>
+)</p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

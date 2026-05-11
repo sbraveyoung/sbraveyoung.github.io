@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 入门到精通 04 · 深度学习基础 · sbraveyoung · 字里行间</title>
+<meta name="description" content="深度学习 = 用神经网络做 ML，外加一套独特的训练 trick。 你看到的所有 SOTA（GPT、Sora、AlphaFold）都建立在本章的基础上。 一、神经网络的"黑盒"打开 神经元** = 线性变换 + 非线性激活：`y = σ(Wx + b)`。 多层感知机 (MLP)** = 多个神经元堆叠 → 能逼近任何…">
+<meta property="og:title" content="AI 入门到精通 04 · 深度学习基础">
+<meta property="og:description" content="深度学习 = 用神经网络做 ML，外加一套独特的训练 trick。 你看到的所有 SOTA（GPT、Sora、AlphaFold）都建立在本章的基础上。 一、神经网络的"黑盒"打开 神经元** = 线性变换 + 非线性激活：`y = σ(Wx + b)`。 多层感知机 (MLP)** = 多个神经元堆叠 → 能逼近任何…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/31477598/b9b55924">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2026-04-26
+    </div>
+    <h1 class="article-title">AI 入门到精通 04 · 深度学习基础</h1>
+    <p class="article-lede">深度学习 = 用神经网络做 ML，外加一套独特的训练 trick。 你看到的所有 SOTA（GPT、Sora、AlphaFold）都建立在本章的基础上。 一、神经网络的"黑盒"打开 神经元** = 线性变换 + 非线性激活：`y = σ(Wx + b)`。 多层感知机 (MLP)** = 多个神经元堆叠 → 能逼近任何…</p>
+    <div class="article-meta">
+      <span>6 min read</span>
+      <span>1481 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>AI 入门到精通 04 · 深度学习基础</h2>
+<blockquote>
+<p>深度学习 = 用神经网络做 ML，外加一套独特的训练 trick。
+你看到的所有 SOTA（GPT、Sora、AlphaFold）都建立在本章的基础上。</p>
+</blockquote>
+<h2>一、神经网络的&quot;黑盒&quot;打开</h2>
+<ul>
+<li><strong>神经元</strong> = 线性变换 + 非线性激活：<code>y = σ(Wx + b)</code>。</li>
+<li><strong>多层感知机 (MLP)</strong> = 多个神经元堆叠 → 能逼近任何函数（万能近似定理）。</li>
+<li><strong>训练</strong> = 用梯度下降最小化 loss → 反向传播 (Backprop) 是链式法则的高效实现。</li>
+<li><strong>核心 trick</strong>：随机初始化、激活函数选择、批归一化、Dropout、残差连接。</li>
+</ul>
+<h2>二、知识地图</h2>
+<h3>2.1 基础组件</h3>
+<ul>
+<li><strong>激活函数</strong>：sigmoid / tanh / ReLU / GELU / SiLU / Swish；为什么 ReLU 取代 sigmoid。</li>
+<li><strong>损失函数</strong>：MSE / MAE（回归）；交叉熵 / Focal Loss / Label Smoothing（分类）；CTC / Triplet（特殊任务）。</li>
+<li><strong>初始化</strong>：Xavier / He；为什么不能全零初始化。</li>
+<li><strong>正则化</strong>：L1 / L2 weight decay、Dropout、数据增强、Mixup / CutMix、Label Smoothing。</li>
+<li><strong>归一化</strong>：BatchNorm / LayerNorm / GroupNorm / RMSNorm；不同任务用不同的。</li>
+<li><strong>优化器</strong>：SGD+Momentum / Adam / AdamW / Lion / Adafactor；学习率 warmup + cosine decay。</li>
+<li><strong>梯度问题</strong>：梯度消失 / 爆炸；残差连接 (Residual)、梯度裁剪、归一化的作用。</li>
+</ul>
+<h3>2.2 经典架构</h3>
+<table>
+<thead>
+<tr>
+<th>架构</th>
+<th>适用</th>
+<th>必看代表作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MLP</strong></td>
+<td>表格 / 简单分类</td>
+<td>LeNet 之前的所有</td>
+</tr>
+<tr>
+<td><strong>CNN</strong></td>
+<td>图像 / 局部模式</td>
+<td>LeNet → AlexNet → VGG → ResNet → EfficientNet → ConvNeXt</td>
+</tr>
+<tr>
+<td><strong>RNN / LSTM / GRU</strong></td>
+<td>序列（已被 Transformer 替代但要懂）</td>
+<td>Seq2Seq、Attention 早期</td>
+</tr>
+<tr>
+<td><strong>Transformer</strong></td>
+<td>几乎所有现代 SOTA</td>
+<td>Attention is All You Need (2017)</td>
+</tr>
+<tr>
+<td><strong>GNN</strong></td>
+<td>图数据</td>
+<td>GCN / GAT / GraphSAGE</td>
+</tr>
+<tr>
+<td><strong>Autoencoder / VAE</strong></td>
+<td>表征学习 / 生成</td>
+<td>VAE 原论文</td>
+</tr>
+<tr>
+<td><strong>GAN</strong></td>
+<td>生成（已被 Diffusion 部分替代）</td>
+<td>DCGAN / StyleGAN</td>
+</tr>
+<tr>
+<td><strong>Diffusion</strong></td>
+<td>生成（图像 / 视频 / 音频 SOTA）</td>
+<td>DDPM (2020) → Stable Diffusion</td>
+</tr>
+</tbody>
+</table>
+<h3>2.3 Transformer 重点剖析（接 chap 05）</h3>
+<p><strong>这是当前 AI 最重要的一篇论文，必须吃透</strong>：</p>
+<ul>
+<li>Self-Attention：QKV 推导、scaled dot-product、为什么除以 √d。</li>
+<li>Multi-Head Attention：多头的几何意义。</li>
+<li>Position Encoding：sinusoidal、Learned、RoPE、ALiBi。</li>
+<li>Feed-Forward Network、LayerNorm 位置（pre-LN vs post-LN）。</li>
+<li>Encoder-Decoder vs Decoder-Only vs Encoder-Only。</li>
+<li>复杂度：O(n²d) 与现代解决方案（Flash Attention、Linear Attention、Sparse Attention）。</li>
+</ul>
+<h3>2.4 训练技巧</h3>
+<ul>
+<li>学习率搜索：LR Range Test。</li>
+<li>混合精度训练：fp16 / bf16；GradScaler。</li>
+<li>梯度累积：小显存模拟大 batch。</li>
+<li>Checkpoint / Resume；EMA (Exponential Moving Average) 权重。</li>
+<li>分布式训练：DP → DDP → ZeRO / FSDP / Pipeline / Tensor Parallel（详见 chap 06）。</li>
+<li>调试：先在小数据上过拟合（<strong>任何模型都该能在 16 个样本上过拟合，过不了拟合就是 bug</strong>）。</li>
+</ul>
+<h2>三、参考资料</h2>
+<h3>课程</h3>
+<ul>
+<li><strong>《动手学深度学习》(d2l.ai)</strong> —— 中英文免费，所有概念配代码。<strong>首选</strong>。</li>
+<li><strong>Andrej Karpathy 《Neural Networks: Zero to Hero》</strong> —— 从零实现 backprop / MLP / Transformer / GPT。<strong>必看</strong>。</li>
+<li><strong>Stanford CS231n</strong> Fei-Fei Li / Andrej Karpathy / Justin Johnson —— 计算机视觉经典。</li>
+<li><strong>Stanford CS224n</strong> Christopher Manning —— NLP 经典，从词向量讲到 Transformer。</li>
+<li><strong>MIT 6.S191</strong> Introduction to Deep Learning —— 短小精悍。</li>
+<li><strong>DeepMind x UCL Reinforcement Learning Lecture Series</strong> —— RL 经典。</li>
+<li><strong>李宏毅《机器学习》</strong> —— 中文版深度学习课，幽默易懂。</li>
+</ul>
+<h3>教材</h3>
+<ul>
+<li><strong>《Deep Learning》(花书)</strong> Ian Goodfellow / Yoshua Bengio —— 圣经，第二部分必读。</li>
+<li><strong>《Dive into Deep Learning》</strong> d2l 配套书。</li>
+<li><strong>《Understanding Deep Learning》</strong> Simon Prince —— 现代写法，免费 PDF，强烈推荐。</li>
+</ul>
+<h3>论文阅读路线（必读）</h3>
+<p>按时间顺序，读完你就理解了「为什么 Transformer 能赢」：</p>
+<ol>
+<li><strong>AlexNet (2012)</strong> — 深度学习起飞。</li>
+<li><strong>VGG (2014)</strong> / <strong>GoogLeNet (2014)</strong> — 深 / 宽的探索。</li>
+<li><strong>ResNet (2015)</strong> — 残差连接，<strong>当代 NN 的基石</strong>。</li>
+<li><strong>Seq2Seq (2014)</strong> + <strong>Attention (Bahdanau, 2014)</strong>。</li>
+<li><strong>Attention is All You Need (2017)</strong> — Transformer。</li>
+<li><strong>BERT (2018)</strong> — 预训练范式起飞。</li>
+<li><strong>GPT-2 (2019)</strong> / <strong>GPT-3 (2020)</strong> — Scaling 起飞（chap 05）。</li>
+<li><strong>ViT (2020)</strong> — Transformer 进图像。</li>
+<li><strong>CLIP (2021)</strong> — 多模态对比学习（chap 09）。</li>
+<li><strong>DDPM (2020)</strong> / <strong>Stable Diffusion (2022)</strong> — 扩散生成（chap 09）。</li>
+</ol>
+<h3>代码仓库</h3>
+<ul>
+<li><a href="https://github.com/pytorch/examples">PyTorch 官方 examples</a>。</li>
+<li><a href="https://github.com/labmlai/annotated_deep_learning_paper_implementations">labmlai/annotated_deep_learning_paper_implementations</a> —— 论文逐行注释代码。</li>
+<li><a href="https://github.com/karpathy/nanoGPT">karpathy/nanoGPT</a> —— 300 行 GPT 训练代码。</li>
+<li><a href="https://github.com/karpathy/llm.c">karpathy/llm.c</a> —— C 语言实现 GPT 训练。</li>
+</ul>
+<h2>四、动手实践</h2>
+<ol>
+<li><strong>复现 Karpathy Zero to Hero 全部 6 集</strong>：从 micrograd 到 GPT。<strong>这一步比读 10 本书都管用</strong>。</li>
+<li><strong>CIFAR-10 全家桶</strong>：用 ResNet-18 在 CIFAR-10 上训到 95%+。再用各种 trick（cosine LR / EMA / AutoAugment / Mixup）继续往上拉。</li>
+<li><strong>从零实现一个 Transformer</strong>：在小数据集（莎士比亚 / 中文古诗）上训练一个 character-level 语言模型。</li>
+<li><strong>复现一个经典论文</strong>：自选 ResNet / BERT / ViT 之一，用 PyTorch 从零写出训练代码（不抄 transformers 库）。</li>
+<li><strong>用 nanoGPT 训练自己的 GPT</strong>：在 OpenWebText / 自己整理的中文数据上训一个 50M-200M 参数的 GPT。</li>
+<li><strong>图像分类比赛</strong>：参加 <a href="https://www.kaggle.com/competitions?category=Computer+Vision">Kaggle 上一个图像比赛</a>，用 ResNet / EfficientNet / ViT 做对比。</li>
+<li><strong>写一篇博客</strong>：解释 Self-Attention 的 QKV 是什么、为什么是这样设计的。</li>
+</ol>
+<h2>五、通关标志</h2>
+<ul>
+<li><input disabled="" type="checkbox" /> 能在白板上不查资料推导 Self-Attention 的公式。</li>
+<li><input disabled="" type="checkbox" /> 能从零写一个 Transformer 训练 loop（不抄）。</li>
+<li><input disabled="" type="checkbox" /> 训练一个深度模型，遇到 loss 不下降，能给出 5 个以上排查方向。</li>
+<li><input disabled="" type="checkbox" /> 看 ResNet / BERT / GPT 论文，能讲清主要 contribution。</li>
+<li><input disabled="" type="checkbox" /> 你的 GitHub 上有至少一个能跑通的端到端深度学习项目。</li>
+</ul>
+<p>下一站：<a href="/__themes/letter/post/31477598/a9e658cb">05. 大语言模型</a></p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

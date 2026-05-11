@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题2：实现Singleton模式 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：设计一个类，我们只能生成该类的一个实例 分析 Singleton 即单例模式。既然题目要求只能生成类的一个实例，那我们必须把类的构造函数和拷贝构造函数设置为 private 以阻止类的调用者随意创建对象。 我们来看代码 //单例模式类包含的数据 typedef struct data{ int a; //othe…">
+<meta property="og:title" content="面试题2：实现Singleton模式">
+<meta property="og:description" content="题目：设计一个类，我们只能生成该类的一个实例 分析 Singleton 即单例模式。既然题目要求只能生成类的一个实例，那我们必须把类的构造函数和拷贝构造函数设置为 private 以阻止类的调用者随意创建对象。 我们来看代码 //单例模式类包含的数据 typedef struct data{ int a; //othe…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/d617458">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Saturday, May 21, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · May 21, 2016</div>
+    <h1 class="press-article-title">
+      面试题2：实现Singleton模式
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目：设计一个类，我们只能生成该类的一个实例 分析 Singleton 即单例模式。既然题目要求只能生成类的一个实例，那我们必须把类的构造函数和拷贝构造函数设置为 private 以阻止类的调用者随意创建对象。 我们来看代码 //单例模式类包含的数据 typedef struct data{ int a; //othe…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 3 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题2：实现Singleton模式</h2>
+<h3>题目：设计一个类，我们只能生成该类的一个实例</h3>
+<hr />
+<h4>分析</h4>
+<p>Singleton 即单例模式。既然题目要求只能生成类的一个实例，那我们必须把类的构造函数和拷贝构造函数设置为 private 以阻止类的调用者随意创建对象。</p>
+<p>我们来看代码</p>
+<pre><code>//单例模式类包含的数据
+typedef struct data{
+    int a;
+    //other
+}data;
+
+class singleton{
+public:
+    data* create(int x)
+    {
+        if(instance==NULL)
+        {
+            instance=new data;
+            instance-&gt;a=x;
+            //DoOtherThing
+        }
+        return instance;
+    }
+    ~singleton()
+    {
+        if(instance!=NULL)
+        {
+            delete instance;
+        }
+    }
+private:
+    singleton()
+    {}
+    singleton(const singleton&amp;amp; s)
+    {}
+
+private:
+    static data* instance;
+};
+data* singleton::instance=NULL;
+</code></pre>
+<p>上面的代码可以在单线程环境下顺利运行。但在多线程环境中，如果两个线程同时执行 create 函数中的 if 语句，则以下这种情况是可能发生的：</p>
+<table>
+<thead>
+<tr>
+  <th align=\"center\">线程1</th>
+  <th align=\"center\">线程2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td align=\"center\">if(instance==NULL) **成立**</td>
+  <td align=\"center\"></td>
+</tr>
+<tr>
+  <td align=\"center\"></td>
+  <td align=\"center\">if(instance==NULL)**成立**</td>
+</tr>
+<tr>
+  <td align=\"center\">instance=new  data;**生成对象**</td>
+  <td align=\"center\"></td>
+</tr>
+<tr>
+  <td align=\"center\"></td>
+  <td align=\"center\">instance=new data;**原来的instance指向的内存丢失**</td>
+</tr>
+</tbody>
+</table>
+<p>由此可见，如果直接以上面的代码在多线程环境下跑时，会有内存泄露的问题。</p>
+<p>解决办法就是 Linux 下的 pthread 锁机制。</p>
+<pre><code class="language-C">//同步锁，防止了在多线程程序中可能出现的问题
+pthread_mutex_t lock=PTHREAD_MUTEX_INITIALIZER;
+
+class singleton{
+public:
+    data* create(int x)
+    {
+        pthread_mutex_lock(&amp;amp;lock);
+        if(instance==NULL)
+        {
+            instance=new data;
+            instance-&gt;a=x;
+            //DoOtherThing
+        }
+        pthread_mutex_unlock(&amp;amp;lock);
+        return instance;
+    }
+    ~singleton()
+    {
+        if(instance!=NULL)
+        {
+            delete instance;
+        }
+    }
+private:
+    singleton()
+    {}
+ 		singleton(const singleton&amp;amp; s)
+		{}
+
+private:
+    static data* instance;
+};
+data* singleton::instance=NULL;
+</code></pre>
+<p>恩，我们来看看还有没有可以优化的地方。</p>
+<p>因为加锁是一个很耗时的操作，频繁的加锁解锁会导致程序性能下降。上面的代码只有在第一次调用 create 函数时的加锁操作才是必要且有效的。所以我们在加锁前先判断一下，如果实例已经被创建，则跳过锁操作。</p>
+<p>create 函数代码：</p>
+<pre><code class="language-data*">{
+    if(instance==NULL)
+    {
+        pthread_mutex_lock(&amp;amp;lock);
+        if(instance==NULL)
+        {
+            instance=new data;
+            instance-&gt;a=x;
+            //DoOtherThing
+        }
+        pthread_mutex_unlock(&amp;amp;lock);
+    }
+    return instance;
+}
+</code></pre>
+<p>[完]</p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！
+完整代码和测试用例在 github 上：<a href="https://github.com/SmartBrave/Sword-to-Offer/tree/master/02_Singleton">点我前往</a></p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

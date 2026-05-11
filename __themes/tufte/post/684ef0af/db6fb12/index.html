@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题15：链表中倒数第K个节点 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：输入一个链表，输出该链表中倒数第K个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第一个节点。** 链表的定义如下： 分析 有三种方法：递归法，自定义栈法和前后指针法。 递归法 代码如下： 自定义栈法 前后指针法 这三种方法的优缺点如下： <table> <thead> <tr> <th a…">
+<meta property="og:title" content="面试题15：链表中倒数第K个节点">
+<meta property="og:description" content="题目：输入一个链表，输出该链表中倒数第K个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第一个节点。** 链表的定义如下： 分析 有三种方法：递归法，自定义栈法和前后指针法。 递归法 代码如下： 自定义栈法 前后指针法 这三种方法的优缺点如下： <table> <thead> <tr> <th a…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/db6fb12">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2016 · NO. §394</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · June 6, 2016
+      </div>
+      <h1 class="article-title">面试题15：链表中倒数第K个节点</h1>
+      <p class="article-lede">题目：输入一个链表，输出该链表中倒数第K个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第一个节点。** 链表的定义如下： 分析 有三种方法：递归法，自定义栈法和前后指针法。 递归法 代码如下： 自定义栈法 前后指针法 这三种方法的优缺点如下： <table> <thead> <tr> <th a…</p>
+      <div class="article-meta">
+        <span>2 min read</span>
+        <span>·</span>
+        <span>394 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>面试题15：链表中倒数第K个节点</h2>
+<p><strong>题目：输入一个链表，输出该链表中倒数第K个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第一个节点。</strong></p>
+<p>链表的定义如下：</p>
+<pre><code class="language-C">struct ListNode{
+    int value;
+    ListNode* next;
+    ListNode(int data=int()):value(data),next(NULL)
+    {}
+};
+</code></pre>
+<h3>分析</h3>
+<p>有三种方法：递归法，自定义栈法和前后指针法。</p>
+<h4>递归法</h4>
+<p>代码如下：</p>
+<pre><code class="language-C">ListNode* _FindKthToTail(ListNode* head,int&amp; k)
+{
+    if(head==NULL)
+    {
+        return  NULL;
+    }
+    else
+    {
+        ListNode* tmp=_FindKthToTail(head-&gt;next,k);
+        if(k==0)
+            return tmp;
+    }
+    if(k==1)
+    {
+        k=0;
+        return head;
+    }
+    else if(k&gt;1)
+        k--;
+}
+
+ListNode* FindKthToTail(ListNode* head,int k)throw(ListIsTooShort)
+{
+    ListNode* tmp=_FindKthToTail(head,k);
+    if(k==0)
+        return tmp;
+    else
+        throw ListIsTooShort();
+}
+</code></pre>
+<h4>自定义栈法</h4>
+<pre><code class="language-C">ListNode* FindKthToTail(ListNode* head,int k)throw(ListIsTooShort)
+{
+    if(head==NULL || k&lt;=0)
+        return NULL;
+    stack&lt;ListNode*&gt; s;
+    while(head!=NULL)
+    {
+        s.push(head);
+        head=head-&gt;next;
+    }
+    while(--k!=0 &amp;&amp; !s.empty())
+    {
+        s.pop();
+    }
+    if(k==0)
+        return s.top();
+    else
+        throw ListIsTooShort();
+}
+</code></pre>
+<h4>前后指针法</h4>
+<pre><code class="language-C">ListNode* FindKthToTail(ListNode* head,int k)throw(ListIsTooShort)
+{
+    if(head==NULL || k==0)
+        return NULL;
+    ListNode* front=head,*last=head;
+    while(k--&gt;0 &amp;&amp; front!=NULL)
+    {
+        front=front-&gt;next;
+    }
+    if(k&gt;0)
+    {
+        throw ListIsTooShort();
+    }
+    else
+    {
+        while(front!=NULL)
+        {
+            front=front-&gt;next;
+            last=last-&gt;next;
+        }
+    }
+    return last;
+}
+</code></pre>
+<p>这三种方法的优缺点如下：</p>
+<table>
+<thead>
+<tr>
+  <th align="center"></th>
+  <th align="center">时间复杂度</th>
+  <th align="center">空间复杂度</th>
+  <th align="center">是否最优</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td align="center">**递归法**</td>
+  <td align="center">O(n)</td>
+  <td align="center">O(n)</td>
+  <td align="center">否</td>
+</tr>
+<tr>
+  <td align="center">**自定义栈法**</td>
+  <td align="center">O(n)</td>
+  <td align="center">O(n)</td>
+  <td align="center">否</td>
+</tr>
+<tr>
+  <td align="center">**前后指针法**</td>
+  <td align="center">O(n)</td>
+  <td align="center">O(1)</td>
+  <td align="center">是</td>
+</tr>
+</tbody>
+</table>
+<p>因此，最好的方法是最后一种。</p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/15_KthNodeFromEnd/main.cpp">点我前往</a></p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2016-06-06<br>
+          <em>read in</em> 2 min<br>
+          <em>words</em> 394<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2016 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/684ef0af/db6fb12">https://sbrave.cn/post/684ef0af/db6fb12</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

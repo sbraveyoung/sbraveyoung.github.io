@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题25：二叉树中和为某一值的路径 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：输入一颗二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径。从属的根节点开始往下一直到叶节点所经过的节点形成一条路径。二叉树节点的定义如下：** 分析 既然题目要求要打印二叉树上的所有节点，就需要遍历该二叉树。而在最常见的前、中、后序三种遍历方式中，只有前序遍历能第一个访问二叉树的根节点，也就是先累加…">
+<meta property="og:title" content="面试题25：二叉树中和为某一值的路径">
+<meta property="og:description" content="题目：输入一颗二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径。从属的根节点开始往下一直到叶节点所经过的节点形成一条路径。二叉树节点的定义如下：** 分析 既然题目要求要打印二叉树上的所有节点，就需要遍历该二叉树。而在最常见的前、中、后序三种遍历方式中，只有前序遍历能第一个访问二叉树的根节点，也就是先累加…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/97b6f9f3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Monday, June 13, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · June 13, 2016</div>
+    <h1 class="press-article-title">
+      面试题25：二叉树中和为某一值的路径
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目：输入一颗二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径。从属的根节点开始往下一直到叶节点所经过的节点形成一条路径。二叉树节点的定义如下：** 分析 既然题目要求要打印二叉树上的所有节点，就需要遍历该二叉树。而在最常见的前、中、后序三种遍历方式中，只有前序遍历能第一个访问二叉树的根节点，也就是先累加…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 2 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题25：二叉树中和为某一值的路径</h2>
+<p><strong>题目：输入一颗二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径。从属的根节点开始往下一直到叶节点所经过的节点形成一条路径。二叉树节点的定义如下：</strong></p>
+<pre><code>struct BinaryTreeNode{
+    int value;
+    BinaryTreeNode* left;
+    BinaryTreeNode* right;
+    BinaryTreeNode(int data=int()):value(data),left(NULL),right(NULL)
+    {}
+};
+</code></pre>
+<hr />
+<h3>分析</h3>
+<p>既然题目要求要打印二叉树上的所有节点，就需要遍历该二叉树。而在最常见的前、中、后序三种遍历方式中，只有前序遍历能第一个访问二叉树的根节点，也就是先累加根节点的值。所以可以在前序遍历的过程中计算当前路径上所以节点的和。如果当前节点是叶子节点且和等于给定的整数，就打印出当前路径上的节点。否则就将该叶子节点从路径上删除。由此可见，我们需要一个数组来保存当前的路径。</p>
+<p>代码如下：</p>
+<pre><code>void _FindPath(BinaryTreeNode* root,int sum,vector&lt;int&gt;&amp; v,int cursum)
+{
+    if(root==NULL)
+        return;
+    cursum+=root-&gt;value;
+    v.push_back(root-&gt;value);
+    if(cursum==sum &amp;&amp; root-&gt;left==NULL &amp;&amp; root-&gt;right==NULL)
+    {
+        vector&lt;int&gt;::iterator iter=v.begin();
+        for(;iter!=v.end();++iter)
+        {
+            cout&lt;&lt;*iter&lt;&lt;&quot; &quot;;
+        }
+        cout&lt;&lt;endl;
+    }
+    else
+    {
+        _FindPath(root-&gt;left,sum,v,cursum);
+        _FindPath(root-&gt;right,sum,v,cursum);
+    }
+    v.pop_back();
+    return;
+}
+
+void FindPath(BinaryTreeNode* root,int sum)
+{
+    vector&lt;int&gt; v;
+    _FindPath(root,sum,v,0);
+}
+
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/25_PathInTree/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

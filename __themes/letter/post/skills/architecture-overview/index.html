@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skill · 整体架构概览 · sbraveyoung · 字里行间</title>
+<meta name="description" content="何时用**：搞不清楚四个仓库都是干嘛的、谁推谁、谁渲染谁的时候。 解决什么**：把 sbraveyoung 系博客生态的四个 GitHub 仓库以及它们之间的发布链路一次说清，作为后续所有 skill 的上下文锚点。 四个仓库，一句话各自的角色 | 仓库                              | 角…">
+<meta property="og:title" content="Skill · 整体架构概览">
+<meta property="og:description" content="何时用**：搞不清楚四个仓库都是干嘛的、谁推谁、谁渲染谁的时候。 解决什么**：把 sbraveyoung 系博客生态的四个 GitHub 仓库以及它们之间的发布链路一次说清，作为后续所有 skill 的上下文锚点。 四个仓库，一句话各自的角色 | 仓库                              | 角…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/skills/architecture-overview">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2026-05-11
+    </div>
+    <h1 class="article-title">Skill · 整体架构概览</h1>
+    <p class="article-lede">何时用**：搞不清楚四个仓库都是干嘛的、谁推谁、谁渲染谁的时候。 解决什么**：把 sbraveyoung 系博客生态的四个 GitHub 仓库以及它们之间的发布链路一次说清，作为后续所有 skill 的上下文锚点。 四个仓库，一句话各自的角色 | 仓库                              | 角…</p>
+    <div class="article-meta">
+      <span>3 min read</span>
+      <span>715 words</span>
+      
+      <span class="ai-badge">🤖 AI 辅助</span>
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>Skill · 整体架构概览</h2>
+<blockquote>
+<p><strong>何时用</strong>：搞不清楚四个仓库都是干嘛的、谁推谁、谁渲染谁的时候。</p>
+<p><strong>解决什么</strong>：把 sbraveyoung 系博客生态的四个 GitHub 仓库以及它们之间的发布链路一次说清，作为后续所有 skill 的上下文锚点。</p>
+</blockquote>
+<h3>四个仓库，一句话各自的角色</h3>
+<table>
+<thead>
+<tr>
+<th>仓库</th>
+<th>角色</th>
+<th>谁在维护</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sbraveyoung/blog</code></td>
+<td>markdown 原始内容（<strong>唯一可信源</strong>）</td>
+<td>我（手写）</td>
+</tr>
+<tr>
+<td><code>sbraveyoung/gobog</code></td>
+<td>Go 写的渲染引擎 + 三套主题</td>
+<td>我（手写）</td>
+</tr>
+<tr>
+<td><code>sbraveyoung/gobog-obsidian</code></td>
+<td>Obsidian 插件：双向同步 + 自动 front-matter + 微信草稿推送 + 本地预览</td>
+<td>我（手写）</td>
+</tr>
+<tr>
+<td><code>sbraveyoung/sbraveyoung.github.io</code></td>
+<td>渲染后的 HTML，挂在 GitHub Pages 上</td>
+<td>机器（CI 维护）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键约束</strong>：github.io 仓库<strong>不要手改</strong>——它的工作树会被 deploy workflow 整体替换。手改的东西下次 deploy 就没了。允许手改的只有 <code>_gobog.json</code> 和 <code>.github/</code>、<code>scripts/</code>。</p>
+<h3>数据流</h3>
+<pre><code>本地 Obsidian vault
+   ╱ Blog/
+      post/                ← 文章
+      pages/               ← /about、/contact 这种顶层页
+      resource/image/      ← 图片
+   │
+   │  gobog-obsidian 插件（双向）
+   │   • Pull：fetch + ff-only
+   │   • Push：stage → diff confirm → commit → push
+   │   • 新文件自动填 front-matter
+   ▼
+sbraveyoung/blog （GitHub）
+   │
+   │  push 到 master 触发
+   │  .github/workflows/deploy.yml → repository_dispatch
+   │  (event_type=blog-update) → 通知 github.io
+   ▼
+sbraveyoung/sbraveyoung.github.io 的 deploy.yml 跑起来：
+   1. checkout sbraveyoung/blog          (markdown)
+   2. checkout sbraveyoung/gobog         (渲染引擎)
+   3. go build ./_gobog/src              (编译)
+   4. 读 _gobog.json 拼出 _gobog.toml    (主题、评论、品牌)
+   5. gobog -config _gobog.toml -export _dist
+   6. scripts/check-export.sh _dist      (死链 / 孤儿资源审计)
+   7. 用 _dist/ 替换工作树 + commit + push
+   ▼
+GitHub Pages 自动伺服 → sbrave.cn
+</code></pre>
+<h3>唯一可信源 (source-of-truth) 规则</h3>
+<ul>
+<li><strong>内容</strong>永远从 vault → blog → github.io 流，单向。github.io 上看到的内容，源头一定在 <code>sbraveyoung/blog/source/</code>。</li>
+<li><strong>URL</strong> 由 <code>front-matter url:</code> 锚定。一旦写过，gobog 永不会改。改一篇老文章的 URL = 对外的死链，慎重。</li>
+<li><strong>主题 + 品牌 + 评论开关</strong>住在 <code>sbraveyoung.github.io/_gobog.json</code>，不在 blog 里。改这些是在 github.io 仓库的提交，不是 blog。</li>
+<li><strong>代码逻辑</strong>（渲染、URL 生成、front-matter 默认填充）在 <code>sbraveyoung/gobog</code>。改这里要重新跑 deploy 才能在 github.io 上看到。</li>
+</ul>
+<h3>三种典型操作的&quot;该改哪个仓库&quot;</h3>
+<table>
+<thead>
+<tr>
+<th>想做的事</th>
+<th>改哪儿</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>写 / 改一篇文章</td>
+<td>vault 的 <code>Blog/</code>，插件 push 到 <code>sbraveyoung/blog</code></td>
+</tr>
+<tr>
+<td>换主题、改站点标题、开评论</td>
+<td><code>sbraveyoung.github.io/_gobog.json</code></td>
+</tr>
+<tr>
+<td>改渲染逻辑、加 URL 路由</td>
+<td><code>sbraveyoung/gobog</code>，再触发 github.io 的 deploy 才能看到效果</td>
+</tr>
+<tr>
+<td>调插件行为（同步、模板等）</td>
+<td><code>sbraveyoung/gobog-obsidian</code>，本地 <code>npm run build</code> 后在 Obsidian 里 reload</td>
+</tr>
+</tbody>
+</table>
+<p>后续每个 skill 都默认你已经懂这张图。</p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题26：复杂链表的复制 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：请实现函数ComplexListNode* Clone(ComplexListNode* pHead),复制一个复杂链表。在复杂链表中，每个结点除了有一个next指针指向下一个结点外，还有一个Sibling指向链表中的任意结点或者NULL。结点的C++定义如下：** 分析 很容易想到的办法是先像普通链表一样将该链…">
+<meta property="og:title" content="面试题26：复杂链表的复制">
+<meta property="og:description" content="题目：请实现函数ComplexListNode* Clone(ComplexListNode* pHead),复制一个复杂链表。在复杂链表中，每个结点除了有一个next指针指向下一个结点外，还有一个Sibling指向链表中的任意结点或者NULL。结点的C++定义如下：** 分析 很容易想到的办法是先像普通链表一样将该链…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/f672ae4b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-06-14
+    </div>
+    <h1 class="article-title">面试题26：复杂链表的复制</h1>
+    <p class="article-lede">题目：请实现函数ComplexListNode* Clone(ComplexListNode* pHead),复制一个复杂链表。在复杂链表中，每个结点除了有一个next指针指向下一个结点外，还有一个Sibling指向链表中的任意结点或者NULL。结点的C++定义如下：** 分析 很容易想到的办法是先像普通链表一样将该链…</p>
+    <div class="article-meta">
+      <span>2 min read</span>
+      <span>467 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>面试题26：复杂链表的复制</h2>
+<p><em><em>题目：请实现函数ComplexListNode</em> Clone(ComplexListNode</em> pHead),复制一个复杂链表。在复杂链表中，每个结点除了有一个next指针指向下一个结点外，还有一个Sibling指向链表中的任意结点或者NULL。结点的C++定义如下：**</p>
+<pre><code>struct ComplexListNode{
+    int value;
+    int ComplexListNode* next;
+    int ComplexListNode* Sibling;
+    ComplexListNode(int data=int()):value(data),next(NULL),Sibling(NULL)
+    {}
+    ComplexListNode(const ComplexListNode&amp;amp; s):next(NULL),sibling(NULL)
+    {
+        value=s.value;
+    }
+
+};
+
+</code></pre>
+<hr />
+<h3>分析</h3>
+<p>很容易想到的办法是先像普通链表一样将该链表中的每个结点复制出来，不考虑Sibling指针。然后第二遍复制Sibling指针即可。在遍历到每一个结点时，都从链表头再次遍历，找到当前结点的Sibling结点，同时修改复制出来的链表的对应结点的Sibling指针。</p>
+<p>这种方法的时间复杂度达到了O(n<sup>2</sup>)，很明显不是最优的解法。</p>
+<p>我们考虑这样一种思路：即复制的时候，将复制出来的结点挂在源结点的后面。比如原来链表是1,2,3,4,5，经过这一步后链表结点成了1,1,2，2,3,3,4,4,5,5.这样做的好处是复制Sibling指针时只需要O(1)的时间。即源结点的Sibling的next就是当前结点的Sibling。最后将复制出来的结点从源链表中分离出来即可。</p>
+<p>代码如下：</p>
+<pre><code>ComplexListNode* Clone(ComplexListNode* head)
+{
+    if(head==NULL)
+        return NULL;
+    ComplexListNode* cur=head;
+    ComplexListNode* tmp=head;
+    ComplexListNode* newhead=NULL;;
+    ComplexListNode* newtail=NULL;
+    while(cur!=NULL)
+    {
+        tmp=cur-&gt;next;
+        cur-&gt;next=new ComplexListNode(cur-&gt;value);
+        cur=cur-&gt;next;
+        cur-&gt;next=tmp;
+        cur=cur-&gt;next;
+    }
+    cur=head;
+    while(cur!=NULL)
+    {
+        tmp=cur-&gt;next;
+        if(cur-&gt;sibling!=NULL)
+            tmp-&gt;sibling=cur-&gt;sibling-&gt;next;
+        cur=cur-&gt;next;
+        cur=cur-&gt;next;
+    }
+    cur=head;
+    newhead=newtail=cur-&gt;next;
+    while(cur!=NULL)
+    {
+        cur-&gt;next=newtail-&gt;next;
+        cur=cur-&gt;next;
+        if(cur!=NULL)
+        {
+            newtail-&gt;next=cur-&gt;next;
+            newtail=newtail-&gt;next;
+        }
+    }
+    return newhead;
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/26_CopyComplexList/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

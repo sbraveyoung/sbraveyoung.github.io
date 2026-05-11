@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题1：赋值运算符函数 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/363120f3">
+<meta name="description" content="题目：如下为类型CMyString的声明，请为该类添加赋值运算符函数。 分析 我们知道，C++ 中类的 6 个默认的函数分别是构造，拷贝构造，析构，赋值运算符的重载，取址运算符的重载和它的常量版本。其中前 4 个在面试中最常问到。比如在继承/组合类中构造和析构函数的调用顺序，派生类中析构函数是否应该设置为 virtua…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题1：赋值运算符函数">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/363120f3">
+<meta property="og:description" content="题目：如下为类型CMyString的声明，请为该类添加赋值运算符函数。 分析 我们知道，C++ 中类的 6 个默认的函数分别是构造，拷贝构造，析构，赋值运算符的重载，取址运算符的重载和它的常量版本。其中前 4 个在面试中最常问到。比如在继承/组合类中构造和析构函数的调用顺序，派生类中析构函数是否应该设置为 virtua…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-05-19 17:24:04</span>
+        <span>· 640 字</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题1：赋值运算符函数</h2>
+<h2>题目：如下为类型CMyString的声明，请为该类添加赋值运算符函数。</h2>
+<pre><code class="language-C">class CMyString
+{
+public:
+    CMyString(char* pData = NULL);
+    CMyString(const CMyString&amp; str);
+    ~CMyString(void);
+private:
+    char* m_pData;      
+};
+</code></pre>
+<hr />
+<h3>分析</h3>
+<p>我们知道，C++ 中类的 6 个默认的函数分别是构造，拷贝构造，析构，赋值运算符的重载，取址运算符的重载和它的常量版本。其中前 4 个在面试中最常问到。比如在继承/组合类中构造和析构函数的调用顺序，派生类中析构函数是否应该设置为 virtual，拷贝构造在何时被调用以及注意事项等等。</p>
+<p>但要注意的是，对于拷贝构造函数和赋值运算符的重载函数，C++ 默认实现的是按「位」拷贝的方式，也就是将该对象的内存原封不动地挪到新对象的内存中。所以对于成员变量中含有指针的类，我们一定需要自己实现这两个方法（除非你就打算以默认的方式实现），否则在析构时会将同一块空间释放两次导致崩溃。这就是「深浅拷贝」问题。</p>
+<p>解决方案有两种：重新分配内存并拷贝或实现引用计数。很明显，对于 CMyString 类我们需要采用前者。</p>
+<h4>答案代码如下：</h4>
+<ul>
+<li>version1：最普通的写法，没有考虑到自赋值的情况和异常安全性</li>
+</ul>
+<pre><code class="language-C">CMyString&amp; CMyString::operator=(const CMyString&amp; str)
+{
+    delete []m_pData;
+    m_pData=NULL;
+    size_t len=strlen(str.m_pData);
+    m_pData=new char[len+1];
+    memcpy(m_pData,str.m_pData,len+1);
+    return *this;
+}
+</code></pre>
+<ul>
+<li>version 2：比上个版本好一点，检查了自赋值的情况。但如果new操作符失败而抛出异常，会导致自己原来的空间被释放</li>
+</ul>
+<pre><code class="language-C">CMyString&amp; CMyString::operator=(const CMyString&amp; str)
+{
+    if(&amp;str!=this)
+    {
+        delete []m_pData;
+        m_pData=NULL;
+        size_t len=strlen(str.m_pData);
+        m_pData=new char[len+1];
+        memcpy(m_pData,str.m_pData,len+1);
+    }
+    return *this;
+}
+</code></pre>
+<ul>
+<li>version 3：交换当前指针和一个临时对象，该对象析构时会释放掉当前的指针。由于 swap 是原子操作，所以有很好的异常安全性，推荐这种写法</li>
+</ul>
+<pre><code class="language-C">CMyString&amp; CMyString::operator=(const CMyString&amp; str)
+{
+    CMyString tmp(str.m_pData);
+    std::swap(tmp.m_pData,m_pData);
+    return *this;
+}
+</code></pre>
+<ul>
+<li>version 4：和版本 3 原理一样，但需要修改函数声明</li>
+</ul>
+<pre><code class="language-C">CMyString&amp; CMyString::operator=(CMyString str)
+{
+    swap(str.m_pData,m_pData);
+    return *this;
+}
+</code></pre>
+<p>【完】</p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/Sword-to-Offer/tree/master/01_AssignmentOperator">点我前往</a></p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

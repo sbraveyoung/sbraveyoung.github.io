@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题34：丑数 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/ad1595d5">
+<meta name="description" content="题目：我们把只包含因子2,3和5的数称作丑数。求按从小到大的顺序的第1500个丑数。例如6,8都是丑数，但14不是，因为它包含因子7.习惯上我们把1当做第一个丑数。** 分析 最直观的方法是从1往后逐个判断每个数字，并设一个计数器。如果一个数是丑数，计数器加一。当计数器到1500时，输出这个数即可。但求一个数的所有因子…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题34：丑数">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/ad1595d5">
+<meta property="og:description" content="题目：我们把只包含因子2,3和5的数称作丑数。求按从小到大的顺序的第1500个丑数。例如6,8都是丑数，但14不是，因为它包含因子7.习惯上我们把1当做第一个丑数。** 分析 最直观的方法是从1往后逐个判断每个数字，并设一个计数器。如果一个数是丑数，计数器加一。当计数器到1500时，输出这个数即可。但求一个数的所有因子…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-06-27 22:56:32</span>
+        <span>· 459 字</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题34：丑数</h2>
+<p><strong>题目：我们把只包含因子2,3和5的数称作丑数。求按从小到大的顺序的第1500个丑数。例如6,8都是丑数，但14不是，因为它包含因子7.习惯上我们把1当做第一个丑数。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>最直观的方法是从1往后逐个判断每个数字，并设一个计数器。如果一个数是丑数，计数器加一。当计数器到1500时，输出这个数即可。但求一个数的所有因子的时间复杂度为O(n<sup>0.5</sup>)(对否？),总的时间复杂度为O(n<sup>1.5</sup>)。</p>
+<p>更好的一种方法是以空间换时间，即创建一个数组保存已经找到的丑数，这样就不用重复计算前面已经计算过的。而是每次用数组中的一个数来计算出下一个丑数。一般我们会选择数组中2,3,5对应的最后一个数来计算下一个丑数，所以需要使数组是有序的。因此可以用3个变量T2，T3，T5来指示2,3,5对应的最后一个丑数，然后用着三个数分别乘以2,3和5得到R2，R3和R5。只需要将R2，R3，R5中的最小者放入数组中即可，并更新相应的T2，T3或T5。</p>
+<p>代码如下：</p>
+<pre><code class="language-int">{
+    int min=a&gt;b?b:a;
+    min=min&gt;c?c:min;
+    return min;
+}
+
+int GetUglyNumber(int index)
+{
+    if(index&lt;=0)
+        return 0;
+    vector&lt;int&gt; v;
+    v.push_back(1);
+    int M2=0,M3=0,M5=0;
+    while(v.size()&lt;index)
+    {
+        int min=Min(v[M2]*2,v[M3]*3,v[M5]*5);
+        v.push_back(min);
+        while(v[M2]*2&lt;=v[v.size()-1])
+            M2++;
+        while(v[M3]*3&lt;=v[v.size()-1])
+            M3++;
+        while(v[M5]*5&lt;=v[v.size()-1])
+            M5++;
+    }
+    return v[v.size()-1];
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/34_UglyNumber/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

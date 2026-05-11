@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题1：赋值运算符函数 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：如下为类型CMyString的声明，请为该类添加赋值运算符函数。 分析 我们知道，C++ 中类的 6 个默认的函数分别是构造，拷贝构造，析构，赋值运算符的重载，取址运算符的重载和它的常量版本。其中前 4 个在面试中最常问到。比如在继承/组合类中构造和析构函数的调用顺序，派生类中析构函数是否应该设置为 virtua…">
+<meta property="og:title" content="面试题1：赋值运算符函数">
+<meta property="og:description" content="题目：如下为类型CMyString的声明，请为该类添加赋值运算符函数。 分析 我们知道，C++ 中类的 6 个默认的函数分别是构造，拷贝构造，析构，赋值运算符的重载，取址运算符的重载和它的常量版本。其中前 4 个在面试中最常问到。比如在继承/组合类中构造和析构函数的调用顺序，派生类中析构函数是否应该设置为 virtua…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/363120f3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2016 · NO. §640</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · May 19, 2016
+      </div>
+      <h1 class="article-title">面试题1：赋值运算符函数</h1>
+      <p class="article-lede">题目：如下为类型CMyString的声明，请为该类添加赋值运算符函数。 分析 我们知道，C++ 中类的 6 个默认的函数分别是构造，拷贝构造，析构，赋值运算符的重载，取址运算符的重载和它的常量版本。其中前 4 个在面试中最常问到。比如在继承/组合类中构造和析构函数的调用顺序，派生类中析构函数是否应该设置为 virtua…</p>
+      <div class="article-meta">
+        <span>3 min read</span>
+        <span>·</span>
+        <span>640 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>面试题1：赋值运算符函数</h2>
+<h2>题目：如下为类型CMyString的声明，请为该类添加赋值运算符函数。</h2>
+<pre><code class="language-C">class CMyString
+{
+public:
+    CMyString(char* pData = NULL);
+    CMyString(const CMyString&amp; str);
+    ~CMyString(void);
+private:
+    char* m_pData;      
+};
+</code></pre>
+<hr />
+<h3>分析</h3>
+<p>我们知道，C++ 中类的 6 个默认的函数分别是构造，拷贝构造，析构，赋值运算符的重载，取址运算符的重载和它的常量版本。其中前 4 个在面试中最常问到。比如在继承/组合类中构造和析构函数的调用顺序，派生类中析构函数是否应该设置为 virtual，拷贝构造在何时被调用以及注意事项等等。</p>
+<p>但要注意的是，对于拷贝构造函数和赋值运算符的重载函数，C++ 默认实现的是按「位」拷贝的方式，也就是将该对象的内存原封不动地挪到新对象的内存中。所以对于成员变量中含有指针的类，我们一定需要自己实现这两个方法（除非你就打算以默认的方式实现），否则在析构时会将同一块空间释放两次导致崩溃。这就是「深浅拷贝」问题。</p>
+<p>解决方案有两种：重新分配内存并拷贝或实现引用计数。很明显，对于 CMyString 类我们需要采用前者。</p>
+<h4>答案代码如下：</h4>
+<ul>
+<li>version1：最普通的写法，没有考虑到自赋值的情况和异常安全性</li>
+</ul>
+<pre><code class="language-C">CMyString&amp; CMyString::operator=(const CMyString&amp; str)
+{
+    delete []m_pData;
+    m_pData=NULL;
+    size_t len=strlen(str.m_pData);
+    m_pData=new char[len+1];
+    memcpy(m_pData,str.m_pData,len+1);
+    return *this;
+}
+</code></pre>
+<ul>
+<li>version 2：比上个版本好一点，检查了自赋值的情况。但如果new操作符失败而抛出异常，会导致自己原来的空间被释放</li>
+</ul>
+<pre><code class="language-C">CMyString&amp; CMyString::operator=(const CMyString&amp; str)
+{
+    if(&amp;str!=this)
+    {
+        delete []m_pData;
+        m_pData=NULL;
+        size_t len=strlen(str.m_pData);
+        m_pData=new char[len+1];
+        memcpy(m_pData,str.m_pData,len+1);
+    }
+    return *this;
+}
+</code></pre>
+<ul>
+<li>version 3：交换当前指针和一个临时对象，该对象析构时会释放掉当前的指针。由于 swap 是原子操作，所以有很好的异常安全性，推荐这种写法</li>
+</ul>
+<pre><code class="language-C">CMyString&amp; CMyString::operator=(const CMyString&amp; str)
+{
+    CMyString tmp(str.m_pData);
+    std::swap(tmp.m_pData,m_pData);
+    return *this;
+}
+</code></pre>
+<ul>
+<li>version 4：和版本 3 原理一样，但需要修改函数声明</li>
+</ul>
+<pre><code class="language-C">CMyString&amp; CMyString::operator=(CMyString str)
+{
+    swap(str.m_pData,m_pData);
+    return *this;
+}
+</code></pre>
+<p>【完】</p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/Sword-to-Offer/tree/master/01_AssignmentOperator">点我前往</a></p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2016-05-19<br>
+          <em>read in</em> 3 min<br>
+          <em>words</em> 640<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2016 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/684ef0af/363120f3">https://sbrave.cn/post/684ef0af/363120f3</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

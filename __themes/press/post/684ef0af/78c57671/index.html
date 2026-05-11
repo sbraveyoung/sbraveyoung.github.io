@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题16：反转链表 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：定义一个函数，输入一个链表的头结点，反转该链表并输出反转后链表的头结点。链表定义如下：** 此题可以用递归和头插法来做。 递归 用递归做起来稍微复杂一点，而且会有个问题，就是当链表太长时，可能会导致系统栈溢出。 大体思路就是，当我们每递归的链表的一个节点时，如果该节点不是最后一个，就先递归反转它后面的链表，然后将…">
+<meta property="og:title" content="面试题16：反转链表">
+<meta property="og:description" content="题目：定义一个函数，输入一个链表的头结点，反转该链表并输出反转后链表的头结点。链表定义如下：** 此题可以用递归和头插法来做。 递归 用递归做起来稍微复杂一点，而且会有个问题，就是当链表太长时，可能会导致系统栈溢出。 大体思路就是，当我们每递归的链表的一个节点时，如果该节点不是最后一个，就先递归反转它后面的链表，然后将…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/78c57671">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Monday, June 6, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · June 6, 2016</div>
+    <h1 class="press-article-title">
+      面试题16：反转链表
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目：定义一个函数，输入一个链表的头结点，反转该链表并输出反转后链表的头结点。链表定义如下：** 此题可以用递归和头插法来做。 递归 用递归做起来稍微复杂一点，而且会有个问题，就是当链表太长时，可能会导致系统栈溢出。 大体思路就是，当我们每递归的链表的一个节点时，如果该节点不是最后一个，就先递归反转它后面的链表，然后将…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 2 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题16：反转链表</h2>
+<p><strong>题目：定义一个函数，输入一个链表的头结点，反转该链表并输出反转后链表的头结点。链表定义如下：</strong></p>
+<pre><code class="language-C">struct ListNode{
+    int value;
+    ListNode* next;
+    ListNode(int data=int()):value(data),next(NULL)
+    {}
+};
+</code></pre>
+<p>此题可以用递归和头插法来做。</p>
+<h3>递归</h3>
+<p>用递归做起来稍微复杂一点，而且会有个问题，就是当链表太长时，可能会导致系统栈溢出。</p>
+<p>大体思路就是，当我们每递归的链表的一个节点时，如果该节点不是最后一个，就先递归反转它后面的链表，然后将该节点 push_back 到尾部，所以我们需要一个 tail 指针来表明最后一个节点。否则 return 即可。</p>
+<p>代码如下：</p>
+<pre><code class="language-C">ListNode* _ReverseList(ListNode* head,ListNode*&amp; tail)
+{
+    if(head==NULL)
+        return NULL;
+    if(head-&gt;next==NULL)
+    {
+        tail=head;
+        return head;
+    }
+    ListNode* tmp=_ReverseList(head-&gt;next,tail);
+    tail-&gt;next=head;
+    tail=tail-&gt;next;
+    return tmp;
+}
+
+ListNode* ReverseList(ListNode* head)
+{
+    if(head==NULL)
+        return NULL;
+    ListNode* tail=NULL;
+    ListNode* tmp=_ReverseList(head,tail);
+    tail-&gt;next=NULL;
+    return tmp;
+}
+</code></pre>
+<h3>头插法</h3>
+<p>这种方法的思想就是，我们从链表的第二个节点开始(如果有的话)，一次摘取当前节点并头插到前面已经部分反转的链表中去。需要注意的是，我们要维护三个节点指针，分别指向已经部分反转的链表头、当前节点和当前节点的下一个节点。</p>
+<p>代码如下：</p>
+<pre><code class="language-C">ListNode* ReverseList(ListNode* head)
+{
+    if(head==NULL)
+        return NULL;
+    ListNode* cur=head-&gt;next;
+    head-&gt;next=NULL;
+    ListNode* next=NULL;
+    while(cur!=NULL)
+    {
+        next=cur-&gt;next;
+        cur-&gt;next=head;
+        head=cur;
+        cur=next;
+    }
+    return head;
+}
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/16_ReverList/main.cpp">点我前往</a></p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

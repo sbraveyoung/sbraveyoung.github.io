@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 入门到精通 01 · 数学基础 · sbraveyoung · 字里行间</title>
+<meta name="description" content=""搞 AI 不需要数学" 是销售给你的安慰剂。**调 API 不需要数学，做 AI 需要**。 但你不需要数学博士的水平，只需要"看到论文里的公式不慌、能推一个 backprop"的水平。 一、需要学什么、学到什么程度 按重要性 / 实用度排序： | 模块 | 重要性 | 必须掌握的核心 | | --- | --- |…">
+<meta property="og:title" content="AI 入门到精通 01 · 数学基础">
+<meta property="og:description" content=""搞 AI 不需要数学" 是销售给你的安慰剂。**调 API 不需要数学，做 AI 需要**。 但你不需要数学博士的水平，只需要"看到论文里的公式不慌、能推一个 backprop"的水平。 一、需要学什么、学到什么程度 按重要性 / 实用度排序： | 模块 | 重要性 | 必须掌握的核心 | | --- | --- |…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/31477598/d58d4e64">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2026 · NO. §1531</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · April 26, 2026
+      </div>
+      <h1 class="article-title">AI 入门到精通 01 · 数学基础</h1>
+      <p class="article-lede">"搞 AI 不需要数学" 是销售给你的安慰剂。**调 API 不需要数学，做 AI 需要**。 但你不需要数学博士的水平，只需要"看到论文里的公式不慌、能推一个 backprop"的水平。 一、需要学什么、学到什么程度 按重要性 / 实用度排序： | 模块 | 重要性 | 必须掌握的核心 | | --- | --- |…</p>
+      <div class="article-meta">
+        <span>7 min read</span>
+        <span>·</span>
+        <span>1531 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>AI 入门到精通 01 · 数学基础</h2>
+<blockquote>
+<p>&quot;搞 AI 不需要数学&quot; 是销售给你的安慰剂。<strong>调 API 不需要数学，做 AI 需要</strong>。
+但你不需要数学博士的水平，只需要&quot;看到论文里的公式不慌、能推一个 backprop&quot;的水平。</p>
+</blockquote>
+<h2>一、需要学什么、学到什么程度</h2>
+<p>按重要性 / 实用度排序：</p>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>重要性</th>
+<th>必须掌握的核心</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>线性代数</strong></td>
+<td>★★★★★</td>
+<td>矩阵运算、特征值、SVD、向量空间直觉</td>
+</tr>
+<tr>
+<td><strong>微积分</strong></td>
+<td>★★★★★</td>
+<td>偏导、链式法则、梯度、Jacobian / Hessian</td>
+</tr>
+<tr>
+<td><strong>概率论与统计</strong></td>
+<td>★★★★★</td>
+<td>条件概率、贝叶斯、期望方差、常见分布、MLE / MAP</td>
+</tr>
+<tr>
+<td><strong>数值优化</strong></td>
+<td>★★★★</td>
+<td>梯度下降族、凸性、约束优化（拉格朗日）</td>
+</tr>
+<tr>
+<td><strong>信息论</strong></td>
+<td>★★★</td>
+<td>熵、KL 散度、交叉熵</td>
+</tr>
+<tr>
+<td><strong>离散数学 / 图论</strong></td>
+<td>★★</td>
+<td>图、动态规划（搞 GNN / RL 时用）</td>
+</tr>
+<tr>
+<td><strong>微分方程</strong></td>
+<td>★★</td>
+<td>ODE / SDE（搞 Diffusion / Flow 时用）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>底线</strong>：能看懂《Deep Learning》(花书) 第一部分（Part I: Applied Math and Machine Learning Basics）。</p>
+<h2>二、知识点详解</h2>
+<h3>2.1 线性代数</h3>
+<ul>
+<li>向量、矩阵、张量；点积 / 叉积 / 外积的几何意义。</li>
+<li>矩阵乘法（<strong>所有神经网络的基本操作</strong>）。</li>
+<li>行列式、逆、秩、迹；何时矩阵不可逆、伪逆 (pseudo-inverse) 是什么。</li>
+<li>特征值与特征向量；谱定理、矩阵对角化。</li>
+<li>SVD 与低秩近似（PCA、LoRA 都建立在此之上）。</li>
+<li>向量空间、子空间、投影、正交基、Gram-Schmidt。</li>
+<li>范数：L1 / L2 / L∞，Frobenius 范数。</li>
+</ul>
+<h3>2.2 微积分</h3>
+<ul>
+<li>极限、连续、导数、偏导。</li>
+<li>链式法则（<strong>反向传播的全部依据</strong>）。</li>
+<li>梯度、方向导数、Hessian 矩阵。</li>
+<li>Taylor 展开（理解梯度下降为什么是局部线性近似）。</li>
+<li>多元函数极值与拉格朗日乘子（约束优化）。</li>
+<li>矩阵 / 向量求导（Matrix Cookbook 是查阅手册）。</li>
+</ul>
+<h3>2.3 概率论与统计</h3>
+<ul>
+<li>样本空间、事件、条件概率、独立性、贝叶斯公式。</li>
+<li>离散 / 连续随机变量；常见分布（伯努利、二项、泊松、正态、指数、Beta、Dirichlet、Categorical）。</li>
+<li>期望、方差、协方差、相关系数。</li>
+<li>大数定律、中心极限定理。</li>
+<li>参数估计：MLE（极大似然）、MAP（最大后验）。</li>
+<li>贝叶斯推断与共轭先验。</li>
+<li>假设检验、置信区间（业务 A/B test 用到）。</li>
+<li>蒙特卡洛与重要性采样。</li>
+</ul>
+<h3>2.4 数值优化</h3>
+<ul>
+<li>梯度下降 (GD) → 随机梯度下降 (SGD) → mini-batch SGD。</li>
+<li>动量法 (Momentum)、Nesterov、Adagrad、RMSprop、Adam、AdamW。</li>
+<li>学习率调度（cosine、warmup）。</li>
+<li>凸函数、Jensen 不等式。</li>
+<li>约束优化、KKT 条件、对偶问题。</li>
+<li>坐标下降、二阶方法 (Newton, L-BFGS) —— 知道存在即可。</li>
+</ul>
+<h3>2.5 信息论（速通）</h3>
+<ul>
+<li>熵 H(X)、联合熵、条件熵、互信息。</li>
+<li>KL 散度 D(P‖Q)：交叉熵损失的本质。</li>
+<li>交叉熵：分类任务最常用的 loss。</li>
+</ul>
+<h2>三、参考资料</h2>
+<h3>课程（按上手顺序）</h3>
+<ol>
+<li><strong>3Blue1Brown</strong> (<a href="https://www.3blue1brown.com/topics/linear-algebra">Essence of Linear Algebra</a> / <a href="https://www.3blue1brown.com/topics/calculus">Calculus</a>) —— <strong>必看</strong>，建立几何直觉。</li>
+<li>Khan Academy 的 Linear Algebra / Multivariable Calculus / Statistics —— 系统刷题练手感。</li>
+<li>MIT 18.06 Gilbert Strang《线性代数》—— 经典，配套教材免费。</li>
+<li>MIT 6.041 / 6.042《概率论》—— John Tsitsiklis 主讲，b 站有中字。</li>
+<li>Stanford EE364a《Convex Optimization》(Stephen Boyd) —— 进阶，等学到推荐系统 / 经典 ML 时再看。</li>
+</ol>
+<h3>教材</h3>
+<ul>
+<li>《Linear Algebra and Its Applications》—— Strang，配 MIT 18.06。</li>
+<li>《Mathematics for Machine Learning》—— 免费 PDF，专为 ML 写的数学复习。</li>
+<li>《Pattern Recognition and Machine Learning》(PRML) —— Bishop，第一二章是概率统计的金标准。</li>
+<li>《Matrix Cookbook》—— 矩阵求导查阅手册。</li>
+<li>《Deep Learning》(花书) Part I —— 路线终点之一。</li>
+</ul>
+<h3>视频（备选）</h3>
+<ul>
+<li>李宏毅《机器学习》前几章数学补充（中文友好）。</li>
+<li>StatQuest 的统计 / 贝叶斯系列（英文，浅显幽默）。</li>
+</ul>
+<h2>四、动手实践</h2>
+<p>数学不动手等于没学。<strong>所有公式都要用 NumPy 实现一遍</strong>。</p>
+<ol>
+<li><strong>NumPy 实现线代基本运算</strong>：手写矩阵乘法（不用 <code>@</code>）、行列式（递归）、矩阵求逆（高斯消元）。</li>
+<li><strong>PCA from scratch</strong>：用 SVD / 特征分解在 MNIST 上做降维并可视化。</li>
+<li><strong>梯度下降可视化</strong>：在 <code>f(x,y) = x² + 10y²</code> 上对比 SGD / Momentum / Adam 的收敛轨迹（matplotlib 画等高线 + 路径）。</li>
+<li><strong>从零推导并实现一元 / 多元线性回归</strong>：用最小二乘解析解 + 梯度下降两种方法验证。</li>
+<li><strong>手算 + 代码验证一个 3 层全连接网络的反向传播</strong>：在纸上算梯度，再用 PyTorch 的 <code>autograd</code> 比对数值。</li>
+<li><strong>概率作业</strong>：用 NumPy 实现拒绝采样、MCMC (Metropolis-Hastings) 采样一个高斯混合分布。</li>
+<li><strong>MLE 实操</strong>：给定一组数据，用 MLE 估计正态分布的 μ, σ；用 MAP（加正态先验）做对比。</li>
+</ol>
+<h2>五、通关标志</h2>
+<ul>
+<li><input disabled="" type="checkbox" /> 能口头解释：什么是矩阵的秩、特征值、SVD 的几何意义。</li>
+<li><input disabled="" type="checkbox" /> 拿起一篇神经网络论文，能看懂里面的矩阵公式（不一定看懂结论）。</li>
+<li><input disabled="" type="checkbox" /> 能从零推导线性回归 / 逻辑回归的梯度并用 NumPy 实现。</li>
+<li><input disabled="" type="checkbox" /> 知道交叉熵和 KL 散度的关系。</li>
+<li><input disabled="" type="checkbox" /> 能解释为什么用 Adam 不用 SGD（再说出 Adam 的局限）。</li>
+<li><input disabled="" type="checkbox" /> PCA 能用一句话讲清原理。</li>
+</ul>
+<p>下一站：<a href="/__themes/tufte/post/31477598/7bcefa45">02. 编程能力</a></p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2026-04-26<br>
+          <em>read in</em> 7 min<br>
+          <em>words</em> 1531<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/31477598/d58d4e64">https://sbrave.cn/post/31477598/d58d4e64</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

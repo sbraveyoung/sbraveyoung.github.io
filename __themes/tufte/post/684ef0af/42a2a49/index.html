@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题12：打印1到最大的n位数 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印 1,2,3 一直到最大的 3 位数即 999。** 分析 要打印 1 到最大的 n 位数，我们首先想到的方法是先计算出 n,再逐次打印。但有一个很重要的问题，n 大于 9 怎么办？（MAX_INT=2147483647，10 位），…">
+<meta property="og:title" content="面试题12：打印1到最大的n位数">
+<meta property="og:description" content="题目：输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印 1,2,3 一直到最大的 3 位数即 999。** 分析 要打印 1 到最大的 n 位数，我们首先想到的方法是先计算出 n,再逐次打印。但有一个很重要的问题，n 大于 9 怎么办？（MAX_INT=2147483647，10 位），…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/42a2a49">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2016 · NO. §378</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · May 30, 2016
+      </div>
+      <h1 class="article-title">面试题12：打印1到最大的n位数</h1>
+      <p class="article-lede">题目：输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印 1,2,3 一直到最大的 3 位数即 999。** 分析 要打印 1 到最大的 n 位数，我们首先想到的方法是先计算出 n,再逐次打印。但有一个很重要的问题，n 大于 9 怎么办？（MAX_INT=2147483647，10 位），…</p>
+      <div class="article-meta">
+        <span>2 min read</span>
+        <span>·</span>
+        <span>378 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>面试题12：打印1到最大的n位数</h2>
+<p><strong>题目：输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印 1,2,3 一直到最大的 3 位数即 999。</strong></p>
+<h3>分析</h3>
+<p>要打印 1 到最大的 n 位数，我们首先想到的方法是先计算出 n,再逐次打印。但有一个很重要的问题，n 大于 9 怎么办？（MAX_INT=2147483647，10 位），这样要打印的数字就会超过整型可以表示的范围，所以说这是一个隐形的大数问题。</p>
+<p>通常都是用字符串来解决大数问题的，所以我们在字符串上来模拟整数的计算。</p>
+<p>思路就是，每次在最低位（字符串的最右边）加 1，如果产生了进位，就加到下一位上去，否则表明没有进位，break 掉。当最高位产生进位时，表示已经加到最大的 n 位数了，结束。</p>
+<p>代码如下：</p>
+<pre><code class="language-C">void PrintNumber(const string&amp; number)
+{
+    int i;
+    int length=number.size();
+    for(i=0;i&lt;length;++i)
+    {
+        if(number[i]!='0')
+            break;
+    }
+    for(;i&lt;length;++i)
+    {
+        cout&lt;&lt;number[i];
+    }
+    cout&lt;&lt;endl;
+}
+
+bool Increment(string&amp; number)
+{
+    int length=number.size();
+    bool IsOverFlow=false;
+    int nTakeOver=0;
+    int i;
+    for(i=length-1;i&gt;=0;--i)
+    {
+        number[i]+=nTakeOver;
+        if(i==length-1)
+            number[i]++;
+        if(number[i]&gt;=(10+'0'))
+        {
+            if(i==0)
+                return true;
+            else
+            {
+                number[i]-=10;
+                nTakeOver=1;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    return false;
+}
+
+void Print1ToMaxOfNDigits(int n)
+{
+    string number;
+    number.resize(n);
+    int i;
+    for(i=0;i&lt;n;++i)
+    {
+        number[i]='0';
+    }
+    while(!Increment(number))
+    {
+        PrintNumber(number);
+    }
+}
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/12_Print1ToMaxOfNDigits/main.cpp">点我前往</a></p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2016-05-30<br>
+          <em>read in</em> 2 min<br>
+          <em>words</em> 378<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2016 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/684ef0af/42a2a49">https://sbrave.cn/post/684ef0af/42a2a49</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

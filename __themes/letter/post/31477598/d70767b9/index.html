@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 入门到精通 03 · 机器学习基础 · sbraveyoung · 字里行间</title>
+<meta name="description" content="现在大家都在搞 LLM，但**经典 ML 是地基**。不懂偏差方差、过拟合、特征工程，去玩深度学习只会是「炼丹」式的瞎试。 一、ML 的全景与术语 监督学习**：有标签。分类（离散）+ 回归（连续）。 无监督学习**：无标签。聚类、降维、密度估计。 半监督 / 自监督**：少量 / 无标签 → 自己造监督信号（**LL…">
+<meta property="og:title" content="AI 入门到精通 03 · 机器学习基础">
+<meta property="og:description" content="现在大家都在搞 LLM，但**经典 ML 是地基**。不懂偏差方差、过拟合、特征工程，去玩深度学习只会是「炼丹」式的瞎试。 一、ML 的全景与术语 监督学习**：有标签。分类（离散）+ 回归（连续）。 无监督学习**：无标签。聚类、降维、密度估计。 半监督 / 自监督**：少量 / 无标签 → 自己造监督信号（**LL…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/31477598/d70767b9">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2026-04-26
+    </div>
+    <h1 class="article-title">AI 入门到精通 03 · 机器学习基础</h1>
+    <p class="article-lede">现在大家都在搞 LLM，但**经典 ML 是地基**。不懂偏差方差、过拟合、特征工程，去玩深度学习只会是「炼丹」式的瞎试。 一、ML 的全景与术语 监督学习**：有标签。分类（离散）+ 回归（连续）。 无监督学习**：无标签。聚类、降维、密度估计。 半监督 / 自监督**：少量 / 无标签 → 自己造监督信号（**LL…</p>
+    <div class="article-meta">
+      <span>6 min read</span>
+      <span>1449 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>AI 入门到精通 03 · 机器学习基础</h2>
+<blockquote>
+<p>现在大家都在搞 LLM，但<strong>经典 ML 是地基</strong>。不懂偏差方差、过拟合、特征工程，去玩深度学习只会是「炼丹」式的瞎试。</p>
+</blockquote>
+<h2>一、ML 的全景与术语</h2>
+<ul>
+<li><strong>监督学习</strong>：有标签。分类（离散）+ 回归（连续）。</li>
+<li><strong>无监督学习</strong>：无标签。聚类、降维、密度估计。</li>
+<li><strong>半监督 / 自监督</strong>：少量 / 无标签 → 自己造监督信号（<strong>LLM 预训练的本质就是自监督</strong>）。</li>
+<li><strong>强化学习</strong>：通过环境交互学策略（chap 05、06、08 会再展开）。</li>
+<li><strong>在线 vs 离线学习</strong>：是否可以增量更新。</li>
+<li><strong>生成式 vs 判别式</strong>：建模 P(X,Y) 还是 P(Y|X)。</li>
+</ul>
+<h2>二、必须掌握的算法（十大件）</h2>
+<p>按出场顺序：</p>
+<ol>
+<li><strong>线性回归 (Linear Regression)</strong>：最小二乘 / 梯度下降两种解；正则化（Ridge / Lasso）。</li>
+<li><strong>逻辑回归 (Logistic Regression)</strong>：分类的入门；和最大熵模型的等价性。</li>
+<li><strong>k-NN</strong>：最简单的非参数方法；理解维度灾难。</li>
+<li><strong>朴素贝叶斯 (Naive Bayes)</strong>：文本分类的经典 baseline。</li>
+<li><strong>决策树 (Decision Tree)</strong>：信息增益 / 基尼指数；剪枝。</li>
+<li><strong>集成方法 (Ensemble)</strong>：
+<ul>
+<li>Bagging → 随机森林 (Random Forest)。</li>
+<li>Boosting → AdaBoost → GBDT → <strong>XGBoost / LightGBM / CatBoost</strong>（<strong>表格数据 SOTA，工业界主力</strong>）。</li>
+</ul>
+</li>
+<li><strong>支持向量机 (SVM)</strong>：最大间隔、核技巧；理解对偶 + KKT。</li>
+<li><strong>k-means / 高斯混合模型 (GMM)</strong>：聚类与 EM 算法。</li>
+<li><strong>PCA / t-SNE / UMAP</strong>：降维与可视化。</li>
+<li><strong>HMM / CRF</strong>：序列建模经典（NLP 老兵必修）。</li>
+</ol>
+<h2>三、ML 方法论（比算法更重要）</h2>
+<ul>
+<li><strong>数据划分</strong>：训练 / 验证 / 测试集；交叉验证 (k-fold)；时间序列要按时间切分。</li>
+<li><strong>数据泄露 (Data Leakage)</strong>：最致命的错误，本质是「用了未来 / 测试集的信息」。</li>
+<li><strong>偏差 / 方差权衡 (Bias-Variance Tradeoff)</strong>。</li>
+<li><strong>过拟合 / 欠拟合</strong>：识别 + 解决（正则、早停、Dropout、数据增强、加数据）。</li>
+<li><strong>特征工程</strong>：缺失值处理、归一化 / 标准化、One-hot / Target Encoding、特征交叉、时间特征。</li>
+<li><strong>类别不平衡</strong>：重采样、class weight、Focal Loss、阈值调优。</li>
+<li><strong>评价指标</strong>：
+<ul>
+<li>分类：accuracy / precision / recall / F1 / AUC / PR 曲线 / mAP。</li>
+<li>回归：MAE / MSE / RMSE / R²。</li>
+<li>排序 / 推荐：NDCG / Hit Rate / MRR。</li>
+<li>聚类：Silhouette / ARI。</li>
+</ul>
+</li>
+<li><strong>模型可解释性</strong>：feature importance、SHAP、LIME、PDP。</li>
+<li><strong>学习曲线</strong>：训练 / 验证 loss vs 数据量 / epoch，用来诊断问题。</li>
+</ul>
+<h2>四、数学回顾（与 chap 01 对应）</h2>
+<ul>
+<li>极大似然估计：解释逻辑回归 / 朴素贝叶斯的损失为什么长那样。</li>
+<li>KL 散度：交叉熵的来源。</li>
+<li>凸优化：SVM 对偶问题、Logistic 的损失为何凸。</li>
+<li>概率图模型：朴素贝叶斯、HMM、CRF 的统一视角。</li>
+</ul>
+<h2>五、参考资料</h2>
+<h3>课程</h3>
+<ul>
+<li><strong>吴恩达 Machine Learning Specialization (Coursera 新版)</strong> —— 入门最佳。</li>
+<li><strong>Andrew Ng 老版 CS229</strong> —— 数学严谨版，配 <a href="http://cs229.stanford.edu/">讲义</a>。</li>
+<li><strong>林轩田《机器学习基石 / 技法》</strong> —— 中文友好，理论扎实。</li>
+</ul>
+<h3>教材</h3>
+<ul>
+<li><strong>《统计学习方法》李航</strong> —— 中文经典，公式推导细致。</li>
+<li><strong>《Pattern Recognition and Machine Learning》Bishop (PRML)</strong> —— 贝叶斯视角的圣经。</li>
+<li><strong>《The Elements of Statistical Learning》(ESL)</strong> —— 进阶。</li>
+<li><strong>《机器学习》周志华（西瓜书）</strong> —— 中文入门首选。</li>
+</ul>
+<h3>实战</h3>
+<ul>
+<li><strong>Kaggle</strong> —— 真实数据集 + 公开 notebook 学习他人思路。</li>
+<li><strong>scikit-learn 官方文档</strong> —— 写得极好，所有算法都有数学推导 + 例子。</li>
+<li>《Hands-On Machine Learning with Scikit-Learn, Keras and TensorFlow》（Aurélien Géron）—— 工程导向，强烈推荐。</li>
+</ul>
+<h2>六、动手实践</h2>
+<ol>
+<li><strong>从零实现</strong> 线性回归 / 逻辑回归 / 决策树 / k-means / 朴素贝叶斯（不用 sklearn，用 NumPy）。</li>
+<li><strong>scikit-learn pipeline 实战</strong>：泰坦尼克号数据集（Kaggle 入门赛），跑通 数据清洗 → 特征工程 → 模型训练 → 提交，目标 Top 30%。</li>
+<li><strong>GBDT 实战</strong>：在 <a href="https://www.kaggle.com/c/house-prices-advanced-regression-techniques">HousePrice</a> 上对比 LightGBM / XGBoost / CatBoost 的表现，调参（learning_rate / max_depth / num_leaves / 早停）。</li>
+<li><strong>特征工程主题练习</strong>：选一个真实业务数据集（如电商点击日志、信贷数据），做完整特征工程并写文档。</li>
+<li><strong>模型解释</strong>：用 SHAP 解释你训练出的 GBDT，能讲清&quot;为什么这个样本被预测为 1&quot;。</li>
+<li><strong>类别不平衡</strong>：在 Credit Card Fraud Detection 数据集上，用 SMOTE / class weight / focal loss 三种方法对比效果。</li>
+<li><strong>聚类实战</strong>：用 K-Means + UMAP 把 MNIST 降到 2 维并可视化；和 PCA 对比。</li>
+</ol>
+<h2>七、通关标志</h2>
+<ul>
+<li><input disabled="" type="checkbox" /> 能解释偏差 / 方差并诊断一个模型是过拟合还是欠拟合。</li>
+<li><input disabled="" type="checkbox" /> 看到一个新业务问题，能在 30 分钟内给出&quot;用什么模型 / 什么指标 / 怎么划分数据&quot;的方案。</li>
+<li><input disabled="" type="checkbox" /> 完成一个 Kaggle 比赛（不一定要金牌，跑通 + 写一篇 notebook）。</li>
+<li><input disabled="" type="checkbox" /> 能从零推导逻辑回归的梯度并用 NumPy 实现。</li>
+<li><input disabled="" type="checkbox" /> 能解释 GBDT 为什么效果好（loss + 残差拟合）。</li>
+<li><input disabled="" type="checkbox" /> 知道何时不该用深度学习（小数据、表格数据）。</li>
+</ul>
+<p>下一站：<a href="/__themes/letter/post/31477598/b9b55924">04. 深度学习基础</a></p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

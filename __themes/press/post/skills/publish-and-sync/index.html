@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skill · 写完一篇 → 上线全流程 · sbraveyoung · 字里行间</title>
+<meta name="description" content="何时用**：写完一篇文章想发出去；或者要排查"我 push 了为啥 sbrave.cn 没更新"。 解决什么**：把"敲完最后一个字 → sbrave.cn 上看到"这条端到端链路拆成可观察的步骤。 端到端时序 整体时间：从 (a) 到 sbrave.cn 上看到，**1～2 分钟**为常态。 触发器 | 触发    …">
+<meta property="og:title" content="Skill · 写完一篇 → 上线全流程">
+<meta property="og:description" content="何时用**：写完一篇文章想发出去；或者要排查"我 push 了为啥 sbrave.cn 没更新"。 解决什么**：把"敲完最后一个字 → sbrave.cn 上看到"这条端到端链路拆成可观察的步骤。 端到端时序 整体时间：从 (a) 到 sbrave.cn 上看到，**1～2 分钟**为常态。 触发器 | 触发    …">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/skills/publish-and-sync">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2026</span>
+    <span>Monday, May 11, 2026</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · May 11, 2026</div>
+    <h1 class="press-article-title">
+      Skill · 写完一篇 → 上线全流程
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>何时用**：写完一篇文章想发出去；或者要排查"我 push 了为啥 sbrave.cn 没更新"。 解决什么**：把"敲完最后一个字 → sbrave.cn 上看到"这条端到端链路拆成可观察的步骤。 端到端时序 整体时间：从 (a) 到 sbrave.cn 上看到，**1～2 分钟**为常态。 触发器 | 触发    …</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 4 min read · 🤖 AI 辅助 ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>Skill · 写完一篇 → 上线全流程</h2>
+<blockquote>
+<p><strong>何时用</strong>：写完一篇文章想发出去；或者要排查&quot;我 push 了为啥 sbrave.cn 没更新&quot;。</p>
+<p><strong>解决什么</strong>：把&quot;敲完最后一个字 → sbrave.cn 上看到&quot;这条端到端链路拆成可观察的步骤。</p>
+</blockquote>
+<h3>端到端时序</h3>
+<pre><code>你按 Cmd+S
+   │
+   │ (a) Obsidian 写盘
+   │
+   │ (b) 如果开了 auto-push，30s 后插件触发 push 流程
+   │     （没开就走命令面板手动调&quot;Push blog repo&quot;）
+   ▼
+插件: gitInitIfMissing → gitStageAndDiff
+   │  (c) git add -A，跑 git diff --cached
+   ▼
+DiffConfirmModal 弹出 (默认开启)
+   │  (d) 你 review，点 Commit &amp; Push
+   │      （Cancel 会 git reset 解暂存，工作树不动）
+   ▼
+插件: gitCommitAndPush
+   │  (e) 生成 commit 信息（模板 obsidian sync: {{count}} file(s) at {{date}}）
+   │  (f) git commit -m &quot;...&quot;  + git push HEAD:master
+   ▼
+sbraveyoung/blog 的 .github/workflows/deploy.yml
+   │  (g) 仅有一个 step: 用 GH_PAT 调
+   │      POST /repos/sbraveyoung/sbraveyoung.github.io/dispatches
+   │      event_type=blog-update
+   ▼
+sbraveyoung.github.io 的 .github/workflows/deploy.yml
+   │  (h) checkout sbraveyoung/blog + sbraveyoung/gobog
+   │  (i) 读 _gobog.json → 拼 _gobog.toml → go build → ./gobog -export _dist
+   │  (j) scripts/check-export.sh _dist （死链 / 孤儿 / 可疑 URL 审计）
+   │  (k) 用 _dist/ 替换工作树（.git/.github/_gobog.json/scripts 保留）
+   │  (l) git commit + git push
+   ▼
+GitHub Pages 自动伺服
+   ▼
+sbrave.cn
+</code></pre>
+<p>整体时间：从 (a) 到 sbrave.cn 上看到，<strong>1～2 分钟</strong>为常态。</p>
+<h3>触发器</h3>
+<table>
+<thead>
+<tr>
+<th>触发</th>
+<th>来源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主路径</td>
+<td>blog 仓库 push → repository_dispatch → github.io 跑 deploy</td>
+</tr>
+<tr>
+<td>手动</td>
+<td>github.io 仓库的 Actions 页 → Deploy → Run workflow</td>
+</tr>
+<tr>
+<td>兜底</td>
+<td>每天 06:00 UTC 跑一次 schedule，防止某次 webhook 没送达</td>
+</tr>
+</tbody>
+</table>
+<h3>该看哪个 Actions 页排查</h3>
+<ul>
+<li><strong>blog push 后 sbrave.cn 没更新</strong>：先看 <code>sbraveyoung/blog/actions</code>，确认 notify workflow 跑成功。如果是 <code>secrets.GH_PAT not configured</code> 这类错，去 blog 仓库 settings → secrets 加一下 GH_PAT。</li>
+<li><strong>notify 跑成功但 github.io 没动</strong>：看 <code>sbraveyoung/sbraveyoung.github.io/actions</code>，repository_dispatch 触发的 run 应该在那里。失败原因一般是 token 权限不够或者 <code>_gobog.toml</code> 拼接出错。</li>
+<li><strong>github.io 跑成功但页面看着是旧的</strong>：GitHub Pages 自己有缓存，等 1～2 分钟，或者 hard refresh。</li>
+</ul>
+<h3>必需的 secret</h3>
+<table>
+<thead>
+<tr>
+<th>仓库</th>
+<th>secret 名</th>
+<th>干啥</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sbraveyoung/blog</code></td>
+<td><code>GH_PAT</code></td>
+<td>Fine-grained PAT，对 <code>sbraveyoung/sbraveyoung.github.io</code> 有 Contents: R/W。</td>
+</tr>
+<tr>
+<td><code>sbraveyoung/sbraveyoung.github.io</code></td>
+<td><code>GH_PAT</code></td>
+<td>Fine-grained PAT，对 blog + gobog 有 Contents: Read，对自己有 R/W。</td>
+</tr>
+</tbody>
+</table>
+<p>公开仓库的话，github.io 可以 fallback 到默认的 <code>GITHUB_TOKEN</code>，但配 <code>GH_PAT</code> 更稳。</p>
+<h3>常见坑</h3>
+<ul>
+<li><strong>Diff 弹出后我点了 Cancel，但下次 push 还是显示一样的 diff</strong>：正常。Cancel 走的是 <code>git reset</code>，工作树不动；下次 stage 自然还是同一份变更。</li>
+<li><strong>插件说 &quot;pull is not fast-forward&quot;</strong>：你本地有 commit 远端也有 commit。手动 <code>git rebase origin/master</code> 解决，别图省事让插件强 reset。</li>
+<li><strong>deploy 失败，error: gobog binary not found</strong>：意味着 <code>go build</code> 那步出错了，看 Actions 日志里 setup-go / go build 是不是 fail 了。多半是 gobog 仓库的 <code>go.mod</code> 里某个包失踪。</li>
+<li><strong>新文章在首页死活不出现</strong>：检查 front-matter 是不是 <code>draft: true</code> 没去掉，或者 create_time 写错（gobog 用它排序）。</li>
+</ul>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2026 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

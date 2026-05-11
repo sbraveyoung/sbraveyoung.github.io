@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题24：二叉搜索时的后序遍历序列 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：输入一个整数数组，判断该数组是不是某二叉搜索时的后序遍历的结果。如果是则返回true，否则返回false。假设输入的数组的任一两个数字都不相同。** 分析 我们先假设该数组是某颗二叉搜索树的后序遍历序列，则它有如下性质： 数组最后一个元素是该二叉树的根节点； 若数组为arr，长度为n，则arr[0..k-1]<a…">
+<meta property="og:title" content="面试题24：二叉搜索时的后序遍历序列">
+<meta property="og:description" content="题目：输入一个整数数组，判断该数组是不是某二叉搜索时的后序遍历的结果。如果是则返回true，否则返回false。假设输入的数组的任一两个数字都不相同。** 分析 我们先假设该数组是某颗二叉搜索树的后序遍历序列，则它有如下性质： 数组最后一个元素是该二叉树的根节点； 若数组为arr，长度为n，则arr[0..k-1]<a…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/4d4ff175">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-06-12
+    </div>
+    <h1 class="article-title">面试题24：二叉搜索时的后序遍历序列</h1>
+    <p class="article-lede">题目：输入一个整数数组，判断该数组是不是某二叉搜索时的后序遍历的结果。如果是则返回true，否则返回false。假设输入的数组的任一两个数字都不相同。** 分析 我们先假设该数组是某颗二叉搜索树的后序遍历序列，则它有如下性质： 数组最后一个元素是该二叉树的根节点； 若数组为arr，长度为n，则arr[0..k-1]<a…</p>
+    <div class="article-meta">
+      <span>2 min read</span>
+      <span>417 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>面试题24：二叉搜索时的后序遍历序列</h2>
+<p><strong>题目：输入一个整数数组，判断该数组是不是某二叉搜索时的后序遍历的结果。如果是则返回true，否则返回false。假设输入的数组的任一两个数字都不相同。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>我们先假设该数组是某颗二叉搜索树的后序遍历序列，则它有如下性质：</p>
+<ul>
+<li>数组最后一个元素是该二叉树的根节点；</li>
+<li>若数组为arr，长度为n，则arr[0..k-1]&lt;arr[n-1],arr[k..n-2]&gt;arr[n-1]，(0&lt;=k&lt;=n-1)；</li>
+<li>对arr[0..k-1]和arr[k..n-2]同样适用于这些规律；
+不难看出，这是一个递归的思想。数组中前面一部分数字会小于最后一个数字（对应于根节点的左子树），后面一部分数字会大于最后一个数字（对应于根节点的右子树），因此可以递归地对他们进行判断。</li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-C">class ArgIsError{};
+
+template
+bool compair(const T&amp;amp; t1,const T&amp;amp; t2)
+{
+    return t1&gt;t2;
+}
+
+template
+bool IsMax(const vector&amp;amp; v,int start,int end,const T&amp;amp; t)throw (ArgIsError)
+{
+    if(v.size()end)
+        throw ArgIsError();
+    int i;
+    for(i=start;i&lt;end;++i)
+    {
+        if(compair(v[i],t))
+            return false;
+    }
+    return true;
+}
+template
+bool IsMin(const vector&amp;amp; v,int start,int end,const T&amp;amp; t)throw (ArgIsError)
+{
+    if(v.size()end)
+        throw ArgIsError();
+    int i;
+    for(i=start;i&lt;end;++i)
+    {
+        if(!compair(v[i],t))
+            return false;
+    }
+    return true;
+}
+
+template
+bool VerifySquenceOfBST(const vector&amp;amp; sequence)
+{
+    if(sequence.size()=0;--i)
+    {
+        if(sequence[i]&lt;sequence[length-1])
+        {
+            left=0;
+            right=i+1;
+            break;
+        }
+    }
+    try
+    {
+        if(!IsMax(sequence,left,right,sequence[length-1]) || !IsMin(sequence,right,length-1,sequence[length-1]))
+        {
+            return false;
+        }
+    }
+    catch(ArgIsError&amp;amp;)
+    {
+        ;
+    }
+    vector lseq(sequence.begin()+left,sequence.begin()+right),rseq(sequence.begin()+right,sequence.begin()+length-1);
+    if(VerifySquenceOfBST(lseq) &amp;amp;&amp;amp; VerifySquenceOfBST(rseq))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/24_SquenceOfBST/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

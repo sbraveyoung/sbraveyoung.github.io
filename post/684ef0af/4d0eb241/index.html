@@ -1,71 +1,84 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题38：数字在排序数组中出现的次数 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/4d0eb241">
+<meta name="description" content="题目：统计一个数字在排序数组中出现的次数。例如输入数组{1,2,3,3,3,3,4,5}和数字3，由于3在数组中出现了4次，因此输出4.** 分析 看到排序数组，我们自然而然会想到二分法。但平常的二分法只能找到这个数字，并不能找出出现的次数，或者该数字的最左和最右边界。那么我们就需要改进一下： 假设数组是升序排列的，当…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题38：数字在排序数组中出现的次数">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/4d0eb241">
+<meta property="og:description" content="题目：统计一个数字在排序数组中出现的次数。例如输入数组{1,2,3,3,3,3,4,5}和数字3，由于3在数组中出现了4次，因此输出4.** 分析 看到排序数组，我们自然而然会想到二分法。但平常的二分法只能找到这个数字，并不能找出出现的次数，或者该数字的最左和最右边界。那么我们就需要改进一下： 假设数组是升序排列的，当…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>面试题38：数字在排序数组中出现的次数</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>面试题38：数字在排序数组中出现的次数</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-03 23:42:43</span>
+        <span>· 571 字</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题38：数字在排序数组中出现的次数</h2>
 <p><strong>题目：统计一个数字在排序数组中出现的次数。例如输入数组{1,2,3,3,3,3,4,5}和数字3，由于3在数组中出现了4次，因此输出4.</strong></p>
-
 <hr />
-
 <h3>分析</h3>
-
 <p>看到排序数组，我们自然而然会想到二分法。但平常的二分法只能找到这个数字，并不能找出出现的次数，或者该数字的最左和最右边界。那么我们就需要改进一下：</p>
-
 <p>假设数组是升序排列的，当我们用二分法找到这个数时，再继续用二分法去找它的左右边界，因此需要分别写两个函数。以找左边界为例，设现在有left，right和mid分别指向数组的最左，最右和中间数字，且中间数字恰好为我们要找的数字。这时候就在left和mid之间用二分法去找，假设mid2=left+(mid-left)/2；此时有如下几种情况：</p>
-
 <ul>
 <li>arr[mid2]==我们要找的数字，且arr[mid2-1]不等于我们要找的数字，则return mid2。否则继续在left和mid2之间找。</li>
 <li>arr[mid2]&lt;我们要找的数字，则在mid2和mid之间找。</li>
 <li>arr[mid2]&gt;我们要找的数字？？what？这是不可能滴！因为数组是升序排序的，且arr[mid]==我们要找的数字且mid&gt;mid2.</li>
 </ul>
-
 <p>综上，我们可以利用递归去找最左和最右的数字，将其下标相减就可以得到该数字出现的次数。</p>
-
 <p>代码如下：</p>
-
-<p>```template<typename T>
-int _GetLeft(const vector<T>&amp; v,int left,int right,const T&amp; k)
+<pre><code class="language-template&lt;typename">int _GetLeft(const vector&lt;T&gt;&amp;amp; v,int left,int right,const T&amp;amp; k)
 {
     if(left==right)
         return right;
@@ -74,10 +87,10 @@ int _GetLeft(const vector<T>&amp; v,int left,int right,const T&amp; k)
         return _GetLeft(v,left,mid,k);
     else
         return _GetLeft(v,mid+1,right,k);
-}</p>
+}
 
-<p>template<typename T>
-int _GetRight(const vector<T>&amp; v,int left,int right,const T&amp; k)
+template&lt;typename T&gt;
+int _GetRight(const vector&lt;T&gt;&amp;amp; v,int left,int right,const T&amp;amp; k)
 {
     if(left==right)
         return left;
@@ -93,10 +106,10 @@ int _GetRight(const vector<T>&amp; v,int left,int right,const T&amp; k)
         return _GetRight(v,mid,right,k);
     else
         return _GetRight(v,left,mid-1,k);
-}</p>
+}
 
-<p>template<typename T>
-int _NumberOfK(const vector<T>&amp; v,int left,int right,const T&amp; k)
+template&lt;typename T&gt;
+int _NumberOfK(const vector&lt;T&gt;&amp;amp; v,int left,int right,const T&amp;amp; k)
 {
     if(left&gt;right)
         return 0;
@@ -104,42 +117,62 @@ int _NumberOfK(const vector<T>&amp; v,int left,int right,const T&amp; k)
     if(v[mid]&gt;k)
         return _NumberOfK(v,left,mid-1,k);
     else if(v[mid]&lt;k)
-        return <em>NumberOfK(v,mid+1,right,k);
+        return _NumberOfK(v,mid+1,right,k);
     else
     {
-        int r=</em>GetRight(v,mid,right,k);
+        int r=_GetRight(v,mid,right,k);
         int l=_GetLeft(v,left,mid,k);
         //cout&lt;&lt;l&lt;&lt;&quot; &quot;&lt;&lt;r&lt;&lt;endl;
         return r-l+1;
     }
-}</p>
+}
 
-<p>template<typename T>
-int NumberOfK(const vector<T>&amp; v,const T&amp; k)
+template&lt;typename T&gt;
+int NumberOfK(const vector&lt;T&gt;&amp;amp; v,const T&amp;amp; k)
 {
     return _NumberOfK(v,0,v.size()-1,k);
 }
-```</p>
-
+</code></pre>
 <p><strong>以上</strong></p>
-
 <p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
-
 <p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/38_NumbreOfK/main.cpp">点我前往</a></p>
-
 <div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

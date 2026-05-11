@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题23：从上往下打印二叉树 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/2dc774f">
+<meta name="description" content="题目：从上往下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。例如输入下图所示的二叉树，则依次打印出8,6,10,5,7,9,11.** ![](/images/OrderBinTree.png) 二叉树的节点定义如下： 分析 对二叉树而言，第n层最少有1个节点，最多有2&lt;sup&gt;n-1&lt;/sup&gt;个节点。…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题23：从上往下打印二叉树">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/2dc774f">
+<meta property="og:description" content="题目：从上往下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。例如输入下图所示的二叉树，则依次打印出8,6,10,5,7,9,11.** ![](/images/OrderBinTree.png) 二叉树的节点定义如下： 分析 对二叉树而言，第n层最少有1个节点，最多有2&lt;sup&gt;n-1&lt;/sup&gt;个节点。…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-06-11 21:48:20</span>
+        <span>· 433 字</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题23：从上往下打印二叉树</h2>
+<p><strong>题目：从上往下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。例如输入下图所示的二叉树，则依次打印出8,6,10,5,7,9,11.</strong></p>
+<p><img src="/__themes/sepia/images/OrderBinTree.png" alt="" /></p>
+<p>二叉树的节点定义如下：</p>
+<pre><code>struct BinaryTreeNode
+{
+    int value;
+    BinaryTreeNode* left;
+    BinaryTreeNode* right;
+    BinaryTreeNode(int data=int()):value(data),left(NULL),right(NULL)
+    {}
+}
+</code></pre>
+<hr />
+<h3>分析</h3>
+<p>对二叉树而言，第n层最少有1个节点，最多有2<sup>n-1</sup>个节点。很明显，要以层序打印二叉树，就要在遍历时将当前层的节点保存起来，目的有两个，一是为了遍历以当前层节点为跟的子树，二是为了打印这些节点。</p>
+<p>二叉树的层序遍历在广义上可看成是一种“广度优先搜索”策略，由此我们联想的图算法中的广度优先搜索算法，采用“队列”这个数据结构。思想如下：</p>
+<p>先将根节点放入队列，而后在循环中将队列的队首的左右子树放进队列。要注意的是，题目要求按从左到右的顺序打印，所以需要先push右子树，再push左子树。如此循环直到队列为空即可。</p>
+<p>代码如下：</p>
+<pre><code>void PrintFromTopToBottom(BinaryTreeNode* root)
+{
+    if(root==NULL)
+        return;
+    queue&lt;binarytreenode&gt; q;
+    q.push(root);
+    while(!q.empty())
+    {
+        if(q.front()-&gt;left!=NULL)
+            q.push(q.front()-&gt;left);
+        if(q.front()-&gt;right!=NULL)
+            q.push(q.front()-&gt;right);
+        cout&lt;&lt;q.front-&gt;value&lt;&lt;&quot; &quot;;
+        q.pop();
+    }
+    cout&lt;&lt;endl;
+}
+&lt;/q.front-&gt;&lt;/binarytreenode&gt;```
+
+**以上**
+
+如果你有任何想法或是可以改进的地方，欢迎和我交流！
+
+完整代码及测试用例在github上：[点我前往](https://github.com/SmartBrave/Sword-to-Offer/blob/master/23_PrintBinaryTree/main.cpp)
+
+&lt;div&gt;[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 &quot;来自为知笔记(Wiz)&quot;)&lt;/div&gt;
+
+??自为知笔记(Wiz)&quot;)&lt;/div&gt;
+
+</code></pre>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

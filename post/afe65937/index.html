@@ -1,99 +1,139 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.1.1/css/bootstrap.min.css">
-    
-    
-    <link href="/css/home.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    
-    
-    <title>gobog</title>
-    
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>计算机网络系列 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <nav class="navbar navbar-default navbar-fixed-top" style="opacity: .9" role="navigation">
-        <div class="container-fluid">
-            
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/#">Smart的个人博客</a>
-            </div>
 
-            
-
-            <div class="navbar-other">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="#">博客</a></li>
-                    <li><a href="//github.com/SmartBrave" target="_black">Github</a></li>
-                    <li><a href="/about">About</a></li>
-                </ul>
-            </div>
-        </div>
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
     </nav>
-    <div class="outer">
-        <ul class="list-group">
+  </div>
+</header>
 
-            
-            <li class="list-group-item title">
-                <a href="/post/afe65937/b9e67ec1" tag="export">HTTP协议详解</a>
-            </li>
-            
-            <li class="list-group-item title">
-                <a href="/post/afe65937/51aeee82" tag="export">TCP协议</a>
-            </li>
-            
-            <li class="list-group-item title">
-                <a href="/post/afe65937/9eddd0c8" tag="export">一些常见的协议详解</a>
-            </li>
-            
-            <li class="list-group-item title">
-                <a href="/post/afe65937/a452b2f2" tag="export">所有的HTTP返回码</a>
-            </li>
-            
+<main class="page page-group">
+  <nav class="crumbs"><a href="/">Home</a><span>›</span><span>计算机网络系列</span></nav>
+  <header class="group-head">
+    <h1>计算机网络系列</h1>
+    <p class="group-count">4 篇</p>
+  </header>
 
-        </ul>
-    </div>
-
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="//cdn.staticfile.org/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <section class="post-list">
     
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/afe65937/51aeee82">TCP协议</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">TCP 协议处于四层参考模型的第三层，即传输层。同一层的还有 UDP 协议。TCP 和 UDP 的区别是：**TCP 是可靠的，面向连接的，基于字节流的服务；UDP 是不可靠的，无连接的，面向数据块的服务**。 解释如下： 每次使用 TCP 传输数据时，都要先建立一对一的连接，即面向连接的。而使用 UDP 时不必先建立…</p>
+      <div class="entry-meta">
+        <span>2016-08-22 16:23:55</span>
+        <span>· 12 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/afe65937/9eddd0c8">一些常见的协议详解</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">TCP/IP 协议族里面有众多的协议，分别分布在各个不同的层次上。现将跟 TCP 有关的部分协议详解如下： ARP协议 ARP 协议处于 TCP/IP 协议族的最底层，即网络接口层。它的主要用途就是实现一台主机的 IP 地址到 MAC 地址的转换。 以太网 ARP 请求/应答报文的格式如下图所示： ![](../../…</p>
+      <div class="entry-meta">
+        <span>2016-08-20 13:39:26</span>
+        <span>· 7 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/afe65937/b9e67ec1">HTTP协议详解</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">众所周知，HTTP 是我们通过浏览器上网所使用的主要协议，全称为 Hyper Text Transfer Protocol，超文本传输协议。 HTTP 是一个无连接无状态的协议。什么意思呢？ 无连接就是每次传输数据完毕就立即断开连接，这样导致的后果就是如果请求同一台服务器上的多个资源，会花费很多时间在建立连接上。解决方…</p>
+      <div class="entry-meta">
+        <span>2016-08-19 11:53:11</span>
+        <span>· 10 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/afe65937/a452b2f2">所有的HTTP返回码</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">1xx 消息：请求已被接受，需要继续处理。HTTP/1.0 协议中没有定义任何 1xx 状态码。 100 Continue 客户端应当继续发送剩余请求。 101 Switching Protocols 服务器已经理解了客户端的请求，并将通过 Upgrade 消息头通知客户端采用不同的协议来完成这个请求。 102 Pro…</p>
+      <div class="entry-meta">
+        <span>2016-07-10 15:13:57</span>
+        <span>· 8 min</span>
+        
+      </div>
+    </article>
+    
+  </section>
+</main>
 
-</body>
-
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一个简单的哈希表实现 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/844d020b">
+<meta name="description" content="哈希算法可以说是效率比较高的一种算法了，基本上时间复杂度为 O(1)。但哈希有个坑爹的地方就是碰撞问题。当发生冲突时，有两种解决办法： 线性探测 哈希桶法 具体算法不再解释，以下代码使用 STL 中 vector 和 list 实现了一个基于哈希桶的哈希表。 代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个简单的哈希表实现">
+<meta property="og:url" content="https://sbrave.cn/post/e660f1d5/844d020b">
+<meta property="og:description" content="哈希算法可以说是效率比较高的一种算法了，基本上时间复杂度为 O(1)。但哈希有个坑爹的地方就是碰撞问题。当发生冲突时，有两种解决办法： 线性探测 哈希桶法 具体算法不再解释，以下代码使用 STL 中 vector 和 list 实现了一个基于哈希桶的哈希表。 代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-27 22:55:20</span>
+        <span>· 339 字</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>一个简单的哈希表实现</h2>
+<p>哈希算法可以说是效率比较高的一种算法了，基本上时间复杂度为 O(1)。但哈希有个坑爹的地方就是碰撞问题。当发生冲突时，有两种解决办法：</p>
+<ul>
+<li>线性探测</li>
+<li>哈希桶法</li>
+</ul>
+<p>具体算法不再解释，以下代码使用 STL 中 vector 和 list 实现了一个基于哈希桶的哈希表。</p>
+<p>代码如下：</p>
+<pre><code class="language-C++">#pragma once
+
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;list&gt;
+using namespace std;
+
+//template&lt;typename key_type,typename value_type&gt;
+//struct Pair&lt;key_type,value_type&gt;
+//{
+//    key_type _first;
+//    value_type _second;
+//};
+
+template&lt;typename key_type,typename value_type&gt;
+bool operator==(const pair&lt;key_type,value_type&gt;&amp; p1,const pair&lt;key_type,value_type&gt;&amp; p2)
+{
+    if(p1.first==p2.first)
+        return true;
+    return false;
+}
+
+template&lt;typename key_type&gt;
+struct HashFunc{
+    size_t operator()(const key_type* key)
+    {
+        return BKDRHash(key);
+    }
+
+    size_t BKDRHash(const key_type* str)
+    {
+        register size_t hash=0;
+        while(size_t ch=(size_t)*str++)
+        {
+            hash=hash*131+ch;
+        }
+        return hash;
+    }
+};
+
+template&lt;typename key_type,typename value_type,typename Hash=HashFunc&lt;key_type&gt;&gt;
+class HashTable{
+public:
+    HashTable()
+        :_size(0)
+    {
+        HashBase.resize(_GetNextSize());
+    }
+
+    bool Insert(const key_type&amp; key,const value_type&amp; value)
+    {
+        if(Find(key))
+            return false;
+        size_t index=_Hash(key);
+        HashBase[index].insert(pair&lt;key_type,value_type&gt;(key,value));
+        return true;
+    }
+
+    bool Find(const key_type&amp; key)
+    {
+        size_t index=_Hash(key);
+        if(find(HashBase[index].begin(),HashBase[index].end(),key)!=HashBase[index].end())
+            return false;//the key has existed!
+        return true;
+    }
+
+protected:
+    size_t _Hash(const key_type&amp; key)
+    {
+        Hash hs;
+        return hs(key)%_size;
+    }
+
+    size_t _GetNextSize()
+    {
+        enum {__stl_num_primes=28};
+        static const size_t __stl_prime_list[__stl_num_primes] =
+        {
+            53ul,         97ul,         193ul,       389ul,       769ul,
+            1543ul,       3079ul,       6151ul,      12289ul,     24593ul,
+            49157ul,      98317ul,      196613ul,    393241ul,    786433ul,
+            1572869ul,    3145739ul,    6291469ul,   12582917ul,  25165843ul,
+            50331653ul,   100663319ul,  201326611ul, 402653189ul, 805306457ul, 
+            1610612741ul, 3221225473ul, 4294967291ul
+        };
+        size_t size=HashBase.size();
+        int i;
+        for(i=0;i&lt;__stl_num_primes;++i)
+        {
+            if(__stl_prime_list[i]&gt;size)
+                return __stl_prime_list[i];
+        }
+        return __stl_prime_list[__stl_num_primes-1];
+
+    }
+
+private:
+    vector&lt;list&lt;pair&lt;key_type,value_type&gt; &gt; &gt; HashBase;
+    size_t _size;
+};
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/HashTable">点我前往</a></p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

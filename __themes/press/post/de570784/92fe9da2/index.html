@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>浅谈数据库的索引 · sbraveyoung · 字里行间</title>
+<meta name="description" content="我们知道，数据库的分类有关系型数据库和非关系型数据库。关系型数据库的代表是MySQL。这里我们不谈关系型和非关系型的区别于联系，只侧重于讲讲关系型数据库的索引实现原理。 之所以称为关系型数据库，是因为它记录了各种数据之间的“关系”，我们可以形象地将若干个属性它看做一张表，一个数据库有若干个这样的表，这些表之间靠某些共有…">
+<meta property="og:title" content="浅谈数据库的索引">
+<meta property="og:description" content="我们知道，数据库的分类有关系型数据库和非关系型数据库。关系型数据库的代表是MySQL。这里我们不谈关系型和非关系型的区别于联系，只侧重于讲讲关系型数据库的索引实现原理。 之所以称为关系型数据库，是因为它记录了各种数据之间的“关系”，我们可以形象地将若干个属性它看做一张表，一个数据库有若干个这样的表，这些表之间靠某些共有…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/de570784/92fe9da2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Tuesday, August 23, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · August 23, 2016</div>
+    <h1 class="press-article-title">
+      浅谈数据库的索引
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>我们知道，数据库的分类有关系型数据库和非关系型数据库。关系型数据库的代表是MySQL。这里我们不谈关系型和非关系型的区别于联系，只侧重于讲讲关系型数据库的索引实现原理。 之所以称为关系型数据库，是因为它记录了各种数据之间的“关系”，我们可以形象地将若干个属性它看做一张表，一个数据库有若干个这样的表，这些表之间靠某些共有…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 4 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>浅谈数据库的索引</h2>
+<p>我们知道，数据库的分类有关系型数据库和非关系型数据库。关系型数据库的代表是MySQL。这里我们不谈关系型和非关系型的区别于联系，只侧重于讲讲关系型数据库的索引实现原理。</p>
+<p>之所以称为关系型数据库，是因为它记录了各种数据之间的“关系”，我们可以形象地将若干个属性它看做一张表，一个数据库有若干个这样的表，这些表之间靠某些共有的字段连接起来，就构成了他们之间的关系。</p>
+<p>试想，我们在进行表查询的时候，一般都需要扫描整张表，即全表扫描。而这些数据都是存储在磁盘上的，不用我说，磁盘I/O都是很慢的，大概是内存I/O的10000倍左右。这就导致数据库的查询操作效率很低，而究其原因，就是因为我们查询了很多不必要的数据属性。而改进办法很简单，就是尽力减少磁盘I/O。</p>
+<p>此时就出现了索引的概念。索引就是对表中某个(些)字段进行排序的数据结构，一般采用B+树实现，每次查询操作最快只需要O(lgN)的时间复杂度。具体原因请看：</p>
+<p>所谓B+树，是专为减少磁盘I/O而生的。一棵4阶的B+树示意图如下：</p>
+<p><img src="../../../image/92fe9da2-1.png" alt="" /></p>
+<p>可以看出，在B+树中，所有数据均保存在叶子节点上，并且叶子节点是排序的，并且各叶子节点之间用指针连接起来。这样在B+树中查找数据时，只需要根据路径上的索引找到对应的叶子节点，然后利用二分查找再找到对应的值即可。</p>
+<p>B+树实现索引的好处是，每次查找时不必执行全表扫描，也就是不必将磁盘上的所有数据都加载进内存，只需要加载对应的叶子节点到内存即可。所以对任何单个数据的查询，都只需要进行一次磁盘I/O即可。</p>
+<p>使用B+树的另一个好处是，B+树的所有叶子节点都用指针连接起来了。所以要查找某一区间内所有的数据时，可以先从根节点找到区间的下界节点，此操作的时间复杂度为O(lgN)，然后再利用叶节点的指针遍历，直到找到区间上界节点为止，设区间的长度为M，此操作的时间复杂度为O(M)，所以总共的时间复杂度为O(M+lgN)。这是非常高效的。</p>
+<p>综上，使用B+树可以极大提高磁盘查找的效率。当然，索引不只可以使用B+树，B树，位图都可以作为索引使用的数据结构，这里不再赘述。</p>
+<p>【完】</p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

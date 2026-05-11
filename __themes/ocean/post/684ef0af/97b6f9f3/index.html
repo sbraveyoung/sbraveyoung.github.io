@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题25：二叉树中和为某一值的路径 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/97b6f9f3">
+<meta name="description" content="题目：输入一颗二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径。从属的根节点开始往下一直到叶节点所经过的节点形成一条路径。二叉树节点的定义如下：** 分析 既然题目要求要打印二叉树上的所有节点，就需要遍历该二叉树。而在最常见的前、中、后序三种遍历方式中，只有前序遍历能第一个访问二叉树的根节点，也就是先累加…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题25：二叉树中和为某一值的路径">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/97b6f9f3">
+<meta property="og:description" content="题目：输入一颗二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径。从属的根节点开始往下一直到叶节点所经过的节点形成一条路径。二叉树节点的定义如下：** 分析 既然题目要求要打印二叉树上的所有节点，就需要遍历该二叉树。而在最常见的前、中、后序三种遍历方式中，只有前序遍历能第一个访问二叉树的根节点，也就是先累加…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-06-13 13:58:53</span>
+        <span>· 393 字</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题25：二叉树中和为某一值的路径</h2>
+<p><strong>题目：输入一颗二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径。从属的根节点开始往下一直到叶节点所经过的节点形成一条路径。二叉树节点的定义如下：</strong></p>
+<pre><code>struct BinaryTreeNode{
+    int value;
+    BinaryTreeNode* left;
+    BinaryTreeNode* right;
+    BinaryTreeNode(int data=int()):value(data),left(NULL),right(NULL)
+    {}
+};
+</code></pre>
+<hr />
+<h3>分析</h3>
+<p>既然题目要求要打印二叉树上的所有节点，就需要遍历该二叉树。而在最常见的前、中、后序三种遍历方式中，只有前序遍历能第一个访问二叉树的根节点，也就是先累加根节点的值。所以可以在前序遍历的过程中计算当前路径上所以节点的和。如果当前节点是叶子节点且和等于给定的整数，就打印出当前路径上的节点。否则就将该叶子节点从路径上删除。由此可见，我们需要一个数组来保存当前的路径。</p>
+<p>代码如下：</p>
+<pre><code>void _FindPath(BinaryTreeNode* root,int sum,vector&lt;int&gt;&amp; v,int cursum)
+{
+    if(root==NULL)
+        return;
+    cursum+=root-&gt;value;
+    v.push_back(root-&gt;value);
+    if(cursum==sum &amp;&amp; root-&gt;left==NULL &amp;&amp; root-&gt;right==NULL)
+    {
+        vector&lt;int&gt;::iterator iter=v.begin();
+        for(;iter!=v.end();++iter)
+        {
+            cout&lt;&lt;*iter&lt;&lt;&quot; &quot;;
+        }
+        cout&lt;&lt;endl;
+    }
+    else
+    {
+        _FindPath(root-&gt;left,sum,v,cursum);
+        _FindPath(root-&gt;right,sum,v,cursum);
+    }
+    v.pop_back();
+    return;
+}
+
+void FindPath(BinaryTreeNode* root,int sum)
+{
+    vector&lt;int&gt; v;
+    _FindPath(root,sum,v,0);
+}
+
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/25_PathInTree/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

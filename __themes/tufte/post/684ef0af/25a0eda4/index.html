@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题35：第一个只出现一次的数字 · sbraveyoung · 字里行间</title>
+<meta name="description" content="话说写博客真是个累人的干活，即使是我写如此简单，篇幅如此短小的博客，有时候也真想一弃了之，放任不管。恰逢这几天忙着考试，今天一门，明天一门，后天还有一门。一学期了没好好学，现在可真是后悔呀。。。忙得头晕转向，甚至复习时间都感觉很不够用。但我电脑上设置了闹钟，每天道时间就会提醒我该写博客了。今天打开一看，咦？很久没遇到如…">
+<meta property="og:title" content="面试题35：第一个只出现一次的数字">
+<meta property="og:description" content="话说写博客真是个累人的干活，即使是我写如此简单，篇幅如此短小的博客，有时候也真想一弃了之，放任不管。恰逢这几天忙着考试，今天一门，明天一门，后天还有一门。一学期了没好好学，现在可真是后悔呀。。。忙得头晕转向，甚至复习时间都感觉很不够用。但我电脑上设置了闹钟，每天道时间就会提醒我该写博客了。今天打开一看，咦？很久没遇到如…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/25a0eda4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2016 · NO. §698</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · June 28, 2016
+      </div>
+      <h1 class="article-title">面试题35：第一个只出现一次的数字</h1>
+      <p class="article-lede">话说写博客真是个累人的干活，即使是我写如此简单，篇幅如此短小的博客，有时候也真想一弃了之，放任不管。恰逢这几天忙着考试，今天一门，明天一门，后天还有一门。一学期了没好好学，现在可真是后悔呀。。。忙得头晕转向，甚至复习时间都感觉很不够用。但我电脑上设置了闹钟，每天道时间就会提醒我该写博客了。今天打开一看，咦？很久没遇到如…</p>
+      <div class="article-meta">
+        <span>3 min read</span>
+        <span>·</span>
+        <span>698 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>面试题35：第一个只出现一次的数字</h2>
+<p>话说写博客真是个累人的干活，即使是我写如此简单，篇幅如此短小的博客，有时候也真想一弃了之，放任不管。恰逢这几天忙着考试，今天一门，明天一门，后天还有一门。一学期了没好好学，现在可真是后悔呀。。。忙得头晕转向，甚至复习时间都感觉很不够用。但我电脑上设置了闹钟，每天道时间就会提醒我该写博客了。今天打开一看，咦？很久没遇到如此简单的题目了，赶紧写吧，多出来的时间写这一段废话，没什么用处，发发牢骚而已。诸君看看就好，:)</p>
+<hr />
+<p><strong>题目：在字符串中找出第一个只出现一次的字符。如输入”abaccdeff”，则输出”b”。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>此题我觉得是简单哈希表使用的范例。哈希表是啥？就是将一个给定的数据映射到一个确定的位置上。在此题中，”给定的数据”就是该字符串中的每一个字符，因为C语言的编码是一ASCII为基础的，而ASCII只有128个字符，除过33个不可见字符的话就更少了。所以为了稳妥起见，我们定义一个长度为256的整形数组，全部初始化为0.数组的下标表示字符串中某一个字符的ASCII码，而值代表该字符出现的次数。然后我们遍历一次该字符串，每遇到一个字符，就对其对应的位置加1.完成之后就能统计出该字符串中都有哪些字符，各出现了多少次。然后再遍历一遍字符串，若某字符对应的位置上的值为1，它就是我们要找的字符了，return退出即可。</p>
+<p>如果使用蛮力法，每遇到一个字符，就在后面看它有没有再次出现。直到找到第一个只出现一次的字符。这种方法的时间复杂度为O(n<sup>2</sup>),显然没第一种方法高效，代码从略。</p>
+<p>第一个方法代码如下：</p>
+<pre><code class="language-char">{
+    vector&lt;int&gt; count;
+    count.resize(256);
+    int i;
+    for(i=0;i&lt;256;++i)
+    {
+        count[i]=0;
+    }
+    for(i=0;i&lt;str.size();++i)
+    {
+        count[str[i]]++;
+    }
+    for(i=0;i&lt;str.size();++i)
+    {
+        if(count[str[i]]==1)
+            return str[i];
+    }
+    throw new exception();
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/35_FirstNotRepeating/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2016-06-28<br>
+          <em>read in</em> 3 min<br>
+          <em>words</em> 698<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2016 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/684ef0af/25a0eda4">https://sbrave.cn/post/684ef0af/25a0eda4</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

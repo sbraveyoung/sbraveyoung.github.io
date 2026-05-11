@@ -1,219 +1,274 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>some-tips · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/101d5b75">
+<meta name="description" content="这是我在学习及工作过程中遇到的一些小的点，记录下来方便以后遇到类型问题后翻阅，相当于一个速查表吧。现发表出来，若您还有其他 tips 愿意和我分享，请通过[关于我](/about)联系我。此篇文章会不定期更新。 crontab 运行记录在 `/var/log/cron` 文件里 监控系统状况 监控 CPU 情况：`sa…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="some-tips">
+<meta property="og:url" content="https://sbrave.cn/post/101d5b75">
+<meta property="og:description" content="这是我在学习及工作过程中遇到的一些小的点，记录下来方便以后遇到类型问题后翻阅，相当于一个速查表吧。现发表出来，若您还有其他 tips 愿意和我分享，请通过[关于我](/about)联系我。此篇文章会不定期更新。 crontab 运行记录在 `/var/log/cron` 文件里 监控系统状况 监控 CPU 情况：`sa…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>some-tips</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>some-tips</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2018-02-28 01:39:17</span>
+        <span>· 2016 字</span>
+        <span>· 9 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>some-tips</h2>
 <p>这是我在学习及工作过程中遇到的一些小的点，记录下来方便以后遇到类型问题后翻阅，相当于一个速查表吧。现发表出来，若您还有其他 tips 愿意和我分享，请通过<a href="/about">关于我</a>联系我。此篇文章会不定期更新。</p>
-
 <ul>
-<li><p>crontab 运行记录在 <code>/var/log/cron</code> 文件里</p></li>
-
-<li><p>监控系统状况</p>
-
+<li>
+<p>crontab 运行记录在 <code>/var/log/cron</code> 文件里</p>
+</li>
+<li>
+<p>监控系统状况</p>
 <ul>
 <li>监控 CPU 情况：<code>sar 1</code> 表示每隔1s打印一次</li>
 <li>监控内存情况：<code>sar -r 1</code></li>
-<li>sar 安装:<code>yum -y install sysstat</code>
-<br /></li>
-</ul></li>
-
-<li><p>CPU 信息：<code>cat /proc/cpuinfo</code></p></li>
-
-<li><p>内存信息：<code>cat /proc/meminfo</code></p></li>
-
-<li><p>CPU 占用率：<code>cat /proc/stat</code></p></li>
-
-<li><p>四个进程，每个进程 8 线程跑，OS 会按照 32 个线程调度，而不是 4 个进程调度？</p></li>
-
-<li><p>ffmpeg 使用 map 参数时，需要对每个视频分别指定编码参数，包括编码器，否则会使用默认编码器(libx264)。</p></li>
-
-<li><p>文件的三个时间：<code>stat file</code> 可查看</p>
-
+<li>sar 安装:<code>yum -y install sysstat</code></li>
+</ul>
+</li>
+<li>
+<p>CPU 信息：<code>cat /proc/cpuinfo</code></p>
+</li>
+<li>
+<p>内存信息：<code>cat /proc/meminfo</code></p>
+</li>
+<li>
+<p>CPU 占用率：<code>cat /proc/stat</code></p>
+</li>
+<li>
+<p>四个进程，每个进程 8 线程跑，OS 会按照 32 个线程调度，而不是 4 个进程调度？</p>
+</li>
+<li>
+<p>ffmpeg 使用 map 参数时，需要对每个视频分别指定编码参数，包括编码器，否则会使用默认编码器(libx264)。</p>
+</li>
+<li>
+<p>文件的三个时间：<code>stat file</code> 可查看</p>
 <ul>
 <li>ctime:Change time，状态修改时间</li>
 <li>atime:Access time，访问时间</li>
-<li>mtime:Modify time，文件修改时间
-<br /></li>
-</ul></li>
-
-<li><p>docker 使用 <code>-v</code> 参数挂载数据卷时，容器内部没有权限：</p>
-
+<li>mtime:Modify time，文件修改时间</li>
+</ul>
+</li>
+<li>
+<p>docker 使用 <code>-v</code> 参数挂载数据卷时，容器内部没有权限：</p>
 <ul>
 <li><code>run</code> 时加上 <code>--privileged=true</code> 特权；</li>
 <li>临时关闭 selinux <code>setenforce 0</code></li>
-<li>添加 SELinux 规则： http://www.openskill.cn/article/520
-<br /></li>
-</ul></li>
-
-<li><p>虚拟机是 CentOS7，在和外网通信时需要关闭防火墙 <code>systemctl stop firewalld</code></p></li>
-
-<li><p>bash 运行多个命令：<code>bash -c 'cmd1 &amp;&amp; cmd2</code>，这在 docker 中很有用。</p></li>
-
-<li><p>显示一个路径的所有权限：<code>namei -om /path/to/check</code></p></li>
-
-<li><p><code>nslookup</code> 命令可以查看某个域名所解析的记录值</p></li>
-
-<li><p><code>top -bn 5</code> 可以输出到文件</p></li>
-
-<li><p>进行多任务并发测试时，不能统计每个进程时间再相加，会重复统计。</p></li>
+<li>添加 SELinux 规则： <a href="http://www.openskill.cn/article/520">http://www.openskill.cn/article/520</a></li>
 </ul>
-
-<p><!-- `ssh-copy-id -i ~/.ssh/id_rsa.pub user@host` 拷贝本地公钥到服务器，可免密码登录 --></p>
-
-<ul>
-<li><p><code>.</code> 表示将另一个脚本中内容包含进来并执行</p></li>
-
-<li><p>bash 执行 <code>set -i vi</code> 可以以 vim 方式操作命令行。</p></li>
-
-<li><p>git status 命令对中文文件名乱码：<code>git config --global core.quotepath false</code></p></li>
-
-<li><p><code>vim</code>下使用<code>:%!xxd</code>将文本转换为十六进制，<code>:%!xxd -r</code>可转换回来。</p></li>
-
-<li><p><code>tc</code>可用来模拟丢包；</p></li>
-
-<li><p>vim命令行操作，类似<code>vim +PluginInstall +qall</code>
-<!--  * code review 能否自动化？--></p></li>
-
-<li><p>netstat -s<code>命令和</code>ss<code>命令可以查看网络相关情况</code></p></li>
-
-<li><p>golang 中的<code>break label</code>和<code>continue label</code>语法可以很方便地在嵌套循环中控制外层循环。</p></li>
-
-<li><p>man -w <code>可以列出所有 man 手册的位置；</code></p></li>
-
-<li><p>listen 函数中 backlog 参数指定全连接队列的长度。</p></li>
-
-<li><p>压测时客户端可能出现大量连接处于 TIME_WAIT 状态，导致连接被用完；</p></li>
-
-<li><p>QPS= 并发数 / 平均响应时间；</p></li>
-
-<li><p>shell 中 esc + back 键可以快速删除当前命令行一部分；</p></li>
-
-<li><p>数组中元素内部带有互斥锁时，不能通过<code>for _,val:=range(array){}</code>访问，因为会拷贝锁;</p></li>
-
-<li><p>求文件交、并、差集：</p>
-
+</li>
+<li>
+<p>虚拟机是 CentOS7，在和外网通信时需要关闭防火墙 <code>systemctl stop firewalld</code></p>
+</li>
+<li>
+<p>bash 运行多个命令：<code>bash -c 'cmd1 &amp;&amp; cmd2</code>，这在 docker 中很有用。</p>
+</li>
+<li>
+<p>显示一个路径的所有权限：<code>namei -om /path/to/check</code></p>
+</li>
+<li>
+<p><code>nslookup</code> 命令可以查看某个域名所解析的记录值</p>
+</li>
+<li>
+<p><code>top -bn 5</code> 可以输出到文件</p>
+</li>
+<li>
+<p>进行多任务并发测试时，不能统计每个进程时间再相加，会重复统计。</p>
+ <!-- `ssh-copy-id -i ~/.ssh/id_rsa.pub user@host` 拷贝本地公钥到服务器，可免密码登录 -->
+</li>
+<li>
+<p><code>.</code> 表示将另一个脚本中内容包含进来并执行</p>
+</li>
+<li>
+<p>bash 执行 <code>set -i vi</code> 可以以 vim 方式操作命令行。</p>
+</li>
+<li>
+<p>git status 命令对中文文件名乱码：<code>git config --global core.quotepath false</code></p>
+</li>
+<li>
+<p><code>vim</code>下使用<code>:%!xxd</code>将文本转换为十六进制，<code>:%!xxd -r</code>可转换回来。</p>
+</li>
+<li>
+<p><code>tc</code>可用来模拟丢包；</p>
+</li>
+<li>
+<p>vim命令行操作，类似<code>vim +PluginInstall +qall</code></p>
+<!--  * code review 能否自动化？-->
+</li>
+<li>
+<p>netstat -s<code>命令和</code>ss<code>命令可以查看网络相关情况</code></p>
+</li>
+<li>
+<p>golang 中的<code>break label</code>和<code>continue label</code>语法可以很方便地在嵌套循环中控制外层循环。</p>
+</li>
+<li>
+<p>man -w <code> 可以列出所有 man 手册的位置；</code></p>
+</li>
+<li>
+<p>listen 函数中 backlog 参数指定全连接队列的长度。</p>
+</li>
+<li>
+<p>压测时客户端可能出现大量连接处于 TIME_WAIT 状态，导致连接被用完；</p>
+</li>
+<li>
+<p>QPS= 并发数 / 平均响应时间；</p>
+</li>
+<li>
+<p>shell 中 esc + back 键可以快速删除当前命令行一部分；</p>
+</li>
+<li>
+<p>数组中元素内部带有互斥锁时，不能通过<code>for _,val:=range(array){}</code>访问，因为会拷贝锁;</p>
+</li>
+<li>
+<p>求文件交、并、差集：</p>
 <ul>
 <li><code>grep -F -f a.txt b.txt</code>可以求两个文件的交集；</li>
 <li><code>sort a.txt b.txt | uniq -d</code> 也可以求两个文件的交集；</li>
 <li><code>sort a.txt b.txt | uniq</code> 求并集；</li>
 <li><code>sort a.txt b.txt b.txt | uniq -u</code> 求差集 a.txt - b.txt</li>
-</ul></li>
-
-<li><p><code>sed 's/.*([0-9]*).*/\1/g' file</code> 可以提取字符串，<code>\1</code>表示用第一个括号里面的内容替换掉整个字符串。</p></li>
-
-<li><p>服务回滚管理最佳实践，配置文件是否应该提交到内部私有代码仓库中？如提交/不提交，线上和测试环境不一致问题如何管理？</p></li>
-
-<li><p>golang 语法糖之三个点：</p>
-
+</ul>
+</li>
+<li>
+<p><code>sed 's/.*([0-9]*).*/\1/g' file</code> 可以提取字符串，<code>\1</code>表示用第一个括号里面的内容替换掉整个字符串。</p>
+</li>
+<li>
+<p>golang 语法糖之三个点：</p>
 <ul>
 <li>用于可变参数列表，如<code>func foo(keys ...int){}</code>；</li>
 <li>用于打散slice，如<code>slice=append(slice,other_slice...)</code>；</li>
 <li>用于自动确定数组长度，如<code>array:=[...]int{1,2,3,4,5}</code>;</li>
-<li>用于 go get 下载所有的包，如<code>go get github.com/abc/xyz/...</code>
-<br /></li>
-</ul></li>
-
-<li><p><code>w</code>命令可以用来看谁都登录了机器并且在做什么；</p></li>
-
-<li><p>免密登录服务器步骤：</p>
-
+<li>用于 go get 下载所有的包，如<code>go get github.com/abc/xyz/...</code></li>
+</ul>
+</li>
+<li>
+<p><code>w</code>命令可以用来看谁都登录了机器并且在做什么；</p>
+</li>
+<li>
+<p>免密登录服务器步骤：</p>
 <ul>
 <li>本机生成公钥/密钥：<code>ssh-keygen</code></li>
 <li>本机编辑 config 文件：<code>vim ~/.ssh/config</code></li>
-<li>将公钥上传到远程主机上：<code>ssh-copy-id user@host</code>
-<br /></li>
-</ul></li>
-
-<li><p>yes | yum install xxx<code>自动输入 yes;</code></p></li>
-
-<li><p><code>一个坑：golang MySQL 包调用 rows.Scan() 前必须调用 rows.Next()，否则会失败。</code></p></li>
-
-<li><p><code>golang 中如果不想让 struct 中某个字段序列化到 json 中，可以指定它的 field 为</code>json:&quot;-&quot;<code>。</code></p></li>
-
-<li><p><code>接手一个项目代码时，可以先了解下其功能及大体流程，然后跟踪关键部分代码，而不必要对细枝末节过于追究，如解析配置等。</code></p></li>
-
-<li><p><code>pwdx</code> 命令可以根据 pid 查到可执行文件具体路径。</p></li>
-
-<li><p>可以调研下在 macOS 和 iOS 上都可以跑的 docker，这样就可以去掉虚拟机，直接在 docker 上运行虚拟机。镜像及相关数据通过 iCloud 备份，真正实现「云办公」。</p></li>
-
-<li><p>vmware 开启共享文件夹后看不到/权限问题：<code>vmhgfs-fuse .host:/ /mnt/hgfs -o uid=1000 -o gid=1000 -o umask=0033</code> 或者 <code>vmhgfs-fuse -o allow_other .host:/ /mnt/hgfs</code></p></li>
-
-<li><p>python -m SimpleHTTPServer 8899 可以直接从服务器下载文件</p></li>
-
-<li><p>sed 处理的时候，会先去掉换行符，处理完成后再加上。因此无法直接替换掉换行符，需要使用模式空间来处理；</p></li>
-
-<li><p>代码注释：NOTE, OPTIMIZE, TODO, HACK, XXX, FIXME, and BUG；</p></li>
-
-<li><p>不要轻易 &quot;相信&quot; 别人。使用别人服务或接口前，要经过充分验证。</p></li>
-
-<li><p><code>cat file | while read line; do XXX; done</code> 有可能只会读一行，原因是 XXX 命令从标准输入将缓冲区内容全部读走了。解决方法是 <code>XXX &lt;/dev/null</code></p></li>
-
-<li><p>git merge 时出现冲突，文本文件好解决，二进制问题可使用 <code>git checkout xxx —theirs</code> 或 <code>git checkout xxx —ours</code> 使用自己或对方的版本。</p></li>
-
-<li><p><code>gdb -tui xxx</code> 可图形界面调试；</p></li>
-
-<li><p>golang 的 <code>Label</code>在嵌套函数(闭包)是不可用的. 不管是在<code>闭包里</code>调用<code>闭包外</code>的Label, 还是在<code>闭包外</code>调用<code>闭包里</code>的Label</p></li>
-
-<li><p>```go
-A:=[]int{0,1,2}
-var index int
-for index=0;index&lt;len(A);index++{};
-println(index)</p></li>
+<li>将公钥上传到远程主机上：<code>ssh-copy-id user@host</code></li>
 </ul>
+</li>
+<li>
+<p>yes | yum install xxx<code> 自动输入 yes;</code></p>
+</li>
+<li>
+<p>一个坑：golang MySQL 包调用 rows.Scan() 前必须调用 rows.Next()，否则会失败。</p>
+</li>
+<li>
+<p>golang 中如果不想让 struct 中某个字段序列化到 json 中，可以指定它的 field 为 <code>`json:&quot;-&quot;`</code>。</p>
+</li>
+<li>
+<p>接手一个项目代码时，可以先了解下其功能及大体流程，然后跟踪关键部分代码，而不必要对细枝末节过于追究，如解析配置等。</p>
+</li>
+<li>
+<p><code>pwdx</code> 命令可以根据 pid 查到可执行文件具体路径。</p>
+</li>
+<li>
+<p>可以调研下在 macOS 和 iOS 上都可以跑的 docker，这样就可以去掉虚拟机，直接在 docker 上运行虚拟机。镜像及相关数据通过 iCloud 备份，真正实现「云办公」。</p>
+</li>
+<li>
+<p>vmware 开启共享文件夹后看不到/权限问题：<code>vmhgfs-fuse .host:/ /mnt/hgfs -o uid=1000 -o gid=1000 -o umask=0033</code> 或者 <code>vmhgfs-fuse -o allow_other .host:/ /mnt/hgfs</code></p>
+</li>
+<li>
+<p>python -m SimpleHTTPServer 8899 可以直接从服务器下载文件</p>
+</li>
+<li>
+<p>sed 处理的时候，会先去掉换行符，处理完成后再加上。因此无法直接替换掉换行符，需要使用模式空间来处理；</p>
+</li>
+<li>
+<p>代码注释：NOTE, OPTIMIZE, TODO, HACK, XXX, FIXME, and BUG；</p>
+</li>
+<li>
+<p>不要轻易 &quot;相信&quot; 别人。使用别人服务或接口前，要经过充分验证。cle</p>
+</li>
+<li>
+<p><code>cat file | while read line; do XXX; done</code> 有可能只会读一行，原因是 XXX 命令从标准输入将缓冲区内容全部读走了。解决方法是 <code>XXX &lt;/dev/null</code></p>
+</li>
+<li>
+<p>git merge 时出现冲突，文本文件好解决，二进制问题可使用 <code>git checkout xxx —theirs</code> 或 <code>git checkout xxx —ours</code> 使用自己或对方的版本。</p>
+</li>
+<li>
+<p><code>gdb -tui xxx</code> 可图形界面调试；</p>
+</li>
+<li>
+<p>golang 的 <code>Label</code>在嵌套函数(闭包)是不可用的. 不管是在<code>闭包里</code>调用<code>闭包外</code>的Label, 还是在<code>闭包外</code>调用<code>闭包里</code>的Label</p>
+</li>
+<li>
+<pre><code class="language-go"> A:=[]int{0,1,2}
+ var index int
+ for index=0;index&lt;len(A);index++{};
+ println(index)
 
-<p>A:=[]int{0,1,2}
-   var index int
-   for index=range A{};
-   println(index)</p>
 
-<p>//打印结果一样吗，为什么？
-   ```</p>
+ A:=[]int{0,1,2}
+ var index int
+ for index=range A{};
+ println(index)
 
-<ul>
-<li>centOS8 中很多软件包缺失，可以用<code>yum whatprovides ifconfig</code> 查找；</li>
-<li>二进制文件分析工具
-
+ //打印结果一样吗，为什么？
+</code></pre>
+</li>
+<li>
+<p>centOS8 中很多软件包缺失，可以用<code>yum whatprovides ifconfig</code> 查找；</p>
+</li>
+<li>
+<p>二进制文件分析工具</p>
 <ul>
 <li>file -- 查看文件类型</li>
 <li>ldd -- 显示二进制的依赖库</li>
@@ -223,22 +278,136 @@ println(index)</p></li>
 <li>strings -- 打印二进制中可打印的字符串</li>
 <li>readelf -- 显示 elf 相关信息</li>
 <li>objdump -- 打印汇编</li>
-<li>nm -- 打印符号表
-<br /></li>
-</ul></li>
+<li>nm -- 打印符号表</li>
 </ul>
+</li>
+<li>
+<p>iptables -A INPUT -p tcp --dport 1935 -j DROP 打开某端口</p>
+</li>
+<li>
+<p>gcc 内置宏定义列表：<code>gcc -dM -E - &lt; /dev/null</code></p>
+</li>
+<li>
+<p>程序性能分析：https://fenbf.github.io/AwesomePerfCpp/</p>
+<ul>
+<li>perf/gperftools/valgrind/g</li>
+</ul>
+</li>
+<li>
+<p>shell 脚本中，通过管道传递数据给 while，然后在循环中修改变量，循环结束后变量未被修改。原因：管道会在子 shell 中执行。有四种解决方法：</p>
+<ul>
+<li>
+<pre><code class="language-shell"> #here document
+ while read line
+ do
+     #do sth
+ done &lt;&lt;&lt; &quot;abc&quot;
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell"> #read from file
+ while read line
+ do
+     #do sth
+ done &lt; /path/to/file
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell"> #process replacement
+ while read line
+ do
+     #do sth
+ done &lt; &lt;(cmd)
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell"> #replacement stdin
+ exec &lt;/path/to/file
+ while read line
+ do
+     #do sth
+ done
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>ffmpeg 的一些使用：</p>
+</li>
+<li>
+<pre><code class="language-shell">ffmpeg -i input.flv -c:v copy -bsf:v trace_headers -f null -
+</code></pre>
+</li>
+<li>
+<p>Shell Parameter Expansion: <a href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02">https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02</a></p>
+</li>
+<li>
+<p>c++ 中各个平台宏判断：</p>
+</li>
+</ul>
+<pre><code class="language-c++">#ifdef _WIN32
+  #ifdef _WIN64
+  #else
+  #endif
+#elif __APPLE__
+  #ifdef TARGET_IPHONE_SIMULATOR
+  #elif TARGET_OS_IPHONE
+  #elif TARGET_OS_MAC
+#elif __ANDROID__
+#elif __linux__
+#elif __unix__
+#elif defined(_POSIX_VERSION)
+#else
+error &quot;unknown&quot;
+#endif
+</code></pre>
+<ul>
+<li>
+<p>cmake 编译时，加上 <code>-DCMAKE_VERBOSE_MAKEFILE=ON</code> 可以显示编译时的命令，便于分析问题</p>
+</li>
+<li>
+<p>使用 ffmpeg api 时，如果编译时出现 undefined reference xxx 问题，检查一下  ffmpeg 头文件是否用 extern &quot;C&quot; 包起来了。。</p>
+</li>
+<li>
+<p>不要在 shell 脚本中使用 <code>return true</code> 或者 <code>return false</code>，否则判断返回值的时候不小心写成 <code>if ${ret}</code> 会让你怀疑人生。正确做法是 <code>return 0</code> 或者 <code>return 1</code></p>
+</li>
+</ul>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

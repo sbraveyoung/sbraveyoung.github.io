@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>golang程序启动流程 · sbraveyoung · 字里行间</title>
+<meta name="description" content="通常来说，程序执行的入口点都不是我们所写的 `main` 函数，编译器会在之前插入部分代码，用来执行相关的初始化工作。本文从整体流程上分析一下 Go 编译器在我们写的代码之前究竟做了什么。 准备 本次测试在我的电脑主机上完成，Golang 版本为 1.5.1： 先编写一个简单的程序，如下： test.go 编译为可执行…">
+<meta property="og:title" content="golang程序启动流程">
+<meta property="og:description" content="通常来说，程序执行的入口点都不是我们所写的 `main` 函数，编译器会在之前插入部分代码，用来执行相关的初始化工作。本文从整体流程上分析一下 Go 编译器在我们写的代码之前究竟做了什么。 准备 本次测试在我的电脑主机上完成，Golang 版本为 1.5.1： 先编写一个简单的程序，如下： test.go 编译为可执行…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/78eb32d6/5937cec8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2018-06-08
+    </div>
+    <h1 class="article-title">golang程序启动流程</h1>
+    <p class="article-lede">通常来说，程序执行的入口点都不是我们所写的 `main` 函数，编译器会在之前插入部分代码，用来执行相关的初始化工作。本文从整体流程上分析一下 Go 编译器在我们写的代码之前究竟做了什么。 准备 本次测试在我的电脑主机上完成，Golang 版本为 1.5.1： 先编写一个简单的程序，如下： test.go 编译为可执行…</p>
+    <div class="article-meta">
+      <span>4 min read</span>
+      <span>796 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>golang程序启动流程</h2>
+<p>通常来说，程序执行的入口点都不是我们所写的 <code>main</code> 函数，编译器会在之前插入部分代码，用来执行相关的初始化工作。本文从整体流程上分析一下 Go 编译器在我们写的代码之前究竟做了什么。</p>
+<h5>准备</h5>
+<p>本次测试在我的电脑主机上完成，Golang 版本为 1.5.1：</p>
+<pre><code class="language-shell">$ go version
+go version go1.5.1 linux/amd64
+</code></pre>
+<p>先编写一个简单的程序，如下：</p>
+<p>test.go</p>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main(){
+    fmt.Println(&quot;hello world&quot;)
+}
+</code></pre>
+<p>编译为可执行程序，需要注意的是：最好使用 <code>-gcflags -N -l</code> 禁止编译器进行优化和内联，否则实际生成代码可能会不一样：</p>
+<pre><code class="language-shell">go build -gcflags &quot;-N -l&quot;
+</code></pre>
+<p>然后使用 gdb 进行调试：</p>
+<pre><code>(gdb) info files
+Symbols from &quot;/home/smart/code/go/src/test/test&quot;.
+Local exec file:
+    `/home/smart/code/go/src/test/test', file type elf64-x86-64.
+    Entry point: 0x4561d0
+    0x0000000000401000 - 0x00000000004b2240 is .text
+    0x00000000004b3000 - 0x000000000053b4db is .rodata
+    0x000000000053b4e0 - 0x000000000053d588 is .typelink
+    0x000000000053d588 - 0x000000000053d588 is .gosymtab
+    0x000000000053d5a0 - 0x000000000058ece5 is .gopclntab
+    0x000000000058f000 - 0x0000000000590bc8 is .noptrdata
+    0x0000000000590be0 - 0x0000000000593150 is .data
+    0x0000000000593160 - 0x00000000005b6d38 is .bss
+    0x00000000005b6d40 - 0x00000000005bbb80 is .noptrbss
+    0x0000000000400fc8 - 0x0000000000401000 is .note.go.buildid
+</code></pre>
+<p>可以看到，程序的入口点在 <code>0x4561d0</code> 处。需要注意的是，入口点不一定是 <code>.text</code> 段开始的位置（比如这里 <code>0x4561d0</code> 处就是 <code>main.main</code>），该段各模块代码的顺序和链接器有关。在 Linux 下 ELF 格式中，有个 <code>e_entry</code> 字段指定程序的入口，然后在代码中会进行跳转。ELF 格式参考<a href="http://refspecs.linuxbase.org/elf/gabi4+/ch4.eheader.html">这里</a>，可用 <code>readelf</code> 或 <code>objdump</code> 工具查看。</p>
+<p>在此处打个 breakpoint：</p>
+<pre><code>(gdb) b *0x4561d0
+Breakpoint 1 at 0x4561d0: file /usr/local/go/src/runtime/rt0_linux_amd64.s, line 8.
+</code></pre>
+<p>打开该文件，跳转到第 8 行：</p>
+<pre><code class="language-asm">TEXT _rt0_amd64_linux(SB),NOSPLIT,$-8
+    LEAQ    8(SP), SI // argv
+    MOVQ    0(SP), DI // argc
+    MOVQ    $main(SB), AX
+    JMP    AX
+</code></pre>
+<p>这里将 <code>argc</code> 和 <code>argv</code> 压栈，并跳转到 <code>main</code> 代码段。不过我暂时还不清楚是在哪里将 <code>argc</code> 和 <code>argv</code> 放到 DI 和SI 寄存器中，以及参数 SB 代表的意义。</p>
+<pre><code class="language-asm">TEXT main(SB),NOSPLIT,$-8
+    MOVQ    $runtime·rt0_go(SB), AX
+    JMP    AX
+</code></pre>
+<p>这里跳转到 <code>$runtime.rt0_go</code>，通过 breakpoint 查看：</p>
+<pre><code>(gdb) b runtime.rt0_go
+Breakpoint 2 at 0x452b00: file /usr/local/go/src/runtime/asm_amd64.s, line 12.
+</code></pre>
+<p>在 <code>runtime.rt0_go</code> 中，才真正执行一系列初始化工作，关键代码如下：</p>
+<pre><code class="language-asm">TEXT runtime·rt0_go(SB),NOSPLIT,$0
+
+    ......
+
+    CALL    runtime·args(SB)
+    CALL    runtime·osinit(SB)
+    CALL    runtime·schedinit(SB)
+
+    // create a new goroutine to start program
+    MOVQ    $runtime·mainPC(SB), AX        // entry
+
+    ......
+
+    CALL    runtime·newproc(SB)
+
+    ......
+
+    // start this M
+    CALL    runtime·mstart(SB)
+</code></pre>
+<p>这里分别调用 <code>runtime.args()</code>、<code>runtime.osinit()</code>、<code>runtime.schedinit()</code>、<code>runtime.newproc()</code>、<code>runtime.mstart()</code> 几个函数，再用 gdb 查看：</p>
+<pre><code>(gdb) b runtime.args
+Breakpoint 4 at 0x434ec0: file /usr/local/go/src/runtime/runtime1.go, line 48.
+(gdb) b runtime.osinit
+Breakpoint 5 at 0x424290: file /usr/local/go/src/runtime/os1_linux.go, line 172.
+(gdb) b runtime.schedinit
+Breakpoint 6 at 0x429eb0: file /usr/local/go/src/runtime/proc1.go, line 40.
+(gdb) b runtime.newproc
+Breakpoint 3 at 0x42fce0: file /usr/local/go/src/runtime/proc1.go, line 2208.
+(gdb) b runtime.mstart
+Breakpoint 4 at 0x42bb60: file /usr/local/go/src/runtime/proc1.go, line 674.
+</code></pre>
+<p><code>runtime.args()</code> 做的事情比较简单，完成了 <code>argc</code> 和 <code>argv</code> 的初始化工作。</p>
+<p><code>runtime.osinit()</code> 获取 CPU 数目。</p>
+<p><code>runtime.schedinit()</code> 比较复杂，做了一些初始化工作，具体放到后面再看。</p>
+<p><code>runtime.newproc()</code> 则创建一个 goroutine，用来运行我们编写的 <code>main.main()</code> 函数。</p>
+<p><code>runtime.mstart()</code> 执行这个 M，M、P、G是什么以及他们的关系同样放到后面。</p>
+<!-- main 被哪里调用 -->
+<p>至此，程序启动前的工作就已经做完了。</p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

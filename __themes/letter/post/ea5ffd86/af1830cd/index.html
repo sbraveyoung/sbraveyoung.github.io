@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>下一代直播--低延迟直播技术探索 · sbraveyoung · 字里行间</title>
+<meta name="description" content="一、背景 互联网直播的发展大致可分为 4 个阶段：创新期、演进期、量产期和瓶颈期，分别对应着不同的直播场景、实现技术，相应地会有不同的延迟及用户体验。 创新期**：直播技术从无到有的时期，革命性地将观众的观看体验从线下/离线文件转移到线上。但这个时期直播体验较差，体现在延迟上就是分钟级别的。 演进期**：这一时期随着互…">
+<meta property="og:title" content="下一代直播--低延迟直播技术探索">
+<meta property="og:description" content="一、背景 互联网直播的发展大致可分为 4 个阶段：创新期、演进期、量产期和瓶颈期，分别对应着不同的直播场景、实现技术，相应地会有不同的延迟及用户体验。 创新期**：直播技术从无到有的时期，革命性地将观众的观看体验从线下/离线文件转移到线上。但这个时期直播体验较差，体现在延迟上就是分钟级别的。 演进期**：这一时期随着互…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/ea5ffd86/af1830cd">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2020-12-16
+    </div>
+    <h1 class="article-title">下一代直播--低延迟直播技术探索</h1>
+    <p class="article-lede">一、背景 互联网直播的发展大致可分为 4 个阶段：创新期、演进期、量产期和瓶颈期，分别对应着不同的直播场景、实现技术，相应地会有不同的延迟及用户体验。 创新期**：直播技术从无到有的时期，革命性地将观众的观看体验从线下/离线文件转移到线上。但这个时期直播体验较差，体现在延迟上就是分钟级别的。 演进期**：这一时期随着互…</p>
+    <div class="article-meta">
+      <span>16 min read</span>
+      <span>3971 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>下一代直播--低延迟直播技术探索</h2>
+<h2>一、背景</h2>
+<p>互联网直播的发展大致可分为 4 个阶段：创新期、演进期、量产期和瓶颈期，分别对应着不同的直播场景、实现技术，相应地会有不同的延迟及用户体验。</p>
+<ul>
+<li><strong>创新期</strong>：直播技术从无到有的时期，革命性地将观众的观看体验从线下/离线文件转移到线上。但这个时期直播体验较差，体现在延迟上就是分钟级别的。</li>
+<li><strong>演进期</strong>：这一时期随着互联网基础设施的演进而发展起来。最有代表性性的就是流媒体切片模式，通过 CDN 进行分发。延迟在 2-10s 左右。</li>
+<li><strong>量产期</strong>：4G 时代的兴起，催生了直播技术的遍地开花。这一时期国内主流的直播协议是 rtmp、http-flv、hls 等三件套，对应的延时在 2-8s 左右。能够较好地支撑当时秀场直播、游戏直播等场景。</li>
+<li><strong>瓶颈期</strong>：随着 5G 的逐渐普及，以及网络带宽的增长，人们对直播延时提出了更高的需求。PK、在线会议等场景催生了相关的直播连麦技术。以及直播带货、在线教育、云游戏等场景更是需要将端到端的延迟降到到毫秒级别。</li>
+</ul>
+<p>综上可以看到，直播技术的发展和直播场景是相辅相成的。场景驱动技术发展，技术反过来支撑更多的直播场景。当前我司已经支持的连麦技术，在「主播-主播」之间的延迟已经较低了，但还是存在两个问题：</p>
+<ol>
+<li>业界目前越来越火的直播带货场景，需要实现「主播-观众」端的低延迟；</li>
+<li>在线教育等场景下，用户在观众状态和嘉宾状态之间切换，由于延迟的不一致，导致用户体验较差，可能还会有黑屏中断等问题；</li>
+</ol>
+<p>因此对下一代超低延迟直播技术的探索，成了我们当前不得不做的一项工作。</p>
+<h2>二、技术实现</h2>
+<p>当前业界的主流直播实现方案为 rtmp + http-flv + hls。存在以下问题：</p>
+<ul>
+<li>三者均采用 TCP 作为传输层协议。TCP 作为通用的互联网古老协议族，早已被实现在内核里面，相关特性无法针对多媒体数据进行特定优化，如：
+<ul>
+<li>延迟确认。TCP 会在积攒一定的数据包后再发送 ACK 给对方，这点在超低延时直播上是难以接受的；</li>
+<li>弱网场景。滑动窗口内数据发送完毕后但未收到 ACK，也会导致数据积压；</li>
+<li>拥塞判断不准确。对一个重传的包发送 ACK，无法判断是针对第一个包还是第二个包的确认，导致 rtt 判断不准确；</li>
+<li>TCP 头部阻塞。一个数据包的阻塞会导致整个媒体流卡顿；</li>
+<li>强可靠性，每个数据包必须送达。而在多媒体场景下，允许一定程度的丢包；</li>
+</ul>
+</li>
+<li>http-flv 延迟一般在 2-10s，主要受限于 GOP 大小。首先，为缓解 TCP 网络抖动可能带来的卡顿问题，GOP 不能设置太小；但是GOP太大，则会导致延迟增加；</li>
+<li>hls 延迟相比 http-flv 更高，主要因素在 GOP 以及 ts 分片延迟。</li>
+</ul>
+<p>因此，大部分基于 TCP 的协议无法满足低延迟直播的需求，需在 UDP 方案中进行调研。</p>
+<p>纵观业界当前比较领先的低延迟直播技术实现，大体上有 WebRTC、QUIC、SRT、CMAF、LLHLS 等方案。这里做一简单对比：</p>
+<table>
+<thead>
+<tr>
+<th align="left">指标</th>
+<th align="left">WebRTC</th>
+<th align="left">QUIC</th>
+<th align="left">SRT</th>
+<th align="left">CMAF</th>
+<th align="left">LLHLS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">提出时间</td>
+<td align="left">2010</td>
+<td align="left">2012</td>
+<td align="left">2012，2017</td>
+<td align="left">2016</td>
+<td align="left">2019</td>
+</tr>
+<tr>
+<td align="left">覆盖链路</td>
+<td align="left">采集、编解码、传输、渲染</td>
+<td align="left">传输</td>
+<td align="left">编码、传输</td>
+<td align="left">封装、传输</td>
+<td align="left">封装、传输</td>
+</tr>
+<tr>
+<td align="left">传输层协议</td>
+<td align="left">UDP</td>
+<td align="left">UDP</td>
+<td align="left">UDP</td>
+<td align="left">TCP</td>
+<td align="left">TCP</td>
+</tr>
+<tr>
+<td align="left">类型</td>
+<td align="left">流式、不可靠</td>
+<td align="left">流式、可靠</td>
+<td align="left">流式、可靠+不可靠</td>
+<td align="left">ABR切片式、可靠</td>
+<td align="left">ABR切片式、可靠</td>
+</tr>
+<tr>
+<td align="left">针对场景</td>
+<td align="left">端到端音视频通信</td>
+<td align="left">通用协议</td>
+<td align="left">媒体远程制作</td>
+<td align="left">下行分发、CDN友好</td>
+<td align="left">下行分发、CDN友好</td>
+</tr>
+<tr>
+<td align="left">标准化</td>
+<td align="left">RFC/W3C</td>
+<td align="left">RFC Draft</td>
+<td align="left">Halvision SRT联盟</td>
+<td align="left">ISO MPEG</td>
+<td align="left">Apple</td>
+</tr>
+<tr>
+<td align="left">延时</td>
+<td align="left">端到端 250ms</td>
+<td align="left">&gt;2s</td>
+<td align="left">&gt;2s</td>
+<td align="left">&gt;3s</td>
+<td align="left">&gt;2s</td>
+</tr>
+<tr>
+<td align="left">终端</td>
+<td align="left">H5、iOS、Android</td>
+<td align="left">Chrome</td>
+<td align="left">FFmpeg</td>
+<td align="left">H5</td>
+<td align="left">iOS</td>
+</tr>
+</tbody>
+</table>
+<p>这里简要介绍一下 WebRTC、QUIC 及 LLHLS：</p>
+<h4>1. WebRTC</h4>
+<p>WebRTC，即 Web Real-Time Communication，web实时通信技术。实现了基于网页的语音对话或视频通话，目的是无插件地实现 web 端的实时通信能力。</p>
+<p>WebRTC 提供了音视频的核心技术，包括音视频采集、编解码、网络传输、终端展示等，覆盖了流媒体的大部分环节，且支持跨平台，通过简单调用 API 即可使用。</p>
+<p>从延迟上看，WebRTC 由于采用了 UDP 的传输协议，端到端延迟一般在毫秒级别，极限情况下可达到 100ms 以内。</p>
+<h4>2. QUIC</h4>
+<p>QUIC，即 Quick UDP Internet Connection，是 Google 开发的一种基于 UDP 协议的低延迟互联网传输协议。解决了 TCP 的头部阻塞、握手/挥手延迟、切换网络断线重连等问题。可在一定程度上降低端到端的延迟。</p>
+<p>但由于 QUIC 的设计目标是成为一个通用的传输协议，也并没有针对多媒体数据进行优化，因此其应用在音视频传输上的延迟是秒级的。</p>
+<h4>3. LLHLS</h4>
+<p>苹果于 2019 年提出了低延迟 hls 的草案，旨在通过降低切片发布延时、优化客户端发现新分片的方式、消除额外 rtt、减小传输开销等方式，进一步降低 hls 的直播延迟。具体可见：<a href="/__themes/letter/post/ea5ffd86/8c61a296">低延迟 hls 调研</a></p>
+<h5>3.1 降低发布延时</h5>
+<p>降低发布延时是通过允许服务器在主分片准备好之前，先发布其中部分内容的方式来实现的。假设当前一个分片时长为 6s，可将其切成 30 个小分片，每个小分片包含 200ms，可独立被客户端获取并播放。且当一个分片被全部生成后，其小分片会被删除，以避免播放列表的膨胀。</p>
+<p>可以通过如下标签启用部分分片功能：</p>
+<pre><code>#EXT-X-PART-INF:PART-TARGET=0.33334
+#EXT-X-PART:DURATION=0.33334,URI=&quot;filePart271.0.mp4&quot;
+#EXT-X-PART:DURATION=0.33334,URI=&quot;filePart271.1.mp4&quot;
+#EXT-X-PART:DURATION=0.33334,URI=&quot;filePart271.2.mp4&quot;
+#EXT-X-PART:DURATION=0.33334,URI=&quot;filePart271.3.mp4&quot;
+#EXT-X-PART:DURATION=0.33334,URI=&quot;filePart271.4.mp4&quot;,INDEPENDENT=YES
+#EXT-X-PART:DURATION=0.33334,URI=&quot;filePart271.5.mp4&quot;
+#EXT-X-PART:DURATION=0.33334,URI=&quot;filePart271.6.mp4&quot;
+#EXT-X-PART:DURATION=0.33334,URI=&quot;filePart271.7.mp4&quot;
+#EXT-X-PART:DURATION=0.33334,URI=&quot;filePart271.8.mp4&quot;,INDEPENDENT=YES
+#EXT-X-PART:DURATION=0.33334,URI=&quot;filePart271.9.mp4&quot;
+#EXT-X-PART:DURATION=0.33334,URI=&quot;filePart271.10.mp4&quot;
+#EXT-X-PART:DURATION=0.33334,URI=&quot;filePart271.11.mp4&quot;
+#EXTINF:4.00008,
+fileSequence271.mp4
+</code></pre>
+<p>EXP-X-PART-INF 标签的 PART-TARGET 属性标识每个部分片段的持续时间，该值为十进制浮点数。</p>
+<p>EXT-X-PART 标签表示每一个具体的部分片段，DURATION 属性标识持续时长，URI 为该部分片段的标识符，INDEPENDENT=YES 表示该部分片段包含一个独立的帧，以此来提高客户端切入的效率。</p>
+<h5>3.2 播放列表增量更新</h5>
+<p>客户端第一次请求 m3u8 时，服务器会返回全量分片列表。此后客户端只会关心 m3u8 的增量部分，因此发起的是增量请求，以便客户端更频繁地获取播放列表，从而降低延迟。返回数据相比原始全量数据会大大减少，以便于放在一个 MTU 数据包内返回。</p>
+<p>增量更新可以减少每次传输的数据量，可通过以下标签予以支持：</p>
+<pre><code>#EXT-X-SERVER-CONTROL:CAN-SKIP-UNTIL=12.0
+#EXT-X-SKIP:SKIPPED-SEGMENTS=3
+</code></pre>
+<p>EXT-X-SERVER-CONTROL 标签使服务器指示对传递指令的支持，CAN-SKIP-UNTIL 指示服务器可以响应 _HLS_skip 指令来生成播放列表增量更新。它的值是需要跳过的秒的十进制浮点数。</p>
+<p>EXT-X-SKIP 标签的 SKIPPED-SEGMENTS 属性表示需要被跳过的分片数。</p>
+<h5>3.3 阻塞客户端请求</h5>
+<p>为了在生成新媒体段和部分段后及时通知到客户端，低延迟 HLS 引入了阻塞客户端加载请求的功能。当客户端发出 HTTP GET 请求更新媒体播放列表时，可以带上 _HLS_msn 这个参数，以表明其希望播放列表里包括将来的片段。然后，服务器阻塞请求，直到包含该片段的播放列表版本可用为止。此特性可以消除客户端对播放列表的轮询。</p>
+<h5>3.4 优化客户端发现新分片的方式</h5>
+<p>服务器使用新标签 EXT-X-PRELOAD-HINT 来通知客户端即将出现的部分段和媒体初始化段。客户端可以提前发出对提示资源的 GET 请求；只要媒体可用，服务器就会响应该请求。具体来说，就是在服务器上还没有新分片之前，客户端就已经发起对该分片的请求。一旦服务器上生成了该分片，就可以立即推送给客户端。此种方式可以在小于 1rtt 的时间内发现新分片。</p>
+<pre><code>#EXT-X-PART:DURATION=1.02,URI=&quot;fs271.mp4&quot;,BYTERANGE=20000@0
+#EXT-X-PART:DURATION=1.02,URI=&quot;fs271.mp4&quot;,BYTERANGE=23000@20000
+#EXT-X-PART:DURATION=1.02,URI=&quot;fs271.mp4&quot;,BYTERANGE=18000@43000
+#EXT-X-PRELOAD-HINT:TYPE=PART,URI=&quot;fs271.mp4&quot;,BYTERANGE-START=61000
+</code></pre>
+<p>该 m3u8 文件表明，当前已经生成了三个分片，EXT-X-PRELOAD-HINT 标签表示第四个分片虽然还未生成，但可以提前推送给客户端。</p>
+<h5>3.5 消除额外往返</h5>
+<p>客户端第一次请求到全量播放列表后，会和服务器建立起一条连接。此后当有新分片生成时，服务器会主动将 m3u8 和 ts 分片推送给客户端，减少了一次轮询的 rtt 时间。</p>
+<p>由于服务器推送方式需要 HTTP/2 的支持，在 CDN 场景下不友好，因此该方案已被废除。</p>
+<h5>3.6 快速切换码率</h5>
+<p>由于是增量更新 m3u8，当 CDN 上有两种码率的流时，每次返回时可以携带额外信息。因此当客户端需要切换到不同码率时，就可以直接切换。</p>
+<h2>三、业界做法</h2>
+<p>当前业界比较成熟的低延迟直播系统有腾讯云的快直播、阿里云的 RTS，均采用 WebRTC 作为底层流媒体框架。简要介绍如下：</p>
+<h4>1. 腾讯云快直播</h4>
+<p>快直播方案改造的就是从CDN分发节点到SDK、再到观众端播放这部分，这样的好处在于主播推流中间的录制、截图、转码等都可以复用，接入简单，可以同时出flv、rtmp、hls、WebRTC的数据流。</p>
+<p>此外，快直播从五个方面对标准WebRTC进行升级，包括支持aac（同时支持adts、latm两种封装）、视频支持H265和B帧、通过STP协商精简了信令交互、可以关闭gtrs以及支持透传metadata。</p>
+<p>在接入方面，快直播的接入其实非常简单，只需要一步就可以从标准直播升级为快直播——升级播放端、其余全部复用。Web/H5端调用浏览器WebRTC接入快直播，App接入需要集成SDK。</p>
+<p>在直播效果上，快直播能做到的延迟一般是300ms左右，极限延迟可以做到43ms。并且首帧在 100ms 左右，质量和flv相当，而延迟从10秒降低到300ms，并且可以抗30%+丢包。</p>
+<h4>2. 阿里云 RTS</h4>
+<p>RTS 是由阿里云和淘宝直播共建的低延迟直播系统，此系统分两大块：</p>
+<ul>
+<li>上行接入：可接入三种输入方式，第一种是 H5 终端，使用标准 WebRTC 推流到RTS系统中；第二种是 OBS 等传统 RTMP 推流软件，使用 RTMP 协议推流到 RTS 系统中；第三种是 低延迟推流端，可以使用阿里基于 RTP/RTCP 扩展的私有协议推流到RTS系统中。</li>
+<li>下行分发：它提供两种低延迟分发，第一种是标准 WebRTC 分发，另一种是我们在 WebRTC 基础上的 私有协议扩展，淘宝直播目前使用最多的就是基于私有协议的分发。</li>
+</ul>
+<p>RTS拥有四个技术特性：</p>
+<ul>
+<li>秒级延时和卓越的抗弱网能力，在相同卡顿率下延时可以降低80%，相比于传统的RTMP和FLV的5-10s延时，RTS的延时可以达到1s以内，并且还在基于线上的大数据，在自我学习和持续迭代中。</li>
+<li>成熟稳定，RTS历经2年多时间的潜心研发，并经历了淘宝直播618大促的线上考验，目前已经在淘宝直播上线。</li>
+<li>开放标准，为了能够方便自研播放器的客户使用我们的RTS服务，阿里云的WebRTC接入的信令协议的完全开放的、透明的。</li>
+<li>广覆盖和高并发，RTS服务是构建在阿里云2800+边缘节点之上，可以支持千万级并发播放。</li>
+</ul>
+<p>RTS 底层依赖阿里云 GRTN 网络，GRTN的定位是基于中心云和边缘云的异构节点，构建超低延时、全分布式下沉的通信级流媒体传输网络。目前融合了互联网直播和RTC等多种业务场景的音视频流传输和交换。基于GRTN的短延时直播RTS可以支持标准H5 WebRTC推播，在千万级并发情况下延时可以控制在1s以内；RTC端到端延时可以控制在250ms左右。</p>
+<h2>四、总结</h2>
+<ul>
+<li>LLHLS：虽然 LLHLS 相比普通 HLS，延迟降低了不少。但它仍然是基于 TCP 的切片式协议，因此其延迟还是在秒级别。且由于标准较新，兼容性不是特别好，业界目前没有太多的实现可以参照或测试。</li>
+<li>QUIC：作为 HTTP/3 的底层支持协议，QUIC 解决了 TCP 的一系列痛点，在弱网场景下相比 TCP 会有更好的表现。业界主流 CDN 厂商和直播厂商，均已推出或正在研发基于 QUIC 的直播服务。但由于 QUIC 对直播链路覆盖不足，无法做到反馈式优化，因此对延迟的提升也是有天花板的。</li>
+<li>WebRTC：相比其他协议，WebRTC 专为流媒体而生，且针对弱网传输做了较好的优化，覆盖了直播场景下的大部分环节。且业界主流厂商也都是基于 WebRTC 而推出相关服务，因此是一个比较理想的选择。未来我们也会投入更多的精力在这个方面加以研究，争取能够做出相关的产品来支撑业务的发展。</li>
+</ul>
+<h2>五、参考文献</h2>
+<ul>
+<li><a href="https://webrtc.org/">https://webrtc.org/</a></li>
+<li><a href="https://www.chromium.org/quic">https://www.chromium.org/quic</a></li>
+<li><a href="https://developer.apple.com/documentation/http_live_streaming/enabling_low-latency_hls">https://developer.apple.com/documentation/http_live_streaming/enabling_low-latency_hls</a></li>
+<li><a href="https://tools.ietf.org/html/draft-pantos-hls-rfc8216bis-08">https://tools.ietf.org/html/draft-pantos-hls-rfc8216bis-08</a></li>
+<li><a href="https://blog.csdn.net/vn9PLgZvnPs1522s82g/article/details/109348627">https://blog.csdn.net/vn9PLgZvnPs1522s82g/article/details/109348627</a></li>
+<li><a href="https://mp.weixin.qq.com/s/UqipMf2S2oo0jo6pgR1sWQ">https://mp.weixin.qq.com/s/UqipMf2S2oo0jo6pgR1sWQ</a></li>
+<li><a href="https://www.infoq.cn/article/sos0orAePCxwVs7KJgfD">https://www.infoq.cn/article/sos0orAePCxwVs7KJgfD</a></li>
+<li><a href="https://mp.weixin.qq.com/s/tc0JXXykNVf7A7-Q7jnpdQ">https://mp.weixin.qq.com/s/tc0JXXykNVf7A7-Q7jnpdQ</a></li>
+<li><a href="https://mp.weixin.qq.com/s/HP_8alBv3ONq1x2ldlm03Q">https://mp.weixin.qq.com/s/HP_8alBv3ONq1x2ldlm03Q</a></li>
+</ul>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

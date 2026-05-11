@@ -1,0 +1,13 @@
+{
+  "current": "",
+  "default": "minimal",
+  "static": true,
+  "themes": [
+    "letter",
+    "minimal",
+    "ocean",
+    "press",
+    "sepia",
+    "tufte"
+  ]
+}

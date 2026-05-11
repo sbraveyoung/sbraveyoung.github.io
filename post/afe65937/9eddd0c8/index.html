@@ -1,59 +1,76 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一些常见的协议详解 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/afe65937/9eddd0c8">
+<meta name="description" content="TCP/IP 协议族里面有众多的协议，分别分布在各个不同的层次上。现将跟 TCP 有关的部分协议详解如下： ARP协议 ARP 协议处于 TCP/IP 协议族的最底层，即网络接口层。它的主要用途就是实现一台主机的 IP 地址到 MAC 地址的转换。 以太网 ARP 请求/应答报文的格式如下图所示： ![](../../…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些常见的协议详解">
+<meta property="og:url" content="https://sbrave.cn/post/afe65937/9eddd0c8">
+<meta property="og:description" content="TCP/IP 协议族里面有众多的协议，分别分布在各个不同的层次上。现将跟 TCP 有关的部分协议详解如下： ARP协议 ARP 协议处于 TCP/IP 协议族的最底层，即网络接口层。它的主要用途就是实现一台主机的 IP 地址到 MAC 地址的转换。 以太网 ARP 请求/应答报文的格式如下图所示： ![](../../…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>一些常见的协议详解</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>一些常见的协议详解</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-08-20 13:39:26</span>
+        <span>· 1531 字</span>
+        <span>· 7 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>一些常见的协议详解</h2>
 <p>TCP/IP 协议族里面有众多的协议，分别分布在各个不同的层次上。现将跟 TCP 有关的部分协议详解如下：</p>
-
 <h2>ARP协议</h2>
-
 <p>ARP 协议处于 TCP/IP 协议族的最底层，即网络接口层。它的主要用途就是实现一台主机的 IP 地址到 MAC 地址的转换。</p>
-
 <h4>以太网 ARP 请求/应答报文的格式如下图所示：</h4>
-
-<p><img src="/image/9eddd0c8-1.png" width=100% height=100%></p>
-
+<p><img src="../../images/9eddd0c8-1.png" alt="" /></p>
 <ul>
 <li>硬件类型字段表示物理地址的类型，它的值为 1 表示 MAC 地址。</li>
 <li>协议类型字段表示要映射的协议地址类型，它的值为 0x800，表示 IP 地址。</li>
@@ -61,45 +78,29 @@
 <li>操作字段指出 4 种操作类型：ARP 请求（值为 1），ARP 应答（值为 2），RARP 请求（值为 3）和RARP 应答（值为 4）。</li>
 <li>最后 4  个字段指定通信双方的以太网地址和 IP 地址。</li>
 </ul>
-
 <h4>ARP 协议的工作过程如下：</h4>
-
 <ul>
 <li>发送端填充除目的端以太网地址之外的其他所有字段，构建一个 ARP 请求报文并发送。</li>
 <li>发送主机所处的网络上的所有主机均可收到该报文，但只有 IP 地址和报文中「目的端 IP 地址」相同的那台主机才响应该报文，其他主机均忽略。</li>
 <li>目的主机将自己的 MAC 地址填充到该报文中的目的端以太网地址上，然后交换两个目的端地址和两个发送端地址，将操作字段的值更改为 2，构建 ARP 应答报文并发送。</li>
 <li>发送主机收到该 ARP 应答报文，从中取出对端的 MAC 地址即可。</li>
 </ul>
-
 <h2>DNS 协议</h2>
-
 <p>我们平常访问网站时都是直接输入域名的，而因特网上的主机都是通过 IP 地址来标示的。所以就需要 DNS 协议来实现域名到 IP 地址的转换工作。</p>
-
 <p>DNS 是一套分布式的域名解析系统。工作原理如下：</p>
-
 <ul>
 <li>客户程序拿到域名后，通过系统调用 gethostbyname() 来向 DNS 服务器请求该域名对应的 IP 地址。</li>
 <li>DNS 服务器通过某种方式查询到 IP 地址后，将其返回给客户程序即可。</li>
 </ul>
-
 <p>需要声明的是，DNS 底层采用的是 UDP 协议。</p>
-
 <p>DNS 服务器的查询有两个方式：迭代和递归。</p>
-
 <p>迭代方式就是当该 DNS 服务器上没有该域名对应的 IP 地址时，DNS 服务器就返回给客户程序另一台 DNS 服务器的地址，告诉客户程序到这台 DNS 服务器上去查询。</p>
-
 <p>递归方式就是当该 DNS 服务器上没有该域名对应的 IP 地址时，DNS 服务器自身去另一台 DNS 服务器上去查询，查到之后再返回给客户程序。</p>
-
 <h2>IP 协议</h2>
-
 <p>IP 协议处于网络层，几乎所有上层协议都会使用到 IP 协议。</p>
-
 <h4>IP协议的报文格式如下：</h4>
-
-<p><img src="/image/9eddd0c8-2.png" width=100% height=100%></p>
-
+<p><img src="../../images/9eddd0c8-2.png" alt="" /></p>
 <p>解释如下：</p>
-
 <ul>
 <li>版本号指定 IP 协议的版本，长度为 4bit。对于 IPv4 来说，其值为 4。</li>
 <li>头部长度该 IP 头部包括选项在内共有多少个 4 字节。</li>
@@ -114,26 +115,46 @@
 <li>接下来两个字段源端 IP 和目的端 IP 表示发送端和接收端的 IP 地址。</li>
 <li>选项部分长度最大为 40 字节，因为头部长度字段最大可表示 15，也就是说 IP 数据报的报头最大可以有 60 字节。而前面这些已经占了 20 字节。故选项部分只能有 40 字节。</li>
 </ul>
-
 <h4>IP分片</h4>
-
 <p>当要发送的数据大于 MTU 的时候，通常需要进行 IP 分片，将数据分成多个 IP 数据报发送。MTU 一般为 1500 字节。</p>
-
 <p>由上文可知，在 3 位的标志字段中，如果允许分片，则相同的 16 位的标识字段标识这些分片属于同一个数据块，片偏移标识这些分片的先后顺序。</p>
-
 <p>【完】</p>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

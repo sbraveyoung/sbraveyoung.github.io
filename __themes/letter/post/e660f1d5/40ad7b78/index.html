@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一个简单的Stack实现 · sbraveyoung · 字里行间</title>
+<meta name="description" content="stack 的特性不用多说了吧，先进后出。底层可以用 vector 或 list 实现。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Stack) )">
+<meta property="og:title" content="一个简单的Stack实现">
+<meta property="og:description" content="stack 的特性不用多说了吧，先进后出。底层可以用 vector 或 list 实现。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Stack) )">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/40ad7b78">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-07-26
+    </div>
+    <h1 class="article-title">一个简单的Stack实现</h1>
+    <p class="article-lede">stack 的特性不用多说了吧，先进后出。底层可以用 vector 或 list 实现。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Stack) )</p>
+    <div class="article-meta">
+      <span>1 min read</span>
+      <span>150 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>一个简单的Stack实现</h2>
+<p>stack 的特性不用多说了吧，先进后出。底层可以用 vector 或 list 实现。</p>
+<pre><code class="language-C++">#ifndef _STACK_
+#define _STACK_
+
+#include&lt;iostream&gt;
+#include&quot;../List/MyList.h&quot;
+using namespace std;
+
+class StackIsEmpty{};
+
+template&lt;typename T&gt;
+class MyStack{
+public:
+    MyStack():mylist()
+    {}
+
+    ~MyStack()
+    {}
+
+    MyStack(const MyStack&lt;T&gt;&amp; mystack)
+    {
+        mylist=mystack.mylist;
+    }
+
+    MyStack&lt;T&gt;&amp; operator=(const MyStack&lt;T&gt;&amp; mystack)
+    {
+        mylist=mystack.mylist;
+    }
+
+    void push(const T&amp; t)
+    {
+        mylist.push_back(t);
+    }
+
+    void pop()throw (StackIsEmpty)
+    {
+        try
+        {
+            mylist.pop_back();
+        }
+        catch(ListIsEmpty&amp;)
+        {
+            throw StackIsEmpty();
+        }
+    }
+
+    T top()
+    {
+        return mylist.end()-&gt;data;
+    }
+
+    bool empty()
+    {
+        return mylist.empty();
+    }
+
+    size_t size()
+    {
+        return mylist.size();
+    }
+
+private:
+    List&lt;T&gt; mylist;
+};
+
+#endif
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/Stack">点我前往</a>
+)</p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>直播答题背后的技术原理 · sbraveyoung · 字里行间</title>
+<meta name="description" content="2018 年仅仅过去了一个礼拜，就迎来了今年的第一个风口--直播答题闯关赢现金。这场由国民老公点燃的战火一触即发，大有愈演愈烈之势。不仅有思聪力挺的冲顶大会，更有作为花椒直播背后的老板周鸿祎，西瓜视频老板张一鸣等大佬也纷纷加入到这场「大撒币」中来。直播答题的具体规则如下： 平台方在某个整点有一名出题官发起直播，并设有一…">
+<meta property="og:title" content="直播答题背后的技术原理">
+<meta property="og:description" content="2018 年仅仅过去了一个礼拜，就迎来了今年的第一个风口--直播答题闯关赢现金。这场由国民老公点燃的战火一触即发，大有愈演愈烈之势。不仅有思聪力挺的冲顶大会，更有作为花椒直播背后的老板周鸿祎，西瓜视频老板张一鸣等大佬也纷纷加入到这场「大撒币」中来。直播答题的具体规则如下： 平台方在某个整点有一名出题官发起直播，并设有一…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/ea5ffd86/1229577b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2018</span>
+    <span>Friday, February 9, 2018</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · February 9, 2018</div>
+    <h1 class="press-article-title">
+      直播答题背后的技术原理
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>2018 年仅仅过去了一个礼拜，就迎来了今年的第一个风口--直播答题闯关赢现金。这场由国民老公点燃的战火一触即发，大有愈演愈烈之势。不仅有思聪力挺的冲顶大会，更有作为花椒直播背后的老板周鸿祎，西瓜视频老板张一鸣等大佬也纷纷加入到这场「大撒币」中来。直播答题的具体规则如下： 平台方在某个整点有一名出题官发起直播，并设有一…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 8 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>直播答题背后的技术原理</h2>
+<p>2018 年仅仅过去了一个礼拜，就迎来了今年的第一个风口--直播答题闯关赢现金。这场由国民老公点燃的战火一触即发，大有愈演愈烈之势。不仅有思聪力挺的冲顶大会，更有作为花椒直播背后的老板周鸿祎，西瓜视频老板张一鸣等大佬也纷纷加入到这场「大撒币」中来。直播答题的具体规则如下：</p>
+<ul>
+<li>平台方在某个整点有一名出题官发起直播，并设有一定数量的奖金；</li>
+<li>用户观看直播并答题，共 12 道题，全部答对的所有用户平分全部奖金；</li>
+<li>若答错某题，则不能继续作答。但如果有复活卡，每场直播可自动复活一次；</li>
+<li>每道题为三选一，须在 10s 内做出选择，一旦选择，无法更改答案，超时未选或选错则失败。</li>
+</ul>
+<p>从以上规则中可以看出，直播答题的最大难点在于实时性和高并发性。实时性是指每道题目只有 10s 的作答时间，运营方对题目的下发需要精确到秒级。时间太长会导致作弊，时间太短则对用户不公平。高并发性是指单场直播会突然涌入百万级的用户观看，我看过的某平台最高单场有两百多万人参与。这对服务器架构设计和流量成本就有很高的要求。</p>
+<p>说实话，我算不得「内行」，但也来凑凑这里面的「门道」。</p>
+<h3>直播技术概述</h3>
+<p>直播自从 16 年成为风口后，到现在已经涌现出许多平台，其中不乏映客、花椒、美拍等行业标杆。在技术上已经比较成熟。一场完整的直播从主播发起直播到观众观看直播包括 <code>采集--编码--传输--源站处理--分发CDN--解码观看</code> 这几个步骤。</p>
+<h4>采集</h4>
+<p>一般对流媒体的采集包括视频和音频的采集，分别通过手机摄像头和麦克风设备来完成。摄像头在 1s 内连续记录的多个画面，称为「帧」，每一帧可以理解为一张图片，在播放端快速播放多个连续的帧就形成了视频。而音频则是对人发出的声波进行采样，然后进行模数转换，将之转换为数字信号。</p>
+<h4>编码</h4>
+<p>采集到音视频数据后，还需要进行编码才能在网络上传输。我这里所说的编码不仅仅是指将音视频数据按照一定的格式进行组织，也包括对视频的压缩。试想一部时长两小时、分辨率为 1920x1080，每秒 20帧 的电影如果不经过压缩，其大小将达到 2224G！这简直是不可想象的。
+以视频为例，摄像头采集的原始数据数据为 YUV帧，对这些帧进行宏块划分、帧内和帧间预测、运动估计和运动补偿、再将得到的稀疏矩阵经过离散余弦变换，就可以得到 H264 裸码流。最后再将其封装为 flv 格式，就可以进行传输了。</p>
+<h4>传输、源站、CDN</h4>
+<p>流媒体在网络上的传输是比较重要的一个环节，尤其是对直播来说。因为直播类音视频的一个基本要求就是实时性，因此要尽可能缩短在网络上的延迟。包括从传输协议、传输链路、各端之间处理等方面的选型和优化。</p>
+<p>现在普遍选用的传输协议是 RTMP 协议，称为实时消息传输协议，是 Adobe 公司发布的。从功能和命名上看，他就是为实时传输消息而设计的，因此很适合于直播流的传输。对应的开源项目一般有 nginx-rtmp-module、SRS、CRTMPD、FMS、WOWZA 等。</p>
+<p>在链路层面，主要是尽可能去优化路由，避免跨网络跨运营商情况，缩短数据包在主播和观众之间的跳数。一般来说，跨运营商和跨地区会导致丢数据的现象。跨运营商会带来两个问题：</p>
+<ol>
+<li>运营商数据交汇点不一定在本地，需要绕远路；</li>
+<li>高峰期可能会拥堵；</li>
+</ol>
+<p>因此在观众观看直播时，需要就近拉取，同时也需要尽可能保证电信用户走电信通道，联通走联通通道等。</p>
+<p>同时，主播和观众往往是一对多的关系。若主播所以在观众端可以通过 CDN 来进行拉流分发，以缓解源站的压力。CDN 全称为 Content Delivery Network，即内容分发网络。在另一方面，观众观看直播时，会到就近的 CDN 边缘节点进行拉取，也可以提升连接质量，缓解因链路而引起的丢帧问题。</p>
+<h4>解码</h4>
+<p>解码是编码的逆过程。观众端拿到直播数据后，需要进行 <code>解封装--解码</code> 的过程，然后将得到的音视频数据分别送到扬声器和屏幕上。</p>
+<h3>直播答题技术的挑战</h3>
+<p>而直播答题是在直播的模式之上，加入的一种新型互动玩法。这就要求在技术上不仅要达到直播的低延迟要求，同时也要满足题目和直播流的同步。题目出现过早或过晚都不行，过早，主持人还没开始念题，题目已经弹出；过晚，主持人都念完了，题目才弹出，容易导致作弊。而题目通常是通过 IM 通道下发的，与直播属于两个不同的通道，这之间的同步如何保证？</p>
+<p>答案就是 SEI。SEI 称为补充增强信息（Supplemental Enhancement Information），是 H.264 和 H.265 协议中规定的一种 NAL unit，用来向视频中加入一些额外信息，如视频版权等。可以在视频编码端或传输端加入。</p>
+<p>这里我们需要在 SEI 中加入时间戳相关信息。在观众参与答题时，为尽可能保证时间戳的准确性，可在 CDN 边缘节点上再加入，同时在 IM 通道中设定题目在哪一个时间点应该出现。这样，客户端就可以根据这个时间戳进行同步，精确到某一帧再弹出题目或答案，保证了答题时间的准确性。</p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2018 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

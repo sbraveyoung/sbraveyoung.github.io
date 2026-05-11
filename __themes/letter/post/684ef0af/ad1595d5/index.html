@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题34：丑数 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：我们把只包含因子2,3和5的数称作丑数。求按从小到大的顺序的第1500个丑数。例如6,8都是丑数，但14不是，因为它包含因子7.习惯上我们把1当做第一个丑数。** 分析 最直观的方法是从1往后逐个判断每个数字，并设一个计数器。如果一个数是丑数，计数器加一。当计数器到1500时，输出这个数即可。但求一个数的所有因子…">
+<meta property="og:title" content="面试题34：丑数">
+<meta property="og:description" content="题目：我们把只包含因子2,3和5的数称作丑数。求按从小到大的顺序的第1500个丑数。例如6,8都是丑数，但14不是，因为它包含因子7.习惯上我们把1当做第一个丑数。** 分析 最直观的方法是从1往后逐个判断每个数字，并设一个计数器。如果一个数是丑数，计数器加一。当计数器到1500时，输出这个数即可。但求一个数的所有因子…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/ad1595d5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-06-27
+    </div>
+    <h1 class="article-title">面试题34：丑数</h1>
+    <p class="article-lede">题目：我们把只包含因子2,3和5的数称作丑数。求按从小到大的顺序的第1500个丑数。例如6,8都是丑数，但14不是，因为它包含因子7.习惯上我们把1当做第一个丑数。** 分析 最直观的方法是从1往后逐个判断每个数字，并设一个计数器。如果一个数是丑数，计数器加一。当计数器到1500时，输出这个数即可。但求一个数的所有因子…</p>
+    <div class="article-meta">
+      <span>2 min read</span>
+      <span>459 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>面试题34：丑数</h2>
+<p><strong>题目：我们把只包含因子2,3和5的数称作丑数。求按从小到大的顺序的第1500个丑数。例如6,8都是丑数，但14不是，因为它包含因子7.习惯上我们把1当做第一个丑数。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>最直观的方法是从1往后逐个判断每个数字，并设一个计数器。如果一个数是丑数，计数器加一。当计数器到1500时，输出这个数即可。但求一个数的所有因子的时间复杂度为O(n<sup>0.5</sup>)(对否？),总的时间复杂度为O(n<sup>1.5</sup>)。</p>
+<p>更好的一种方法是以空间换时间，即创建一个数组保存已经找到的丑数，这样就不用重复计算前面已经计算过的。而是每次用数组中的一个数来计算出下一个丑数。一般我们会选择数组中2,3,5对应的最后一个数来计算下一个丑数，所以需要使数组是有序的。因此可以用3个变量T2，T3，T5来指示2,3,5对应的最后一个丑数，然后用着三个数分别乘以2,3和5得到R2，R3和R5。只需要将R2，R3，R5中的最小者放入数组中即可，并更新相应的T2，T3或T5。</p>
+<p>代码如下：</p>
+<pre><code class="language-int">{
+    int min=a&gt;b?b:a;
+    min=min&gt;c?c:min;
+    return min;
+}
+
+int GetUglyNumber(int index)
+{
+    if(index&lt;=0)
+        return 0;
+    vector&lt;int&gt; v;
+    v.push_back(1);
+    int M2=0,M3=0,M5=0;
+    while(v.size()&lt;index)
+    {
+        int min=Min(v[M2]*2,v[M3]*3,v[M5]*5);
+        v.push_back(min);
+        while(v[M2]*2&lt;=v[v.size()-1])
+            M2++;
+        while(v[M3]*3&lt;=v[v.size()-1])
+            M3++;
+        while(v[M5]*5&lt;=v[v.size()-1])
+            M5++;
+    }
+    return v[v.size()-1];
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/34_UglyNumber/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

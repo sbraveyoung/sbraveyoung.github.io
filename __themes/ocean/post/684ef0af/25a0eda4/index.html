@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题35：第一个只出现一次的数字 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/25a0eda4">
+<meta name="description" content="话说写博客真是个累人的干活，即使是我写如此简单，篇幅如此短小的博客，有时候也真想一弃了之，放任不管。恰逢这几天忙着考试，今天一门，明天一门，后天还有一门。一学期了没好好学，现在可真是后悔呀。。。忙得头晕转向，甚至复习时间都感觉很不够用。但我电脑上设置了闹钟，每天道时间就会提醒我该写博客了。今天打开一看，咦？很久没遇到如…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题35：第一个只出现一次的数字">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/25a0eda4">
+<meta property="og:description" content="话说写博客真是个累人的干活，即使是我写如此简单，篇幅如此短小的博客，有时候也真想一弃了之，放任不管。恰逢这几天忙着考试，今天一门，明天一门，后天还有一门。一学期了没好好学，现在可真是后悔呀。。。忙得头晕转向，甚至复习时间都感觉很不够用。但我电脑上设置了闹钟，每天道时间就会提醒我该写博客了。今天打开一看，咦？很久没遇到如…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-06-28 23:48:22</span>
+        <span>· 698 字</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题35：第一个只出现一次的数字</h2>
+<p>话说写博客真是个累人的干活，即使是我写如此简单，篇幅如此短小的博客，有时候也真想一弃了之，放任不管。恰逢这几天忙着考试，今天一门，明天一门，后天还有一门。一学期了没好好学，现在可真是后悔呀。。。忙得头晕转向，甚至复习时间都感觉很不够用。但我电脑上设置了闹钟，每天道时间就会提醒我该写博客了。今天打开一看，咦？很久没遇到如此简单的题目了，赶紧写吧，多出来的时间写这一段废话，没什么用处，发发牢骚而已。诸君看看就好，:)</p>
+<hr />
+<p><strong>题目：在字符串中找出第一个只出现一次的字符。如输入”abaccdeff”，则输出”b”。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>此题我觉得是简单哈希表使用的范例。哈希表是啥？就是将一个给定的数据映射到一个确定的位置上。在此题中，”给定的数据”就是该字符串中的每一个字符，因为C语言的编码是一ASCII为基础的，而ASCII只有128个字符，除过33个不可见字符的话就更少了。所以为了稳妥起见，我们定义一个长度为256的整形数组，全部初始化为0.数组的下标表示字符串中某一个字符的ASCII码，而值代表该字符出现的次数。然后我们遍历一次该字符串，每遇到一个字符，就对其对应的位置加1.完成之后就能统计出该字符串中都有哪些字符，各出现了多少次。然后再遍历一遍字符串，若某字符对应的位置上的值为1，它就是我们要找的字符了，return退出即可。</p>
+<p>如果使用蛮力法，每遇到一个字符，就在后面看它有没有再次出现。直到找到第一个只出现一次的字符。这种方法的时间复杂度为O(n<sup>2</sup>),显然没第一种方法高效，代码从略。</p>
+<p>第一个方法代码如下：</p>
+<pre><code class="language-char">{
+    vector&lt;int&gt; count;
+    count.resize(256);
+    int i;
+    for(i=0;i&lt;256;++i)
+    {
+        count[i]=0;
+    }
+    for(i=0;i&lt;str.size();++i)
+    {
+        count[str[i]]++;
+    }
+    for(i=0;i&lt;str.size();++i)
+    {
+        if(count[str[i]]==1)
+            return str[i];
+    }
+    throw new exception();
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/35_FirstNotRepeating/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

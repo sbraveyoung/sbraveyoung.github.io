@@ -1,99 +1,109 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git 五分钟入门 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/f36e7355">
+<meta name="description" content="作为一名技术人员，git 是我们每天都会接触到的。但你真的了解它吗？你知道 git 是如何存储我们的代码数据，又是如何保障数据安全的吗？接下来带你用五分钟的时间了解 git 的方方面面。Let&#39;s go! 一、什么是 git？ 虽然 git 很多时候被用来管理代码。但如果抛开代码，git 其实是一个版本控制系统，而且是…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git 五分钟入门">
+<meta property="og:url" content="https://sbrave.cn/post/f36e7355">
+<meta property="og:description" content="作为一名技术人员，git 是我们每天都会接触到的。但你真的了解它吗？你知道 git 是如何存储我们的代码数据，又是如何保障数据安全的吗？接下来带你用五分钟的时间了解 git 的方方面面。Let&#39;s go! 一、什么是 git？ 虽然 git 很多时候被用来管理代码。但如果抛开代码，git 其实是一个版本控制系统，而且是…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>Git 五分钟入门</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>Git 五分钟入门</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2021-02-16 16:01:45</span>
+        <span>· 3101 字</span>
+        <span>· 13 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>Git 五分钟入门</h2>
 <p>作为一名技术人员，git 是我们每天都会接触到的。但你真的了解它吗？你知道 git 是如何存储我们的代码数据，又是如何保障数据安全的吗？接下来带你用五分钟的时间了解 git 的方方面面。Let's go!</p>
-
 <h2>一、什么是 git？</h2>
-
 <p>虽然 git 很多时候被用来管理代码。但如果抛开代码，git 其实是一个版本控制系统，而且是世界上最先进的版本控制系统。主要体现在三个方面：</p>
-
 <ul>
 <li>数据备份：提交到 git 里面的数据会被存储起来，并推送到远程仓库进行备份；</li>
 <li>历史记录：可以查看对某些数据的历史变更，以及变更的详细信息；</li>
 <li>上下文对照：可以对数据的不同版本进行差异比较；</li>
 </ul>
-
 <p>因此，git 作为版本控制系统，解决了手动管理文件变更历史的问题；</p>
-
 <p>此外，git 还是一个对象数据库。数据在 git 内部就是通过一系列对象来存储的。具体内容见后文。</p>
-
 <h2>二、为什么要用 git</h2>
-
 <p>同样是版本控制系统，我们为什么不用其他工具，而使用 git 呢？主要得益于 git 有以下几个特性：</p>
-
 <ul>
 <li>开源
-
 <ul>
 <li>源码之前，了无秘密。只要愿意，我们一窥 git 内部的优秀设计；</li>
 <li>全世界优秀开发者共同维护，使得 git 更加易用、完善；</li>
-</ul></li>
+</ul>
+</li>
 <li>分布式开发
-
 <ul>
 <li>多人协作</li>
 <li>数据冗余</li>
-</ul></li>
+</ul>
+</li>
 <li>本地+远程：大部分操作在本地完成，体验好。通常只在需要提交、拉取代码时连接远程仓库；</li>
 <li>数据完整性：git 内部像区块链一样，通过 hash 计算出数据的校验和，环环相扣，不可篡改，可以保证数据安全、完整；</li>
 <li>快！
-
 <ul>
 <li>大部分操作本地完成；</li>
 <li>分支切换通过指针完成，而 SVN 是通过硬切换完成；</li>
 <li>文件快照，差异对比使用快照操作</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <h2>三、git 的使用</h2>
-
 <h3>1. 相关命令</h3>
-
 <p>git 的操作命令从使用程度上可分为上层命令和底层命令。上层命令就是大部分人平时用到的 <code>git add xxx</code>、<code>git commit -m xxx</code>、<code>git push</code> 等。底层命令则是 git 真正的内部操作，需对 git 内部原理有所了解才能熟练驾驭。相关命令展示如下：</p>
-
 <table>
 <thead>
 <tr>
@@ -101,105 +111,81 @@
 <th>作用</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>git init</td>
 <td>初始化一个空仓库</td>
 </tr>
-
 <tr>
 <td>git add</td>
 <td>添加某个文件到 git 仓库</td>
 </tr>
-
 <tr>
 <td>git commit</td>
 <td>提交本次改动</td>
 </tr>
-
 <tr>
 <td>git push</td>
 <td>推送到远程仓库</td>
 </tr>
-
 <tr>
 <td>git reset</td>
 <td>将当前分支重置到某个版本</td>
 </tr>
-
 <tr>
 <td>git checkout</td>
 <td>切换分支或版本</td>
 </tr>
-
 <tr>
 <td>git log</td>
 <td>查看提交历史</td>
 </tr>
-
 <tr>
 <td>git hash-object</td>
 <td>将任意数据保存于 git 数据库中，并返回 key 值</td>
 </tr>
-
 <tr>
 <td>git cat-file</td>
 <td>查看 git 数据库中的文件内容或类型</td>
 </tr>
-
 <tr>
 <td>git update-index</td>
 <td>暂存区处理</td>
 </tr>
-
 <tr>
 <td>git read-tree/write-tree</td>
 <td>将树对象读入暂存区/将暂存区内写入一个树对象</td>
 </tr>
-
 <tr>
 <td>git commit-tree</td>
 <td>创建一个提交对象</td>
 </tr>
-
 <tr>
 <td>git symbolic-ref</td>
 <td>对 HEAD 进行操作</td>
 </tr>
-
 <tr>
 <td>git update-ref</td>
 <td>更新引用</td>
 </tr>
-
 <tr>
 <td>...</td>
 <td>...</td>
 </tr>
 </tbody>
 </table>
-
 <h3>2. git-flow</h3>
-
 <p>git 是一个分布式的版本控制系统，有非常多的特性，如分支管理、工作区、fast forward 等。但也有不少难以使用的地方：</p>
-
 <ol>
 <li>如何开发一个新的 feature？对小型项目还好，稍大一点的项目同时开发的 feature 可能达到十几个，这么多 feature 如何管理？</li>
 <li>线上出了 bug 如何快速修复？并且保证之后发布的所有版本都包含这个修复的 commit？</li>
 <li>每次修改代码，重新发布的流程很多很繁琐，如何保证 RD 严格按照规范来操作？</li>
 </ol>
-
 <p>此时 git-flow 出现了，我将它称为「git 工作流」，从字面意思来看，就是按照一个规定好的工作流程来操作，以保证规范性（此处解决了上述第三个问题）。git flow 严格来说是一种思想、机制，git 相关的大部分操作都可以用某些「流」来完成。它不同于许多开发人员惯用的方式。在传统开发模式下，许多人只维护了「master」和「develop」分支，相关的新功能在 develop 上开发，完成后 merge 到 master 分支上，更有甚者只有一个 master 分支。这样的工作模式对于对于并发进行多个 feature 的管理简直是个噩梦。</p>
-
 <p>git flow 设定了五个分支：master、develop、hotfix、feature、release。各个分支通过不同的耦合，形成一个「流」，共同完成代码从编写到上线的一系列流程。各个分支之间的关系如下图：</p>
-
-<p><img src="/image/git-flow.png" width=100% height=100%></p>
-
+<p><img src="/image/git-flow.png" alt="" /></p>
 <p>（图片来自网络）</p>
-
 <p>下面来逐一解释：</p>
-
 <ul>
 <li>master 分支：只能由 release 分支合并而来，不能在上面直接开发，以保证在任意时刻，master 分支上的代码都是稳定的；且每次合并都应该打 tag；</li>
 <li>hotfix 分支：当生产环境发现问题需要紧急修复时，需要且只能基于 master 分支创建一个 hotfix 分支，修复后双向 merge 到 master 和 develop，以保证生产环境和后续新功能的开发都 fix 掉此问题；</li>
@@ -207,123 +193,100 @@
 <li>feature 分支：用来开发一个新功能，一旦开发完成，需要 merge 回 develop 分支。可以同时存在多个 feature 分支并行开发；</li>
 <li>release 分支：需要发布时，基于 develop 分支创建 release 分支，在此之上进行测试、修复 bug 等，完成后双向 merge 到 master 和 develop 分支上就可以发布了；</li>
 </ul>
-
 <p>由此，git flow 成功将各个分支串起来，形成一个工作流，以便于快速开发迭代。</p>
-
 <h2>四、git 实现原理</h2>
-
 <h3>1. 暂存区</h3>
-
-<p><img src="/image/2429e4d2661e60027537aea0077f6e40.png" width=100% height=100%></p>
-
+<p><img src="/image/2429e4d2661e60027537aea0077f6e40.png" alt="" /></p>
 <p>git 本地数据管理，大概可以分为三个区，工作区,暂存区和版本库。</p>
-
 <ul>
 <li><strong>工作区（Working Directory）</strong> 是我们直接编辑的地方，例如 vsocde 打开的项目，记事本打开的文本等，肉眼可见，直接操作。</li>
 <li><strong>暂存区（Stage 或 Index）</strong> 数据暂时存放的区域，可在工作区和版本库之间进行数据的友好交流。</li>
 <li><strong>版本库（commit History）</strong> 存放已经提交的数据，push 的时候，就是把这个区的数据 push 到远程仓库了。</li>
 </ul>
-
 <h3>2. 存储结构</h3>
-
 <p>git 相关的所有数据均存储在 .git 目录中。我们新建一个仓库，来看一下目录结构：</p>
-
-<p><img src="/image/image-20210119163055663.png" width=100% height=100%></p>
-
+<p><img src="/image/image-20210119163055663.png" alt="" /></p>
 <p>比较重要的主要是以下几个，分别在后文介绍：</p>
-
 <ul>
 <li>HEAD：指向目前被检出的分支；</li>
 <li>objects：存储所有对象数据内容（键值数据库）；</li>
 <li>refs：存储指向数据（分支、远程仓库和标签等）的提交对象的指针；</li>
 </ul>
-
 <h3>3. 对象</h3>
-
 <p>git 内存存在四种对象，分别是 blob、tree、commit 和 tag 对象。每种对象都会生成一个长度为 40 的 sha1 值来标记并存储。</p>
-
 <h4>blob 对象</h4>
-
-<p>blob 对象，可以类比为 linux 系统上的 inode 节点或具体文件，是真正存储数据的对象。其布局如图所示：!<img src="/image/image-20210119183505067.png" width=50% height=50%></p>
-
+<p>blob 对象，可以类比为 linux 系统上的 inode 节点或具体文件，是真正存储数据的对象。其布局如图所示：!<img src="/image/image-20210119183505067.png" alt="" /></p>
 <p>可见，一个 blob 对象由 header 和 body 组成。其中 header=&quot;blob&quot;+数据长度，body 为实际存储的数据。然后对整个对象做 sha1 计算，得到上文所说的 sha1 值。以该值前两位作为目录名，后 38 位作为文件名，存储于 objects 目录下。文件内容为对整个对象做 zlib 压缩后的结果。如下图所示：</p>
-
-<p><img src="/image/image-20210119195753640.png" width=100% height=100%></p>
-
+<p><img src="/image/image-20210119195753640.png" alt="" /></p>
 <p>从上图可以看出，我们可以通过 <code>git hash-object</code> 命令，将一个文件的内容写入到一个 blob 对象中。但 blob 对象还是存在两个问题：</p>
-
 <ol>
 <li>sha1 哈希值难以记忆，直接给人使用较为困难；</li>
 <li>blob 对象中只存储文件内容，无文件名；</li>
 </ol>
-
 <p>因此，就引出了  tree 对象。</p>
-
 <h4>tree 对象</h4>
-
 <p>如果说 blob 对象，可以类比为 linux 系统上的 inode 节点或具体文件的话，tree 对象就可以类比未 linux 系统上的目录，指向 blob 对象或者子目录对象。其结构如下图所示：</p>
-
-<p><img src="/image/image-20210119200230822.png" width=50% height=50%></p>
-
+<p><img src="/image/image-20210119200230822.png" alt="" /></p>
 <p>可见，tree 对象的 header 跟 blob 对象较为类似，但其 body 包含好多条记录，每条记录均指向一个子 blob 对象或子 tree 对象，并记录了子对象的文件模式（图中未画出）、类型、sha1 值和文件名。下图演示了如何生成一个 tree 对象并将上文中生成的 blob 对象添加进去：</p>
-
-<p><img src="/image/image-20210119200647968.png" width=100% height=100%></p>
-
+<p><img src="/image/image-20210119200647968.png" alt="" /></p>
 <p>同样，tree 对象也有一些问题，最大的问题就是：该 tree 对象及其子对象是谁保存的？为什么保存？什么时间保存的？该问题可以由 commit 对象来解决。</p>
-
 <h4>commit 对象</h4>
-
 <p>commit 对象的 body，包含其所指向的 tree 对象的 sha1 值、父 commit 对象的 sha1 值（如果有）、提交者以及相关说明信息。布局如图所示：</p>
-
-<p><img src="/image/image-20210119201207199.png" width=50% height=50%></p>
-
+<p><img src="/image/image-20210119201207199.png" alt="" /></p>
 <p>下图演示了如何生成一个 commit 对象：</p>
-
-<p><img src="/image/image-20210119201343911.png" width=100% height=100%></p>
-
+<p><img src="/image/image-20210119201343911.png" alt="" /></p>
 <h4>tag 对象</h4>
-
 <p>tag 对象有两种：轻量 tag 对象和附注 tag 对象。</p>
-
 <p>若使用 <code>git tag xxx</code> 命令，生成的为轻量 tag 对象。轻量标签很像一个不会改变的分支——它只是某个特定提交的引用。</p>
-
 <p>而附注 tag 是存储在 git 数据库中的一个完整对象， 它们是可以被校验的，其中包含打标签者的名字、电子邮件地址、日期时间等。通过 <code>git tag xxx -m 'yyy'</code> 即可生成一个附注 tag 对象。其布局如下：</p>
-
-<p><img src="/image/image-20210119202128135.png" width=100% height=100%></p>
-
+<p><img src="/image/image-20210119202128135.png" alt="" /></p>
 <h3>4. 引用</h3>
-
 <p>git 有三种引用类型：HEAD 引用、标签引用和远程引用。均存储于 .git/refs 目录下。下图演示了 HEAD 引用及标签引用：</p>
-
-<p><img src="/image/image-20210119205405750.png" width=100% height=100%></p>
-
+<p><img src="/image/image-20210119205405750.png" alt="" /></p>
 <p>可以看出，我们平时所说的分支，其实就是一个引用，对应 .git/refs/heads 下面的一个文件，文件内容为其所指向的 commit 对象指针。另外，也印证了轻量 tag 对象其实就是一个引用。</p>
-
 <h3>5. HEAD 引用</h3>
-
 <p>.git 目录下面还有一个特殊的 HEAD 文件：</p>
-
-<p><img src="/image/image-20210119210056476.png" width=100% height=100%></p>
-
+<p><img src="/image/image-20210119210056476.png" alt="" /></p>
 <p>可以看出，该文件内容为 refs/heads/master，指向上文提到的分支引用的路径。因此 HEAD 文件相当于「引用的引用」，也可以理解为「指向指针的指针」，即二级指针，用于记录当前 git 工作在哪一个分支之上。</p>
-
 <h3>6. git 组织结构</h3>
-
-<p><img src="/image/image-20210119212842038.png" width=100% height=100%></p>
-
+<p><img src="/image/image-20210119212842038.png" alt="" /></p>
 <p>如图为 git 中各对象、引用之间的关系，可以看出，HEAD 指向引用，引用指向 commit 对象，commit 对象指向 tree 对象，其 parent 指针指向父对象。tree 对象指向 blob 对象，blob 对象中存储具体数据。</p>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

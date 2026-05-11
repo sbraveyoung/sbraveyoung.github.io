@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题36：数组中的逆序对 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/14312f1f">
+<meta name="description" content="题目：在数组中的两个数字如果前面一个大于后面的数字，则这两个数字组成一个逆序对。输入一个数组，求出这个数组中所有逆序对的总数。** 分析 如果采用简单粗暴的方法，即遍历数组，对每个数，检查后面的每一个数是否小于它。时间复杂度为O(n&lt;sup&gt;2&lt;/sup&gt;)。 实际上我们可以采用归并排序来解决这个问题，只需要在归并每一…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题36：数组中的逆序对">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/14312f1f">
+<meta property="og:description" content="题目：在数组中的两个数字如果前面一个大于后面的数字，则这两个数字组成一个逆序对。输入一个数组，求出这个数组中所有逆序对的总数。** 分析 如果采用简单粗暴的方法，即遍历数组，对每个数，检查后面的每一个数是否小于它。时间复杂度为O(n&lt;sup&gt;2&lt;/sup&gt;)。 实际上我们可以采用归并排序来解决这个问题，只需要在归并每一…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-02 01:40:27</span>
+        <span>· 648 字</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题36：数组中的逆序对</h2>
+<p><strong>题目：在数组中的两个数字如果前面一个大于后面的数字，则这两个数字组成一个逆序对。输入一个数组，求出这个数组中所有逆序对的总数。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>如果采用简单粗暴的方法，即遍历数组，对每个数，检查后面的每一个数是否小于它。时间复杂度为O(n<sup>2</sup>)。</p>
+<p>实际上我们可以采用归并排序来解决这个问题，只需要在归并每一个数字时，通过计算而不是遍历的方式得到后面有多少个元素小于它(常数时间)。这样总的时间复杂度就是归并排序的时间复杂度为O(nlgn)，不并且需要额外的O(n)的空间。这又是一个“以空间换时间”的做法。</p>
+<p>而具体的计算方法如下：归并时从后往前归并，如果前面的数大于后面的，说明他们是有序的，不构成逆序对；否则说明前面的数大于后面的数字，并且可以推断出前面的数大于后面中该数字之前的所有数字。例子如下：</p>
+<center>1,4,5,7</center>
+和<center>2,3,6,8</center>
+<ul>
+<li>首先，7&lt;8，此时临时数组中后半部分的数字为8，count加0。</li>
+<li>然后7和6,7&gt;6，构成逆序对，并且6之前的所有元素均和7构成逆序对，count加3。临时数组中值为7,8。</li>
+<li>5&lt;6，不构成逆序对，count加0.临时数组中后半部分值为6,7,8。</li>
+<li>5&gt;3，所以5和2,3都构成逆序对，count加2.临时数组中值为5,6,7,8。</li>
+<li>4&gt;3，所以4和2,3都构成逆序对，count加2，临时数组中值为4,5,6,7,8。</li>
+<li>接下来两步，1&lt;2和3，不构成逆序对，直接放入临时数组即可，值为1,2,3,4,5,6,7,8。</li>
+</ul>
+<p>所以以上1,4,5,7,2,3,6,8数组中共有7组逆序对。</p>
+<p>代码如下：</p>
+<pre><code class="language-void">{
+    int i=mid,j=right,k=right;
+    while(i&gt;=left &amp;amp;&amp;amp; j&gt;mid)
+    {
+        if(v[i]&lt;v[j])
+            tmp[k--]=v[j--];
+        else
+        {
+            tmp[k--]=v[i--];
+            count+=(j-mid);
+        }
+    }
+    while(i&gt;=left)
+        tmp[k--]=v[i--];
+    while(j&gt;mid)
+        tmp[k--]=v[j--];
+    for(i=left;i&lt;=right;++i)
+    {
+        v[i]=tmp[i];
+    }
+}
+
+void MergeSort(vector&lt;int&gt;&amp;amp; v,int left,int right,vector&lt;int&gt;&amp;amp; tmp,int&amp;amp; count)
+{
+    if(right-left&gt;1)
+    {
+        int mid=left+(right-left)/2;
+        MergeSort(v,left,mid,tmp,count);
+        MergeSort(v,mid+1,right,tmp,count);
+        Merge(v,left,mid,right,tmp,count);
+    }
+    else
+    {
+        Merge(v,left,left,right,tmp,count);
+    }
+}
+
+int InversePairs(vector&lt;int&gt; v)
+{
+    int count=0;
+    vector&lt;int&gt; tmp;
+    tmp.resize(v.size());
+    MergeSort(v,0,v.size()-1,tmp,count);
+    return count;
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/36_InversePairs/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

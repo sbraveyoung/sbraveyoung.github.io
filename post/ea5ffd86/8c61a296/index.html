@@ -1,89 +1,95 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>低延迟 hls 调研 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/ea5ffd86/8c61a296">
+<meta name="description" content="一、目标 1. 1~2秒延迟； 2. 不影响 hls 原有特性，如码率自适应、CDN 分发等； 3. 完全向后兼容； 二、常规 hls 方案 不考虑 CDN 的情况 ![low-hls-1|100%](../../../image/low-hls-1.png) 客户端播放 hls 的流程如上图： 1. 服务端先生成 6…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="低延迟 hls 调研">
+<meta property="og:url" content="https://sbrave.cn/post/ea5ffd86/8c61a296">
+<meta property="og:description" content="一、目标 1. 1~2秒延迟； 2. 不影响 hls 原有特性，如码率自适应、CDN 分发等； 3. 完全向后兼容； 二、常规 hls 方案 不考虑 CDN 的情况 ![low-hls-1|100%](../../../image/low-hls-1.png) 客户端播放 hls 的流程如上图： 1. 服务端先生成 6…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>低延迟 hls 调研</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>低延迟 hls 调研</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2020-07-24 18:46:29</span>
+        <span>· 1312 字</span>
+        <span>· 6 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>低延迟 hls 调研</h2>
 <h2>一、目标</h2>
-
 <ol>
 <li>1~2秒延迟；</li>
 <li>不影响 hls 原有特性，如码率自适应、CDN 分发等；</li>
 <li>完全向后兼容；</li>
 </ol>
-
 <h2>二、常规 hls 方案</h2>
-
 <h4>不考虑 CDN 的情况</h4>
-
-<p><img src="/image/low-hls-1.png" width=100% height=100%></p>
-
+<p><img src="../../../image/low-hls-1.png" alt="low-hls-1|100%" /></p>
 <p>客户端播放 hls 的流程如上图：</p>
-
 <ol>
 <li>服务端先生成 6s 的分片，此过程会导致延时 +6s；</li>
 <li>理想情况下，客户端在分片生成后立即请求。但最坏情况，客户端需要再等 6s 才会请求 m3u8 文件（轮询）。此过程也会导致延时 +6s；</li>
 <li>客户端拿到 m3u8 后，解析到 ts 分片地址，然后再次请求 ts。此过程耗费 2rtt；</li>
 </ol>
-
 <p>综上，传统 hls 延时时间为 12s+2rtt；</p>
-
 <h3>考虑 CDN</h3>
-
-<p><img src="/image/low-hls-2.png" width=100% height=100%></p>
-
+<p><img src="../../../image/low-hls-2.png" alt="" /></p>
 <p>在 CDN 场景下，当客户端 1 第一次请求到 CDN 时，由于 m3u8 尚未被缓存，此时回源获取到包含 1-3 分片的 m3u8 播放列表。之后，源站生成了分片 4，客户端 2 再请求 CDN 时，还是只会返回 1-3 分片，因为 CDN 不知道源站的播放列表已经更新。此时延时会更大。</p>
-
 <h2>三、低延时方案</h2>
-
 <h4>要求</h4>
-
 <p>源站、CDN 和客户端支持 HTTP/2</p>
-
 <h4>概述</h4>
-
 <p>低延迟 hls 是对传统 hls 的扩展，并向后兼容。主要做了一下五个方面的提升：</p>
-
 <ul>
 <li>降低发布延时</li>
 <li>优化客户端发现新分片的方式</li>
@@ -91,31 +97,18 @@
 <li>减少传输开销</li>
 <li>快速切换码率</li>
 </ul>
-
 <h5>降低发布延时</h5>
-
 <p>降低发布延时的方式是允许服务器在主分片准备好之前，先发布其中部分内容。假设当前一个分片时长为 6s，可将其切成 30 个小部分，每部分包含 200ms，可独立被客户端获取并播放。且当一个分片被全部生成后，其部分片段会被删除。</p>
-
 <h5>优化客户端发现新分片的方式</h5>
-
 <p>具体来说，就是在服务器上还没有新分片之前，客户端就已经发起对该分片的请求。一旦服务器上生成了该分片，就可以立即推送给客户端。此种方式可以在小于 1rtt 的时间内发现新分片。</p>
-
 <h5>消除额外往返</h5>
-
 <p>客户端第一次请求到全量播放列表后，会和服务器建立起一条连接。此后当有新分片生成时，服务器会主动将 m3u8 和 ts 分片推送给客户端，减少了一次轮询的 rtt 时间。</p>
-
 <p>由于服务器推送方式在 CDN 推送场景下不友好，因此该方案已废除。取而代之的是请求阻塞方式。具体来说，就是客户端根据现有序号，计算出下一个 ts 分片的序号并请求服务器，服务器会阻塞请求，直到该分片准备好再返回。</p>
-
 <h5>减少传输开销</h5>
-
 <p>客户端第一次请求 m3u8 时，服务器会返回全量分片列表。此后客户端只会关心 m3u8 的增量部分，因此发起的是增量请求。返回数据相比原始全量数据会大大减少，以便于放在一个 MTU 数据包内返回。</p>
-
 <h5>快速切换码率</h5>
-
 <p>由于是增量更新 m3u8，当 CDN 上有两种码率的流时，每次返回时可以携带额外信息。因此当客户端需要切换到不同码率时，就可以直接切换。</p>
-
 <h2>四、结论</h2>
-
 <ol>
 <li>常规 hls 相比 flv 的优势是多码率切换，劣势就是延时高。</li>
 <li>现在 hls 增加了低延时，flv 也有快手做的 las 做码率切换，大体上来说两个应该差不多。</li>
@@ -124,18 +117,43 @@
 <li>从客户端覆盖程度上说，hls 低延时方案，初期只能在苹果设备上使用，其他设备跟进支持可能需要一段时间。las 目前也只支持 web 端；</li>
 <li>从服务端支持程度上看，hls 需要对源站、CDN 做改造，las server 目前只支持 srs，且多个不同码率的流需要保持 I 帧的 pts 完全对齐；</li>
 </ol>
+<p>所以，我的初步结论是，这两个方案，短期内都不太适合线上大规模应用。但可以保持关注，尝试小范围内应用，比如 web 端实现低延时+多码率方案。</p>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题39：二叉树的深度 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/821982b6">
+<meta name="description" content="题目一：输入一颗二叉树的根节点，求该树的深度。从根节点到叶节点一次经过的节点形成树的一条路径，最长路径的长度为树的深度。** 二叉树节点定义如下： 分析 此题可利用递归很方便的完成，步骤如下： 判断参数root是否为空？为空就返回0； 否则计算root的左右子树的高度； 比较左右子树高度，取较大者，返回较大的值加1（r…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题39：二叉树的深度">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/821982b6">
+<meta property="og:description" content="题目一：输入一颗二叉树的根节点，求该树的深度。从根节点到叶节点一次经过的节点形成树的一条路径，最长路径的长度为树的深度。** 二叉树节点定义如下： 分析 此题可利用递归很方便的完成，步骤如下： 判断参数root是否为空？为空就返回0； 否则计算root的左右子树的高度； 比较左右子树高度，取较大者，返回较大的值加1（r…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-04 23:05:45</span>
+        <span>· 679 字</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题39：二叉树的深度</h2>
+<p><strong>题目一：输入一颗二叉树的根节点，求该树的深度。从根节点到叶节点一次经过的节点形成树的一条路径，最长路径的长度为树的深度。</strong></p>
+<p>二叉树节点定义如下：</p>
+<pre><code class="language-struct">{
+    int value;
+    BinaryTreeNode* left;
+    BinaryTreeNode* right;
+    BinaryTreeNode(int data=int())
+       :value(data),left(NULL),right(NULL)
+    {}
+}
+</code></pre>
+<hr />
+<h3>分析</h3>
+<p>此题可利用递归很方便的完成，步骤如下：</p>
+<ul>
+<li>判断参数root是否为空？为空就返回0；</li>
+<li>否则计算root的左右子树的高度；</li>
+<li>比较左右子树高度，取较大者，返回较大的值加1（root自身占一层）。</li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-int">{
+    if(root==NULL)
+        return 0;
+    int LeftDepth=Depth(root-&gt;left);
+    int RightDepth=Depth(root-&gt;right);
+    return LeftDepth&gt;RightDepth?LeftDepth+1:RightDepth+1;
+}
+</code></pre>
+<p><strong>题目二：输入一颗二叉树的根节点，判断该树是不是平衡二叉树。如果某二叉树中任意两个节点的左右子树的深度相差不超过1，那么它就是一颗平衡二叉树。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>最容易想到的就是遍历二叉树，每遍历到一个节点时，去求它的左右子树的深度并比较即可。然而这种方法需要将很多节点遍历多次。如下图：</p>
+<p><img src="/__themes/sepia/images/BinTree.png" alt="" /></p>
+<p>求1的深度时，需要遍历剩下的所有节点。然后求2的深度时，需要遍历4和7两个节点。求3的深度时，又需要遍历5,6,8三个节点。这样导致时间复杂度较高。</p>
+<p>有没有办法减少遍历节点的次数呢？答案是有的。那就是将每次遍历过的节点保存起来。我们可以将从根节点到叶节点所经过的所有节点看成一条路径。每次向下进入子树时，将当前节点保存进路径里面。从子树退回到父节点时，再将它从路径中删除。如此，我们便可以只遍历一次。求遍历过程中路径的最大值就可以，即最长路径。</p>
+<p>代码如下：</p>
+<pre><code class="language-bool">{
+    if(root==NULL)
+    {
+        depth=0;
+        return true;
+    }
+    int left,right;
+    if(_IsBalaced(root-&gt;left,left) &amp;amp;&amp;amp; _IsBalanced(root-&gt;right,right)
+    {
+        int diff=right-left;
+        if(diff&gt;=-1 &amp;amp;&amp;amp; diff &lt;=1)
+        {
+            depth=left&gt;right?left+1:right+1;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool IsBalanced(BinaryTreeNode* root)
+{
+    int depth=0;
+    return _IsBalanced(root,depth);
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/39_1_TreeDepth/main.cpp">点我前往(题目一)</a>  <a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/39_2_BalancedBinaryTree/main.cpp">点我前往(题目二)</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+来自为知笔记(Wiz)")</div>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

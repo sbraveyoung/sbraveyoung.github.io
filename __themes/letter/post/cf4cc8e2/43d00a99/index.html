@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>选择排序 · sbraveyoung · 字里行间</title>
+<meta name="description" content="我个人认为冒泡排序和选择排序真是一对孪生兄弟，因为我总感觉这两个算法的思想很像，时间复杂度也相同。但其实他们的算法思想是不同的。 冒泡排序是从前往后逐个比较相邻的元素，从而使得最大的元素”冒”到数组的最右边。 而选择排序则是将某一个元素与其余所有元素相比较，选出一个最小/最大的元素放在当前位置。 代码如下： 在[这里]…">
+<meta property="og:title" content="选择排序">
+<meta property="og:description" content="我个人认为冒泡排序和选择排序真是一对孪生兄弟，因为我总感觉这两个算法的思想很像，时间复杂度也相同。但其实他们的算法思想是不同的。 冒泡排序是从前往后逐个比较相邻的元素，从而使得最大的元素”冒”到数组的最右边。 而选择排序则是将某一个元素与其余所有元素相比较，选出一个最小/最大的元素放在当前位置。 代码如下： 在[这里]…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/cf4cc8e2/43d00a99">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-08-01
+    </div>
+    <h1 class="article-title">选择排序</h1>
+    <p class="article-lede">我个人认为冒泡排序和选择排序真是一对孪生兄弟，因为我总感觉这两个算法的思想很像，时间复杂度也相同。但其实他们的算法思想是不同的。 冒泡排序是从前往后逐个比较相邻的元素，从而使得最大的元素”冒”到数组的最右边。 而选择排序则是将某一个元素与其余所有元素相比较，选出一个最小/最大的元素放在当前位置。 代码如下： 在[这里]…</p>
+    <div class="article-meta">
+      <span>2 min read</span>
+      <span>384 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>选择排序</h2>
+<p>我个人认为冒泡排序和选择排序真是一对孪生兄弟，因为我总感觉这两个算法的思想很像，时间复杂度也相同。但其实他们的算法思想是不同的。</p>
+<p>冒泡排序是从前往后逐个比较相邻的元素，从而使得最大的元素”冒”到数组的最右边。</p>
+<p>而选择排序则是将某一个元素与其余所有元素相比较，选出一个最小/最大的元素放在当前位置。</p>
+<p>代码如下：</p>
+<pre><code class="language-template&lt;typename">void SelectSort(vector&lt;T&gt;&amp;amp; v)
+{
+    if(v.size()&lt;=1)
+        return;
+    int length=v.size();
+    int i,j;
+    for(i=0;i&lt;length;++i)
+    {
+        for(j=i+1;j&lt;length;++j)
+        {
+            if(-1==compair(v[j],v[i]))
+            {
+                swap(v[j],v[i]);
+            }
+        }
+    }
+}
+</code></pre>
+<p>在<a href="/__themes/letter/post/cf4cc8e2/14e6f1eb">这里</a>说过，”所有基于位置的比较排序的时间复杂度都逃不了O(n<sup>2</sup>)的厄运”，所以选择排序的时间复杂度同样也是O(n<sup>2</sup>)。</p>
+<p>同样来看看可以改进的地方：</p>
+<p>**改进一：如果一趟排序中没有进行交换，则表明排序完成。**具体算法再冒泡排序中说过，再次不在表述。</p>
+<p><strong>改进二：在每一趟排序中进行双向选择。</strong></p>
+<p>代码如下：</p>
+<pre><code class="language-template&lt;typename">void SelectSort(vector&lt;T&gt;&amp;amp; v)
+{
+    if(v.size()&lt;=1)
+        return;
+    int length=v.size();
+    int i,j;
+    for(i=0;i&lt;length;++i)
+    {
+        for(j=i+1;j&lt;length-i;++j)
+        {
+            int ma=max(v,i,j,length-i-1);
+            int mi=min(v,i,j,length-i-1);
+            swap(v[i],v[mi]);
+            if(1==compair(v[ma],v[length-i-1]))
+                swap(v[length-i-1],v[ma]);
+        }
+    }
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/DataStruct/blob/master/Sort/SelectSort/main.cpp">点我前往</a></p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

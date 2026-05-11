@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>sbraveyoung · 字里行间</title>
+<meta name="description" content="一个程序员的笔记本：技术拆解、踩坑总结、生活随笔。">
+<link rel="alternate" type="application/atom+xml" href="/__themes/press/atom.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2026 · the reading notebook</span>
+    <span>Monday, May 11, 2026</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name">
+    <div class="kicker accent">⁂   essays · notes · marginalia   ⁂</div>
+    <h1 class="title-mark"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <div class="kicker muted">since 2019 · by sbraveyoung</div>
+    <nav class="mast-nav">
+      <a href="/__themes/press/" class="active">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<main class="press">
+
+
+
+
+
+<article class="feature">
+  <div class="feature-text">
+    <div class="kicker accent">── cover story</div>
+    <h2 class="feature-title"><a href="/__themes/press/post/skills/ai-attribution">Skill · AI 标识三档约定</a></h2>
+    <p class="feature-lede"><em>何时用**：写完一篇文章决定要不要标 AI / 标哪一档时；或者别人来问&#34;你这博客 AI 标签是啥意思&#34;时甩链接给他。 解决什么**：把&#34;哪种程度的 AI 参与对应哪种 badge&#34;明文化，跟读者建立预期，跟自己建立纪律。 三档来历 借鉴的是 [IPTC digitalSourceType](https://cv.ip…</em></p>
+    <div class="feature-meta">
+      <span>by sbraveyoung · 2026-05-11</span>
+      <span>continue reading →</span>
+    </div>
+  </div>
+  <div class="feature-art">
+    
+      <div class="feature-art-fallback">
+        <div class="art-num">FIG. 01</div>
+        <div class="art-tags"></div>
+      </div>
+    
+  </div>
+</article>
+
+
+
+
+<section class="digest">
+  
+  <article class="digest-col">
+    <div class="kicker accent">№02</div>
+    <h3 class="digest-title"><a href="/__themes/press/post/skills/wechat-publish">Skill · 一键推送公众号草稿</a></h3>
+    <p class="digest-lede">何时用**：写完一篇博客想顺便发到公众号上去。 解决什么**：把&#34;打开公众号后台 → 复制粘贴 → 调样式 → 上传图片&#34;这一整套手工活省掉，留下&#34;人工审核 &#43; 一键发布&#34;这两件事。 工作模型 插件**只把内容推到草稿箱**，**永远不替你发布**。最终的发布按钮只能你自己在 mp.weixin.qq.com 上点。这…</p>
+    <div class="digest-meta">2026-05-11 · 4 min</div>
+  </article>
+  
+  <article class="digest-col">
+    <div class="kicker accent">№03</div>
+    <h3 class="digest-title"><a href="/__themes/press/post/skills/comment-system">Skill · 评论系统（giscus）</a></h3>
+    <p class="digest-lede">何时用**：要打开评论 / 要换评论的承载仓库 / 要排查&#34;评论框为啥没出现&#34;。 解决什么**：把 giscus 集成的全部配置点收拢到一处，开关单一，配置可逆。 为什么是 giscus 评论存在 GitHub Discussions 里，**自己不用搭服务**。 评论者必须 GitHub 登录，**天然反垃圾**。 …</p>
+    <div class="digest-meta">2026-05-11 · 4 min</div>
+  </article>
+  
+  <article class="digest-col">
+    <div class="kicker accent">№04</div>
+    <h3 class="digest-title"><a href="/__themes/press/post/skills/themes-and-branding">Skill · 主题与品牌</a></h3>
+    <p class="digest-lede">何时用**：想换主题、改站名、改副标题、加自定义域名时。 解决什么**：把&#34;哪个开关在哪个仓库的哪个文件里&#34;一次说清——避免每次都到处翻。 改这些都在 _gobog.json `sbraveyoung.github.io` 仓库根目录有一个 `_gobog.json`。它**不是 gobog 自己读的**——是 dep…</p>
+    <div class="digest-meta">2026-05-11 · 4 min</div>
+  </article>
+  
+</section>
+
+
+
+<section class="also">
+  <div class="also-label">also in<br>this issue</div>
+  <div class="also-list">
+    
+    <a class="also-row" href="/__themes/press/post/skills/preview-and-validate">
+      <span class="also-num">05</span>
+      <span class="also-title">Skill · 本地预览 &#43; 部署前自检</span>
+      <span class="also-meta">4 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/skills/publish-and-sync">
+      <span class="also-num">06</span>
+      <span class="also-title">Skill · 写完一篇 → 上线全流程</span>
+      <span class="also-meta">4 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/skills/front-matter-reference">
+      <span class="also-num">07</span>
+      <span class="also-title">Skill · Front-matter 字段速查</span>
+      <span class="also-meta">4 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/skills/content-conventions">
+      <span class="also-num">08</span>
+      <span class="also-title">Skill · 内容目录约定</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/skills/architecture-overview">
+      <span class="also-num">09</span>
+      <span class="also-title">Skill · 整体架构概览</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/blog-evolve-2">
+      <span class="also-num">10</span>
+      <span class="also-title">我的博客演进历程（二）：Obsidian &#43; gobog &#43; GitHub Actions</span>
+      <span class="also-meta">13 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/31477598/7d896b00">
+      <span class="also-num">11</span>
+      <span class="also-title">AI 入门到精通 10 · 前沿方向</span>
+      <span class="also-meta">7 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/31477598/719d3ba2">
+      <span class="also-num">12</span>
+      <span class="also-title">AI 入门到精通 09 · 多模态与生成</span>
+      <span class="also-meta">7 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/31477598/9f71a8f6">
+      <span class="also-num">13</span>
+      <span class="also-title">AI 入门到精通 08 · AI Agent</span>
+      <span class="also-meta">8 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/31477598/cae63e29">
+      <span class="also-num">14</span>
+      <span class="also-title">AI 入门到精通 07 · AI 推理与部署</span>
+      <span class="also-meta">6 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/31477598/79c30475">
+      <span class="also-num">15</span>
+      <span class="also-title">AI 入门到精通 06 · AI 训练实战</span>
+      <span class="also-meta">8 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/31477598/a9e658cb">
+      <span class="also-num">16</span>
+      <span class="also-title">AI 入门到精通 05 · 大语言模型 (LLM)</span>
+      <span class="also-meta">7 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/31477598/b9b55924">
+      <span class="also-num">17</span>
+      <span class="also-title">AI 入门到精通 04 · 深度学习基础</span>
+      <span class="also-meta">6 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/31477598/d70767b9">
+      <span class="also-num">18</span>
+      <span class="also-title">AI 入门到精通 03 · 机器学习基础</span>
+      <span class="also-meta">6 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/31477598/7bcefa45">
+      <span class="also-num">19</span>
+      <span class="also-title">AI 入门到精通 02 · 编程能力</span>
+      <span class="also-meta">6 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/31477598/d58d4e64">
+      <span class="also-num">20</span>
+      <span class="also-title">AI 入门到精通 01 · 数学基础</span>
+      <span class="also-meta">7 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/31477598/5cf17527">
+      <span class="also-num">21</span>
+      <span class="also-title">AI 入门到精通 00 · 导读与学习路线</span>
+      <span class="also-meta">9 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/f36e7355">
+      <span class="also-num">22</span>
+      <span class="also-title">Git 五分钟入门</span>
+      <span class="also-meta">13 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/ea5ffd86/af1830cd">
+      <span class="also-num">23</span>
+      <span class="also-title">下一代直播--低延迟直播技术探索</span>
+      <span class="also-meta">16 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/ea5ffd86/f4cdc5ec">
+      <span class="also-num">24</span>
+      <span class="also-title">H.264五分钟入门</span>
+      <span class="also-meta">19 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/ea5ffd86/8c61a296">
+      <span class="also-num">25</span>
+      <span class="also-title">低延迟 hls 调研</span>
+      <span class="also-meta">6 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/ea5ffd86/3b27d2a4">
+      <span class="also-num">26</span>
+      <span class="also-title">图像高斯模糊算法简介</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/78eb32d6/59d7b3a8">
+      <span class="also-num">27</span>
+      <span class="also-title">golang 性能优化实践</span>
+      <span class="also-meta">11 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/95b7c948">
+      <span class="also-num">28</span>
+      <span class="also-title">UML 五分钟入门</span>
+      <span class="also-meta">5 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/331f81e4">
+      <span class="also-num">29</span>
+      <span class="also-title">Git工作流开发实践</span>
+      <span class="also-meta">5 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/234713ed">
+      <span class="also-num">30</span>
+      <span class="also-title">自如，请拿出该有的担当!</span>
+      <span class="also-meta">6 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/de570784/d87d70ee">
+      <span class="also-num">31</span>
+      <span class="also-title">数据库的事务及隔离级别</span>
+      <span class="also-meta">6 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/68161ae">
+      <span class="also-num">32</span>
+      <span class="also-title">配置文件五分钟入门</span>
+      <span class="also-meta">7 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/78eb32d6/5937cec8">
+      <span class="also-num">33</span>
+      <span class="also-title">golang程序启动流程</span>
+      <span class="also-meta">4 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/77a668">
+      <span class="also-num">34</span>
+      <span class="also-title">我的博客演进历程</span>
+      <span class="also-meta">7 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/3e0efa6d">
+      <span class="also-num">35</span>
+      <span class="also-title">布隆过滤器五分钟入门</span>
+      <span class="also-meta">10 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/101d5b75">
+      <span class="also-num">36</span>
+      <span class="also-title">some-tips</span>
+      <span class="also-meta">9 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/ea5ffd86/1229577b">
+      <span class="also-num">37</span>
+      <span class="also-title">直播答题背后的技术原理</span>
+      <span class="also-meta">8 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/755319a3">
+      <span class="also-num">38</span>
+      <span class="also-title">程序员技术练级攻略</span>
+      <span class="also-meta">15 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/d73c309a">
+      <span class="also-num">39</span>
+      <span class="also-title">docker五分钟入门</span>
+      <span class="also-meta">8 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/d41b9572">
+      <span class="also-num">40</span>
+      <span class="also-title">利用 hexo 搭建博客并推送到企业微信</span>
+      <span class="also-meta">4 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/a1e02445">
+      <span class="also-num">41</span>
+      <span class="also-title">说说付费软件</span>
+      <span class="also-meta">6 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/830d36b0">
+      <span class="also-num">42</span>
+      <span class="also-title">你应该使用markdown写作吗？</span>
+      <span class="also-meta">5 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/78eb32d6/d44b617d">
+      <span class="also-num">43</span>
+      <span class="also-title">go语言学习笔记</span>
+      <span class="also-meta">7 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/cf4cc8e2/5dc644dc">
+      <span class="also-num">44</span>
+      <span class="also-title">动态规划算法</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/5246c832">
+      <span class="also-num">45</span>
+      <span class="also-title">shell语法总结</span>
+      <span class="also-meta">5 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/de570784/92fe9da2">
+      <span class="also-num">46</span>
+      <span class="also-title">浅谈数据库的索引</span>
+      <span class="also-meta">4 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/afe65937/51aeee82">
+      <span class="also-num">47</span>
+      <span class="also-title">TCP协议</span>
+      <span class="also-meta">12 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/afe65937/9eddd0c8">
+      <span class="also-num">48</span>
+      <span class="also-title">一些常见的协议详解</span>
+      <span class="also-meta">7 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/afe65937/b9e67ec1">
+      <span class="also-num">49</span>
+      <span class="also-title">HTTP协议详解</span>
+      <span class="also-meta">10 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/f80efe02/fd972ae3">
+      <span class="also-num">50</span>
+      <span class="also-title">虚拟存储器</span>
+      <span class="also-meta">11 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/3284a3f5">
+      <span class="also-num">51</span>
+      <span class="also-title">继承体系下C&#43;&#43;对象模型</span>
+      <span class="also-meta">8 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/f80efe02/15fc6e8c">
+      <span class="also-num">52</span>
+      <span class="also-title">线程</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/f80efe02/1abadc07">
+      <span class="also-num">53</span>
+      <span class="also-title">死锁</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/f80efe02/31a6b40">
+      <span class="also-num">54</span>
+      <span class="also-title">进程</span>
+      <span class="also-meta">9 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/e660f1d5/9439fc83">
+      <span class="also-num">55</span>
+      <span class="also-title">B树</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/e660f1d5/f89cb603">
+      <span class="also-num">56</span>
+      <span class="also-title">红黑树</span>
+      <span class="also-meta">4 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/cf4cc8e2/2da0528d">
+      <span class="also-num">57</span>
+      <span class="also-title">KMP算法</span>
+      <span class="also-meta">4 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/782f445a">
+      <span class="also-num">58</span>
+      <span class="also-title">求给定数组的最大子数组</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/cf4cc8e2/43d00a99">
+      <span class="also-num">59</span>
+      <span class="also-title">选择排序</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/cf4cc8e2/14e6f1eb">
+      <span class="also-num">60</span>
+      <span class="also-title">冒泡排序</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/e660f1d5/edbc2f2d">
+      <span class="also-num">61</span>
+      <span class="also-title">一个简单的AVL树的实现</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/e660f1d5/8118c33f">
+      <span class="also-num">62</span>
+      <span class="also-title">一个简单的二叉搜索树的实现</span>
+      <span class="also-meta">1 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/e660f1d5/30a3fd3d">
+      <span class="also-num">63</span>
+      <span class="also-title">一个简单的二叉树的实现</span>
+      <span class="also-meta">4 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/e660f1d5/844d020b">
+      <span class="also-num">64</span>
+      <span class="also-title">一个简单的哈希表实现</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/e660f1d5/cfbbceb1">
+      <span class="also-num">65</span>
+      <span class="also-title">一个简单的Deque实现</span>
+      <span class="also-meta">1 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/e660f1d5/40ad7b78">
+      <span class="also-num">66</span>
+      <span class="also-title">一个简单的Stack实现</span>
+      <span class="also-meta">1 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/e660f1d5/d548bd19">
+      <span class="also-num">67</span>
+      <span class="also-title">一个简单的Heap实现</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/e660f1d5/3896b050">
+      <span class="also-num">68</span>
+      <span class="also-title">一个简单的List实现</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/e660f1d5/61d9b4f">
+      <span class="also-num">69</span>
+      <span class="also-title">一个简单的Vector实现</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/cf4cc8e2/56292c42">
+      <span class="also-num">70</span>
+      <span class="also-title">九章算法答案(上)</span>
+      <span class="also-meta">27 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/afe65937/a452b2f2">
+      <span class="also-num">71</span>
+      <span class="also-title">所有的HTTP返回码</span>
+      <span class="also-meta">8 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/791ef0ca">
+      <span class="also-num">72</span>
+      <span class="also-title">面试题42：反转单词顺序 VS 左旋转字符串</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/6dbf5b3c">
+      <span class="also-num">73</span>
+      <span class="also-title">面试题41：和为S的两个数字VS和为s的连续正数序列</span>
+      <span class="also-meta">4 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/557c6d6a">
+      <span class="also-num">74</span>
+      <span class="also-title">面试题40：数组中只出现一次的数字</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/821982b6">
+      <span class="also-num">75</span>
+      <span class="also-title">面试题39：二叉树的深度</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/4d0eb241">
+      <span class="also-num">76</span>
+      <span class="also-title">面试题38：数字在排序数组中出现的次数</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/4e7da307">
+      <span class="also-num">77</span>
+      <span class="also-title">面试题37：两个链表的第一个公共节点</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/14312f1f">
+      <span class="also-num">78</span>
+      <span class="also-title">面试题36：数组中的逆序对</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/25a0eda4">
+      <span class="also-num">79</span>
+      <span class="also-title">面试题35：第一个只出现一次的数字</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/ad1595d5">
+      <span class="also-num">80</span>
+      <span class="also-title">面试题34：丑数</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/791b405b">
+      <span class="also-num">81</span>
+      <span class="also-title">面试题33：把数组排成最小的数</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/27e33fde">
+      <span class="also-num">82</span>
+      <span class="also-title">面试题32：从1到n整数中1出现的次数</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/ae492552">
+      <span class="also-num">83</span>
+      <span class="also-title">面试题31：连续子数组的最大和</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/cf4cc8e2/e667fb74">
+      <span class="also-num">84</span>
+      <span class="also-title">浅谈STL</span>
+      <span class="also-meta">15 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/80606720">
+      <span class="also-num">85</span>
+      <span class="also-title">面试题30：最小的K个数</span>
+      <span class="also-meta">4 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/fbf1e86c">
+      <span class="also-num">86</span>
+      <span class="also-title">面试题29：数组中出现次数超过一半的数字</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/19deb5aa">
+      <span class="also-num">87</span>
+      <span class="also-title">面试题28：字符串的排列</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/f672ae4b">
+      <span class="also-num">88</span>
+      <span class="also-title">面试题26：复杂链表的复制</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/97b6f9f3">
+      <span class="also-num">89</span>
+      <span class="also-title">面试题25：二叉树中和为某一值的路径</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/4d4ff175">
+      <span class="also-num">90</span>
+      <span class="also-title">面试题24：二叉搜索时的后序遍历序列</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/2dc774f">
+      <span class="also-num">91</span>
+      <span class="also-title">面试题23：从上往下打印二叉树</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/cccf5d8">
+      <span class="also-num">92</span>
+      <span class="also-title">面试题22：栈的压入、弹出序列</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/4135afc8">
+      <span class="also-num">93</span>
+      <span class="also-title">面试题21：包含min函数的栈</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/fc27231f">
+      <span class="also-num">94</span>
+      <span class="also-title">面试题20：顺时针打印矩阵</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/3bb6fddb">
+      <span class="also-num">95</span>
+      <span class="also-title">面试题19：二叉树的镜像</span>
+      <span class="also-meta">1 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/344824d0">
+      <span class="also-num">96</span>
+      <span class="also-title">面试题18：树的子结构</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/4e76bcbe">
+      <span class="also-num">97</span>
+      <span class="also-title">面试题17：合并两个排序的链表</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/78c57671">
+      <span class="also-num">98</span>
+      <span class="also-title">面试题16：反转链表</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/db6fb12">
+      <span class="also-num">99</span>
+      <span class="also-title">面试题15：链表中倒数第K个节点</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/99207d23">
+      <span class="also-num">100</span>
+      <span class="also-title">面试题14：调整数组顺序使奇数位于偶数前面</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/42a2a49">
+      <span class="also-num">101</span>
+      <span class="also-title">面试题12：打印1到最大的n位数</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/a8f4a07e">
+      <span class="also-num">102</span>
+      <span class="also-title">面试题11：数值的整数次方</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/1e11b27f">
+      <span class="also-num">103</span>
+      <span class="also-title">面试题10：二进制中1的个数</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/c44c0724">
+      <span class="also-num">104</span>
+      <span class="also-title">面试题9：斐波那契数列</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/a6a26368">
+      <span class="also-num">105</span>
+      <span class="also-title">面试题8：旋转数组的最小数字</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/24dc1be5">
+      <span class="also-num">106</span>
+      <span class="also-title">面试题7：用两个栈实现队列</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/78733cab">
+      <span class="also-num">107</span>
+      <span class="also-title">面试题6：重建二叉树</span>
+      <span class="also-meta">1 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/d44a3e2a">
+      <span class="also-num">108</span>
+      <span class="also-title">面试题5：从尾到头打印链表</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/a202f9ef">
+      <span class="also-num">109</span>
+      <span class="also-title">面试题4：替换空格</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/d82e31ee">
+      <span class="also-num">110</span>
+      <span class="also-title">面试题3：二维数组中的查找</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/d617458">
+      <span class="also-num">111</span>
+      <span class="also-title">面试题2：实现Singleton模式</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/363120f3">
+      <span class="also-num">112</span>
+      <span class="also-title">面试题1：赋值运算符函数</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/869bd286">
+      <span class="also-num">113</span>
+      <span class="also-title">《C陷阱与缺陷》读书笔记</span>
+      <span class="also-meta">16 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/cd358b78">
+      <span class="also-num">114</span>
+      <span class="also-title">《高质量的C_C&#43;&#43;编程指南》读书笔记</span>
+      <span class="also-meta">34 min</span>
+    </a>
+    
+  </div>
+</section>
+
+</main>
+
+<footer class="press-foot">
+  <span>set in DM Serif & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a> · markdown · go</span>
+  <span>© 2026 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

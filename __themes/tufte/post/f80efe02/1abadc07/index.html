@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>死锁 · sbraveyoung · 字里行间</title>
+<meta name="description" content="当一个系统中多个进程对某些临界资源进行访问时，就有可能发生死锁。所谓死锁，就是多个进程都请求某些资源，而这些资源都由这组进程中的其他进程所保持，这样他们都处于持有自己的资源而又等待别的进程释放资源的状态。 发生死锁的充分必要条件是： 互斥条件：即进程对临界资源的访问是互斥的，不能同时有两个或以上的进程访问某一资源； 循…">
+<meta property="og:title" content="死锁">
+<meta property="og:description" content="当一个系统中多个进程对某些临界资源进行访问时，就有可能发生死锁。所谓死锁，就是多个进程都请求某些资源，而这些资源都由这组进程中的其他进程所保持，这样他们都处于持有自己的资源而又等待别的进程释放资源的状态。 发生死锁的充分必要条件是： 互斥条件：即进程对临界资源的访问是互斥的，不能同时有两个或以上的进程访问某一资源； 循…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/f80efe02/1abadc07">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2016 · NO. §553</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · August 11, 2016
+      </div>
+      <h1 class="article-title">死锁</h1>
+      <p class="article-lede">当一个系统中多个进程对某些临界资源进行访问时，就有可能发生死锁。所谓死锁，就是多个进程都请求某些资源，而这些资源都由这组进程中的其他进程所保持，这样他们都处于持有自己的资源而又等待别的进程释放资源的状态。 发生死锁的充分必要条件是： 互斥条件：即进程对临界资源的访问是互斥的，不能同时有两个或以上的进程访问某一资源； 循…</p>
+      <div class="article-meta">
+        <span>3 min read</span>
+        <span>·</span>
+        <span>553 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>死锁</h2>
+<p>当一个系统中多个进程对某些临界资源进行访问时，就有可能发生死锁。所谓死锁，就是多个进程都请求某些资源，而这些资源都由这组进程中的其他进程所保持，这样他们都处于持有自己的资源而又等待别的进程释放资源的状态。</p>
+<p>发生死锁的充分必要条件是：</p>
+<ul>
+<li>互斥条件：即进程对临界资源的访问是互斥的，不能同时有两个或以上的进程访问某一资源；</li>
+<li>循环等待条件：每个进程都在等待其他进程释放自己所请求的资源；</li>
+<li>请求和保持条件：每个进程都占有一些资源，并还需要申请其他资源。在自己的任务完成之前不会释放自己已经拥有的资源；</li>
+<li>不可剥夺条件：也称「不可抢占条件」。就是资源只能由进程自己来释放，而别的进程是不能剥夺的；</li>
+</ul>
+<p>处理死锁的方法有：</p>
+<ul>
+<li>预防死锁：即通过破坏四个充要条件中的一个或多个，使系统无法发生死锁。但要注意的是，互斥条件是某些资源必须具有的条件，不仅不应该破坏，还应保证。所以只能破坏其他三个条件；</li>
+<li>避免死锁：同样是属于事先预防的策略，但并不是破坏死锁发生的条件，而是在资源分配的过程中，采用某种方法防止系统进入不安全状态。常用的方法有银行家算法；</li>
+<li>检测死锁：当死锁发生时，通过某种方法检测出来，然后采取适当的措施，把进程从死锁中解脱出来；</li>
+<li>解除死锁：当检测到已经发生死锁时，采用相应的措施解除死锁。通常是撤销某些进程，释放其资源；</li>
+</ul>
+<p>【完】</p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2016-08-11<br>
+          <em>read in</em> 3 min<br>
+          <em>words</em> 553<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2016 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/f80efe02/1abadc07">https://sbrave.cn/post/f80efe02/1abadc07</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

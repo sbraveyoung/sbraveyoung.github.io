@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KMP算法 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/cf4cc8e2/2da0528d">
+<meta name="description" content="众所周知，KMP 算法的作用是匹配字符串，比如在一个文本编辑器中查找符合某一模式的所有字符等。 就我认为，这个算法还是比较难的，反正我是看了好长时间都没懂，哈哈~ 今天看了《算法导论》中关于该算法的部分，对求 next 数组部分不是特别理解，参考了网上的某些文章(地址已失效)，他这篇文章的分析确实不错，但代码部分有些缺…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KMP算法">
+<meta property="og:url" content="https://sbrave.cn/post/cf4cc8e2/2da0528d">
+<meta property="og:description" content="众所周知，KMP 算法的作用是匹配字符串，比如在一个文本编辑器中查找符合某一模式的所有字符等。 就我认为，这个算法还是比较难的，反正我是看了好长时间都没懂，哈哈~ 今天看了《算法导论》中关于该算法的部分，对求 next 数组部分不是特别理解，参考了网上的某些文章(地址已失效)，他这篇文章的分析确实不错，但代码部分有些缺…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-08-05 12:48:41</span>
+        <span>· 905 字</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>KMP算法</h2>
+<p>众所周知，KMP 算法的作用是匹配字符串，比如在一个文本编辑器中查找符合某一模式的所有字符等。</p>
+<p>就我认为，这个算法还是比较难的，反正我是看了好长时间都没懂，哈哈~</p>
+<p>今天看了《算法导论》中关于该算法的部分，对求 next 数组部分不是特别理解，参考了网上的某些文章(地址已失效)，他这篇文章的分析确实不错，但代码部分有些缺陷，我已改正过来。</p>
+<h3>简要记录如下：</h3>
+<p>普通的暴力匹配算法是将模式串和文本串中的每一个可能的位置都进行逐个比较，假设文本串长度为 n，模式串长度为 m，那么它的时间复杂度就是 O(mn)。其缺点是如果模式串中有重复的字符，并没有很好地利用之前比较过的信息，导致做了一些不必要的比较操作。</p>
+<p>而 KMP 算法则是有一个称之为 next 的数组，该数组记录了模式串中从开始到当前位置前一个的子串中可以匹配的最大前缀和后缀的长度。有点绕口是吧？来看一个例子：</p>
+<p>假设我们有字符串<code>string str=“ABABABC&quot;</code>，则 next 数组长度为<code>str.size()==7</code>。那么：</p>
+<ul>
+<li>next[0] 对应的『从开始到当前位置前一个的子串』为空，所以 next[0]=-1；</li>
+<li>next[1] 对应的『从开始到当前位置前一个的子串』为 &quot;A&quot;，其前缀和后缀均为空，所以next[1]=0；</li>
+<li>next[2] 对应的『从开始到当前位置前一个的子串』为 &quot;AB&quot;，它的前缀为 &quot;A&quot;，后缀为 &quot;B&quot;(空前缀和空后缀没有写出，下同)，没有相等的，所以 next[2]=0；</li>
+<li>next[3] 对应的『从开始到当前位置前一个的子串』为 &quot;ABA&quot;，前缀有 &quot;A&quot;，&quot;AB&quot;，后缀有 &quot;BA&quot;，&quot;A&quot;，它们中可以匹配的有 &quot;A&quot;，长度为 1，所以 next[3]=1；</li>
+<li>next[4] 对应的『从开始到当前位置前一个的子串』为 &quot;ABAB&quot;，前缀有 &quot;A&quot;，&quot;AB&quot;，&quot;ABA&quot;，后缀有 &quot;BAB&quot;，&quot;AB&quot;，&quot;B&quot;，匹配的有 &quot;AB&quot;，长度为2，所以 next[4]=2；</li>
+<li>next[5] 对应的『从开始到当前位置前一个的子串』为 &quot;ABABA&quot;，前缀有 &quot;A&quot;,&quot;AB&quot;,&quot;ABA&quot;,&quot;ABAB&quot;，后缀有 &quot;BABA&quot;,&quot;ABA&quot;,&quot;BA&quot;,&quot;A&quot;，匹配的有 &quot;A&quot; 和 &quot;ABA&quot;，最长的为 &quot;ABA&quot;，长度为 3，所以 next[5]=3；</li>
+<li>next[6] 对应的『从开始到当前位置前一个的子串』为 &quot;ABABAB&quot;，前缀有 &quot;A&quot;,&quot;AB&quot;,&quot;ABA&quot;,&quot;ABAB&quot;,&quot;ABABA&quot;，后缀有 &quot;BABAB&quot;,&quot;ABAB&quot;,&quot;BAB&quot;,&quot;AB&quot;,&quot;B&quot;，匹配的有 &quot;AB&quot;,&quot;ABAB&quot;，最长的一个为 &quot;ABAB&quot;，长度为 4，所以 next[6]=4；</li>
+</ul>
+<p>而如何用代码求出 next 数组，我认为这是 KMP 算法的一个难点。具体如下。</p>
+<pre><code class="language-C">//暴力匹配
+void NaiveStringMatcher(const string&amp; text, const string&amp; pattern)
+{
+    int n = text.size();
+    int m = pattern.size();
+    int i;
+    int s;
+    for (s = 0;s &lt;= n - m;++s)
+    {
+        for (i = 0;i &lt; m;++i)
+        {
+            if (text[s + i] != pattern[i])
+                break;
+        }
+        if (i == m)
+            cout &lt;&lt; &quot;Pattern occurs with shift &quot; &lt;&lt; s &lt;&lt; endl;
+    }
+}
+
+void CalcNext(vector&lt;int&gt;&amp; next, const string&amp; p)
+{
+    int length = p.size();
+    next.resize(length);
+    next[0] = -1;
+    int k = -1, j = 0;
+    while(j &lt; length-1)
+    {
+        while (k &gt;= 0 &amp;&amp; p[j] != p[k])
+            k = next[k];
+        k++;
+        j++;
+        next[j] = k;
+    }
+}
+
+void KMP(const string&amp; text, const string&amp; pattern)
+{
+    int tlen = text.size();
+    int plen = pattern.size();
+    vector&lt;int&gt; next;
+    CalcNext(next, pattern);
+    int i, j=0;
+    for (i = 0;i &lt; tlen;++i)
+    {
+        while (j &gt; 0 &amp;&amp; text[i] != pattern[j])
+            j = next[j];
+        if (text[i] == pattern[j])
+            j++;
+        if (j == plen)
+        {
+            cout &lt;&lt; &quot;Pattern occurs with shift &quot; &lt;&lt; i - plen + 1 &lt;&lt; endl;
+            j = next[j-1];
+        }
+    }
+}
+</code></pre>
+<p>github地址在<a href="https://github.com/SmartBrave/DataStruct/blob/master/KMP/KMP.cpp">这里</a></p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

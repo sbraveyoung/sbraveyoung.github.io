@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skill · 主题与品牌 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/skills/themes-and-branding">
+<meta name="description" content="何时用**：想换主题、改站名、改副标题、加自定义域名时。 解决什么**：把&#34;哪个开关在哪个仓库的哪个文件里&#34;一次说清——避免每次都到处翻。 改这些都在 _gobog.json `sbraveyoung.github.io` 仓库根目录有一个 `_gobog.json`。它**不是 gobog 自己读的**——是 dep…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill · 主题与品牌">
+<meta property="og:url" content="https://sbrave.cn/post/skills/themes-and-branding">
+<meta property="og:description" content="何时用**：想换主题、改站名、改副标题、加自定义域名时。 解决什么**：把&#34;哪个开关在哪个仓库的哪个文件里&#34;一次说清——避免每次都到处翻。 改这些都在 _gobog.json `sbraveyoung.github.io` 仓库根目录有一个 `_gobog.json`。它**不是 gobog 自己读的**——是 dep…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        <span class="badge badge-ai" title="AI 辅助">🤖 AI 辅助</span>
+        <span>2026-05-11 09:05:00</span>
+        <span>· 877 字</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>Skill · 主题与品牌</h2>
+<blockquote>
+<p><strong>何时用</strong>：想换主题、改站名、改副标题、加自定义域名时。</p>
+<p><strong>解决什么</strong>：把&quot;哪个开关在哪个仓库的哪个文件里&quot;一次说清——避免每次都到处翻。</p>
+</blockquote>
+<h3>改这些都在 _gobog.json</h3>
+<p><code>sbraveyoung.github.io</code> 仓库根目录有一个 <code>_gobog.json</code>。它<strong>不是 gobog 自己读的</strong>——是 deploy workflow 在跑之前读这个 JSON 拼出真正的 <code>gobog.toml</code>。所以改它 = 改部署时用的配置。</p>
+<pre><code class="language-json">{
+  &quot;theme&quot;: &quot;minimal&quot;,
+  &quot;domain&quot;: &quot;https://sbrave.cn&quot;,
+  &quot;title&quot;: &quot;sbraveyoung · 字里行间&quot;,
+  &quot;subtitle&quot;: &quot;阅读 · 实践 · 思考&quot;,
+  &quot;author&quot;: &quot;sbraveyoung&quot;,
+  &quot;description&quot;: &quot;一个程序员的笔记本：技术拆解、踩坑总结、生活随笔。&quot;,
+  &quot;cname&quot;: &quot;sbrave.cn&quot;,
+  &quot;comments&quot;: { ... }   // 见 comment-system skill
+}
+</code></pre>
+<h3>三套主题</h3>
+<table>
+<thead>
+<tr>
+<th>theme</th>
+<th>风格</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>minimal</code></td>
+<td>默认，黑白极简，最适合长文阅读</td>
+</tr>
+<tr>
+<td><code>sepia</code></td>
+<td>暖色调，类似纸质书的视觉</td>
+</tr>
+<tr>
+<td><code>ocean</code></td>
+<td>冷蓝调，安静耐看</td>
+</tr>
+</tbody>
+</table>
+<p>三套都共享同一份 HTML 模板和 JS（floating TOC、code copy、MathJax 加载、theme/lang 切换都在），只是 CSS 颜色 token 不同。所以你<strong>预期看到的功能</strong>在三套主题里完全一致——切换主题不会丢失某个 UI 细节。</p>
+<h3>如何切</h3>
+<ol>
+<li>编辑 <code>sbraveyoung.github.io/_gobog.json</code>，把 <code>theme</code> 改成 <code>minimal</code> / <code>sepia</code> / <code>ocean</code> 之一。</li>
+<li>commit + push。</li>
+<li>deploy workflow 跑完（1～2 分钟）。</li>
+</ol>
+<h3>临时预览另一个主题</h3>
+<p>去 <code>sbraveyoung.github.io</code> 的 Actions → Deploy → <strong>Run workflow</strong>，里面有个 <code>theme</code> 输入框。填进去（比如 <code>sepia</code>），跑一次。生效后整站就是 sepia——但 <code>_gobog.json</code> 没变，下一次自动 deploy 又会回到 json 里写的那个主题。</p>
+<p>适合&quot;诶我想试试看 sepia 长啥样&quot;。试完不喜欢？啥都不用回滚，下次自动 deploy 就回去了。</p>
+<h3>关于浅色 / 深色</h3>
+<p>每个主题都自带浅色和深色两个版本：</p>
+<ul>
+<li>默认跟随系统的 <code>prefers-color-scheme</code>。</li>
+<li>用户右上角点 ☀ / ☾ 按钮可以手动覆盖，结果存在 <code>localStorage</code>。</li>
+<li>CSS 变量 <code>--bg / --fg / --accent / ...</code> 是切换的入口；写自定义 CSS 不要硬编码颜色，统一用变量。</li>
+</ul>
+<h3>关于 中 / EN 切换</h3>
+<p>每个主题导航条有 中 / EN 切换按钮：</p>
+<ul>
+<li>默认 <code>lang=&quot;zh-cn&quot;</code>。</li>
+<li>切换后 <code>&lt;html&gt;</code> 的 <code>lang</code> 属性变 <code>en</code>，CSS 用 <code>html[lang^=&quot;en&quot;]</code> 选择子去切某些区域的中英文文本。</li>
+<li>选择存在 <code>localStorage</code>，下次访问保留。</li>
+</ul>
+<p><strong>注意</strong>：中 / EN 切换只切<strong>主题里的 UI 文本</strong>（导航条按钮等），<strong>不会翻译文章内容</strong>。文章是中文还是英文取决于你写的是什么。</p>
+<h3>自定义域名 (CNAME)</h3>
+<p><code>_gobog.json</code> 里 <code>cname: &quot;sbrave.cn&quot;</code> 会被 gobog 写入 <code>&lt;dist&gt;/CNAME</code> 文件。GitHub Pages 检测到这个文件就把博客挂在 sbrave.cn 上。</p>
+<p>把 <code>cname</code> 改成空字符串 = 用 GitHub 默认域 <code>&lt;user&gt;.github.io</code>。</p>
+<p>DNS 那边记得把 <code>sbrave.cn</code> 的 A 记录或 CNAME 记录指到 GitHub Pages（185.199.108.153 等四个 A，或 <code>&lt;user&gt;.github.io.</code>）。</p>
+<h3>什么时候要改 gobog 仓库？</h3>
+<p>需求超出 token 调色范畴时——比如想加新功能（搜索、归档页、夜间柔光模式之类）、改 HTML 结构、加新模板字段。这是&quot;改渲染逻辑&quot;，对应 <code>sbraveyoung/gobog</code>。</p>
+<p>改完 commit + push 到 gobog，再去 github.io 仓库手动跑一次 Deploy（或者等下次 schedule 06:00 UTC 自动跑），新代码才会被拉来生成新版站点。</p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

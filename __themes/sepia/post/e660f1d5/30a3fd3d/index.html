@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一个简单的二叉树的实现 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/30a3fd3d">
+<meta name="description" content="众所周知，二叉树是一种很重要的数据结构，基于二叉树的哈夫曼树可用于文件压缩，BSTreet、AVLTree 可用于排序，RBTree 被广泛用在 STL 中的 map、set 等容器上和 Java 中的 TreeSet 和 TreeMap 上。 二叉树的节点结构： 应用于二叉树的方法主要有：前中后序遍历(递归/非递归)…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个简单的二叉树的实现">
+<meta property="og:url" content="https://sbrave.cn/post/e660f1d5/30a3fd3d">
+<meta property="og:description" content="众所周知，二叉树是一种很重要的数据结构，基于二叉树的哈夫曼树可用于文件压缩，BSTreet、AVLTree 可用于排序，RBTree 被广泛用在 STL 中的 map、set 等容器上和 Java 中的 TreeSet 和 TreeMap 上。 二叉树的节点结构： 应用于二叉树的方法主要有：前中后序遍历(递归/非递归)…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-28 16:09:24</span>
+        <span>· 914 字</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>一个简单的二叉树的实现</h2>
+<p>众所周知，二叉树是一种很重要的数据结构，基于二叉树的哈夫曼树可用于文件压缩，BSTreet、AVLTree 可用于排序，RBTree 被广泛用在 STL 中的 map、set 等容器上和 Java 中的 TreeSet 和 TreeMap 上。</p>
+<p>二叉树的节点结构：</p>
+<pre><code class="language-C++">template&lt;typename T&gt;
+struct BinaryTreeNode
+{
+    T _data;
+    BinaryTreeNode&lt;T&gt;* _left;
+    BinaryTreeNode&lt;T&gt;* _right;
+    BinaryTreeNode(const T&amp; t=T())
+        :_data(t)
+        ,_left(NULL)
+        ,_right(NULL)
+    {}
+}
+</code></pre>
+<p>应用于二叉树的方法主要有：前中后序遍历(递归/非递归)，建立，查找等操作。</p>
+<p>如下代码实现了一颗支持方法比较多的简单二叉树:</p>
+<pre><code class="language-C++">#include&lt;iostream&gt;
+#include&lt;stack&gt;
+#include&lt;queue&gt;
+using namespace std;
+
+template&lt;typename T&gt;
+class Node{
+public:
+    Node(const T&amp; t=T()):data(t),left(NULL),right(NULL)
+    {}
+
+    ~Node()
+    {}
+
+public:
+    T data;
+    Node&lt;T&gt;* left;
+    Node&lt;T&gt;* right;
+};
+
+template&lt;typename T&gt;
+class BinaryTree{
+public:
+    BinaryTree():root(NULL)
+    {}
+
+    ~BinaryTree()
+    {}
+
+    void PreOrder()
+    {
+        cout&lt;&lt;&quot;PrevOrder_R:  &quot;;
+        _PreOrder(root);
+       cout&lt;&lt;endl;
+    }
+
+    void InOrder()
+    {
+        cout&lt;&lt;&quot;InOrder_R:    &quot;;
+        _InOrder(root);
+       cout&lt;&lt;endl;
+    }
+
+    void PostOrder()
+    {
+        cout&lt;&lt;&quot;PostOrder_R:  &quot;;
+        _PostOrder(root);
+       cout&lt;&lt;endl;
+    }
+
+    void CreateWithPre(const T* PreOrder,const T* InOrder,int length)
+    {
+       root= _CreateWithPre(PreOrder,InOrder,length);
+    }
+
+    void CreateWithPost(const T* PostOrder,const T* InOrder,int length)
+    {
+        root=_CreateWithPost(PostOrder,InOrder,length);
+    }
+
+    void PreOrder_NR()
+    {
+        cout&lt;&lt;&quot;PrevOrder_NR: &quot;;
+        stack&lt;Node&lt;T&gt;*&gt; s;
+        if(root!=NULL)
+        {
+            s.push(root);
+        }
+        while(!s.empty())
+        {
+            cout&lt;&lt;s.top()-&gt;data&lt;&lt;&quot; &quot;;
+            Node&lt;T&gt;* cur=s.top();
+            s.pop();
+            if(cur-&gt;right!=NULL)
+                s.push(cur-&gt;right);
+            if(cur-&gt;left!=NULL)
+                s.push(cur-&gt;left);
+        }
+        cout&lt;&lt;endl;
+    }
+
+    void InOrder_NR()
+    {
+        cout&lt;&lt;&quot;InOrder_NR:   &quot;;
+        stack&lt;Node&lt;T&gt;*&gt; s;
+        Node&lt;T&gt;* cur=root;
+        while(!s.empty() || cur!=NULL)
+        {
+            while(cur!=NULL)
+            {
+                s.push(cur);
+                cur=cur-&gt;left;
+            }
+            cur=s.top();
+            cout&lt;&lt;cur-&gt;data&lt;&lt;&quot; &quot;;
+            s.pop();
+            cur=cur-&gt;right;
+        }
+        cout&lt;&lt;endl;
+    }
+
+    void PostOrder_NR()
+    {
+        cout&lt;&lt;&quot;PostOrder_NR: &quot;;
+        if(root==NULL)
+            return;
+        stack&lt;Node&lt;T&gt;*&gt; s1;
+        stack&lt;Node&lt;T&gt;*&gt; s2;
+        Node&lt;T&gt;* cur=root;
+        s1.push(cur);
+        while(!s1.empty())
+        {
+            cur=s1.top();
+            s1.pop();
+            s2.push(cur);
+            if(cur-&gt;left!=NULL)
+                s1.push(cur-&gt;left);
+            if(cur-&gt;right!=NULL)
+                s1.push(cur-&gt;right);
+        }
+        while(!s2.empty())
+        {
+            cout&lt;&lt;s2.top()-&gt;data&lt;&lt;&quot; &quot;;
+            s2.pop();
+        }
+        cout&lt;&lt;endl;
+    }
+
+    //void PostOrder_NR()
+    //{
+    //    cout&lt;&lt;&quot;PostOrder_NR: &quot;;
+    //    stack&lt;Node&lt;T&gt;*&gt; s;
+    //    Node&lt;T&gt;* cur=root;
+    //    Node&lt;T&gt;* visited=NULL;
+    //    while(!s.empty() || cur!=NULL)
+    //    {
+    //        while(cur!=NULL)
+    //        {
+    //            s.push(cur);
+    //            cur=cur-&gt;left;
+    //        }
+    //        cur=s.top();
+    //        if(cur-&gt;right==NULL || cur-&gt;right==visited)
+    //        {
+    //            s.pop();
+    //            cout&lt;&lt;cur-&gt;data&lt;&lt;&quot; &quot;;
+    //            visited=cur;
+    //            cur=NULL;
+    //        }
+    //        else
+    //        {
+    //            cur=cur-&gt;right;
+    //        }
+    //    }
+    //    cout&lt;&lt;endl;
+    //}
+
+    void LevelOrder()
+    {
+        cout&lt;&lt;&quot;LevelOrder_R: &quot;;
+        if(root==NULL)
+            return;
+        queue&lt;Node&lt;T&gt;*&gt; q;
+        Node&lt;T&gt;* cur=root;
+        q.push(cur);
+        while(!q.empty())
+        {
+            cur=q.front();
+            q.pop();
+            cout&lt;&lt;cur-&gt;data&lt;&lt;&quot; &quot;;
+            if(cur-&gt;left!=NULL)
+                q.push(cur-&gt;left);
+            if(cur-&gt;right!=NULL)
+                q.push(cur-&gt;right);
+        }
+        cout&lt;&lt;endl;
+    }
+
+    int Depth()
+    {
+        cout&lt;&lt;&quot;Depth: &quot;;
+        return _Depth(root);
+    }
+
+    void PrintEdge1()
+    {
+        if(root==NULL)
+            return ;
+        vector&lt;vector&lt;Node&lt;T&gt;*&gt; &gt; edge;
+        edge.resize(_Depth(root));
+        _setEdge(root,0,edge);
+        int i;
+        for(i=0;i&lt;edge.size();++i)
+        {
+            cout&lt;&lt;edge[i][0]-&gt;data&lt;&lt;&quot; &quot;;
+        }
+        _printLeafNotInEdge(root,0,edge);
+        for(i=edge.size()-1;i&gt;=0;--i)
+        {
+            if(edge[i][0]!=edge[i][1])
+                cout&lt;&lt;edge[i][1]-&gt;data&lt;&lt;&quot; &quot;;
+        }
+        cout&lt;&lt;endl;
+    }
+
+    void PrintEdge2()
+    {
+        _PrintEdge2(root);
+    }
+
+    int size()
+    {
+        return _size(root);
+    }
+
+    //Morris先序遍历，时间复杂度为O(n),空间复杂度为O(1)
+    void MorrisPre()
+    {
+        if(root==NULL)
+            return;
+        Node&lt;T&gt;* cur=root;
+        Node&lt;T&gt;* LeftTreeRightNode=NULL;
+loop:
+        while(cur-&gt;left!=NULL)
+        {
+            cout&lt;&lt;cur-&gt;data&lt;&lt;&quot; &quot;;
+            LeftTreeRightNode=cur-&gt;left;
+            while(LeftTreeRightNode-&gt;right!=NULL)
+            {
+                LeftTreeRightNode=LeftTreeRightNode-&gt;right;
+            }
+            LeftTreeRightNode-&gt;right=cur;
+            cur=cur-&gt;left;
+        }
+        cout&lt;&lt;cur-&gt;data&lt;&lt;&quot; &quot;;
+        cur=cur-&gt;right;
+        while(cur!=NULL)
+        {
+            LeftTreeRightNode=cur-&gt;left;
+            if(LeftTreeRightNode==NULL)
+                goto loop;
+            while(LeftTreeRightNode-&gt;right!=NULL &amp;&amp; LeftTreeRightNode-&gt;right!=cur)
+            {
+                LeftTreeRightNode=LeftTreeRightNode-&gt;right;
+            }
+            if(LeftTreeRightNode-&gt;right==NULL)
+            {
+                goto loop;
+            }
+            else
+            {
+                LeftTreeRightNode-&gt;right=NULL;
+                cur=cur-&gt;right;
+            }
+        }
+        cout&lt;&lt;endl;
+    }
+
+    //Morris中序遍历，时间复杂度为O(n),空间复杂度为O(1)
+    void MorrisIn()
+    {
+        if(root==NULL)
+            return;
+        Node&lt;T&gt;* cur=root;
+        Node&lt;T&gt;* LeftTreeRightNode=NULL;
+loop:
+        while(cur-&gt;left!=NULL)
+        {
+            LeftTreeRightNode=cur-&gt;left;
+            while(LeftTreeRightNode-&gt;right!=NULL)
+            {
+                LeftTreeRightNode=LeftTreeRightNode-&gt;right;
+            }
+            LeftTreeRightNode-&gt;right=cur;
+            cur=cur-&gt;left;
+        }
+        cout&lt;&lt;cur-&gt;data&lt;&lt;&quot; &quot;;
+        cur=cur-&gt;right;
+        while(cur!=NULL)
+        {
+            LeftTreeRightNode=cur-&gt;left;
+            if(LeftTreeRightNode==NULL)
+                goto loop;
+            while(LeftTreeRightNode-&gt;right!=NULL &amp;&amp; LeftTreeRightNode-&gt;right!=cur)
+            {
+                LeftTreeRightNode=LeftTreeRightNode-&gt;right;
+            }
+            if(LeftTreeRightNode-&gt;right==NULL)
+            {
+                goto loop;
+            }
+            else
+            {
+                LeftTreeRightNode-&gt;right=NULL;
+                cout&lt;&lt;cur-&gt;data&lt;&lt;&quot; &quot;;
+                cur=cur-&gt;right;
+            }
+        }
+        cout&lt;&lt;endl;
+    }
+
+    int LengthBetweenFastestTwoNodes()
+    {
+        queue&lt;Node&lt;T&gt;*&gt; q1;
+        queue&lt;Node&lt;T&gt;*&gt; q2;
+    }
+
+private:
+    void _PrintList(Node&lt;T&gt;* _root)
+    {
+        if(_root==NULL)
+            return;
+        while(_root!=NULL)
+        {
+            cout&lt;&lt;_root-&gt;data&lt;&lt;&quot; &quot;;
+            _root=_root-&gt;right;
+        }
+    }
+
+    Node&lt;T&gt;* _ReverseRightEdge(Node&lt;T&gt;* _root)
+    {
+        if(_root==NULL)
+            return NULL;
+        Node&lt;T&gt;* tmp=NULL;
+        Node&lt;T&gt;* head=_root;
+        Node&lt;T&gt;* cur=NULL;
+        cur=head-&gt;right;
+        head-&gt;right=NULL;
+        while(cur!=NULL)
+        {
+            tmp=cur-&gt;right;
+            cur-&gt;right=head;
+            head=cur;
+            cur=tmp;
+        }
+        return head;
+    }
+
+    int _size(Node&lt;T&gt;* root)
+    {
+        if(root==NULL)
+            return 0;
+        return _size(root-&gt;left) + _size(root-&gt;right) +1;
+    }
+
+    void _PrintEdge2(Node&lt;T&gt;* root)
+    {
+        if(root==NULL)
+            return;
+        cout&lt;&lt;root-&gt;data&lt;&lt;&quot; &quot;;
+        if(root-&gt;left!=NULL &amp;&amp; root-&gt;right!=NULL)
+        {
+            _printLeftEdge(root-&gt;left,true);
+            _printRightEdge(root-&gt;right,true);
+        }
+        else
+        {
+            _PrintEdge2(root-&gt;left!=NULL?root-&gt;left:root-&gt;right);
+        }
+        cout&lt;&lt;endl;
+    }
+
+    void _printLeftEdge(Node&lt;T&gt;* root,bool print)
+    {
+        if(root==NULL)
+            return;
+        if(print || (root-&gt;left==NULL &amp;&amp; root-&gt;right==NULL))
+            cout&lt;&lt;root-&gt;data&lt;&lt;&quot; &quot;;
+        _printLeftEdge(root-&gt;left,true);
+        _printLeftEdge(root-&gt;right,print &amp;&amp; root-&gt;left==NULL?true:false);
+    }
+
+    void _printRightEdge(Node&lt;T&gt;* root,bool print)
+    {
+        if(root==NULL)
+            return;
+        _printRightEdge(root-&gt;left,print &amp;&amp; root-&gt;right==NULL?true:false);
+        _printRightEdge(root-&gt;right,true);
+        if(print || (root-&gt;left==NULL &amp;&amp; root-&gt;right==NULL))
+            cout&lt;&lt;root-&gt;data&lt;&lt;&quot; &quot;;
+    }
+
+    void _printLeafNotInEdge(Node&lt;T&gt;* root,int pos,vector&lt;vector&lt;Node&lt;T&gt;*&gt; &gt; edge)
+    {
+        if(root==NULL)
+            return;
+        if(root-&gt;left==NULL &amp;&amp; root-&gt;right==NULL &amp;&amp; root!=edge[pos][0] &amp;&amp; root!=edge[pos][1])
+            cout&lt;&lt;root-&gt;data&lt;&lt;&quot; &quot;;
+        _printLeafNotInEdge(root-&gt;left,pos+1,edge);
+        _printLeafNotInEdge(root-&gt;right,pos+1,edge);
+    }
+
+    void _setEdge(Node&lt;T&gt;* root,int pos,vector&lt;vector&lt;Node&lt;T&gt;*&gt; &gt;&amp; edge)
+    {
+        if(root==NULL)
+            return;
+        edge[pos].resize(2);
+        edge[pos][0]=edge[pos][0]==NULL?root:edge[pos][0];
+        edge[pos][1]=root;
+        _setEdge(root-&gt;left,pos+1,edge);
+        _setEdge(root-&gt;right,pos+1,edge);
+    }
+
+    int _Depth(const Node&lt;T&gt;* root)
+    {
+        if(root==NULL)
+            return 0;
+        int left=_Depth(root-&gt;left);
+        int right=_Depth(root-&gt;right);
+        return left&gt;right?left+1:right+1;
+    }
+
+    Node&lt;T&gt;* _CreateWithPost(const T* PostOrder,const T* InOrder,int length)
+    {
+        if(PostOrder==NULL || InOrder==NULL || length&lt;=0)
+            return NULL;
+        int i=length-1;
+        while(i&gt;=0 &amp;&amp; InOrder[i]!=PostOrder[length-1])
+        {
+            i--;
+        }
+        Node&lt;T&gt;* root=new Node&lt;T&gt;(PostOrder[length-1]);
+        root-&gt;left=_CreateWithPost(PostOrder,InOrder,i);
+        root-&gt;right=_CreateWithPost(PostOrder+i,InOrder+i+1,length-i-1);
+        return root;
+    }
+
+    Node&lt;T&gt;* _CreateWithPre(const T* PreOrder,const T* InOrder,int length)
+    {
+        if(PreOrder==NULL || InOrder==NULL || length&lt;=0)
+            return NULL;
+        int i=0;
+        while(i&lt;length &amp;&amp; InOrder[i]!=PreOrder[0])
+        {
+            i++;
+        }
+        Node&lt;T&gt;* root=new Node&lt;T&gt;(PreOrder[0]);
+        root-&gt;left=_CreateWithPre(PreOrder+1,InOrder,i);
+        root-&gt;right=_CreateWithPre(PreOrder+i+1,InOrder+i+1,length-i-1);
+        return root;
+    }
+
+    void _PostOrder(Node&lt;T&gt;* root)
+    {
+        if(root==NULL)
+        {
+            return ;
+        }
+        _PostOrder(root-&gt;left);
+        _PostOrder(root-&gt;right);
+        cout&lt;&lt;root-&gt;data&lt;&lt;&quot; &quot;;
+    }
+
+    void _InOrder(Node&lt;T&gt;* root)
+    {
+        if(root==NULL)
+        {
+            return ;
+        }
+        _InOrder(root-&gt;left);
+        cout&lt;&lt;root-&gt;data&lt;&lt;&quot; &quot;;
+        _InOrder(root-&gt;right);
+    }
+
+    void _PreOrder(Node&lt;T&gt;* root)
+    {
+        if(root==NULL)
+        {
+            return ;
+        }
+        cout&lt;&lt;root-&gt;data&lt;&lt;&quot; &quot;;
+        _PreOrder(root-&gt;left);
+        _PreOrder(root-&gt;right);
+    }
+
+public:
+    Node&lt;T&gt;* root;
+};
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/BinaryTree">点我前往</a></p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

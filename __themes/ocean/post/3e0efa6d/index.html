@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>布隆过滤器五分钟入门 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/3e0efa6d">
+<meta name="description" content="缘起 之前在公司的一场技术分享上，有位大牛讲到了布隆过滤器。虽然之前有所了解，但只是停留在代码实现上，还没有去深入探究它存在的合理性和应用场景上。所以借着这个机会重新捋捋脉络，便有了这篇文章。 原理 维基百科上的描述如下： A Bloom filter is a space-efficient probabilisti…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="布隆过滤器五分钟入门">
+<meta property="og:url" content="https://sbrave.cn/post/3e0efa6d">
+<meta property="og:description" content="缘起 之前在公司的一场技术分享上，有位大牛讲到了布隆过滤器。虽然之前有所了解，但只是停留在代码实现上，还没有去深入探究它存在的合理性和应用场景上。所以借着这个机会重新捋捋脉络，便有了这篇文章。 原理 维基百科上的描述如下： A Bloom filter is a space-efficient probabilisti…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2018-05-17 03:11:12</span>
+        <span>· 2417 字</span>
+        <span>· 10 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>布隆过滤器五分钟入门</h2>
+<h2>缘起</h2>
+<p>之前在公司的一场技术分享上，有位大牛讲到了布隆过滤器。虽然之前有所了解，但只是停留在代码实现上，还没有去深入探究它存在的合理性和应用场景上。所以借着这个机会重新捋捋脉络，便有了这篇文章。</p>
+<h2>原理</h2>
+<p>维基百科上的描述如下：</p>
+<blockquote>
+<p>A Bloom filter is a space-efficient probabilistic data structure, conceived by Burton Howard Bloom in 1970, that is used to test whether an element is a member of a set. False positive matches are possible, but false negatives are not – in other words, a query returns either &quot;possibly in set&quot; or &quot;definitely not in set&quot;. Elements can be added to the set, but not removed (though this can be addressed with a &quot;counting&quot; filter); the more elements that are added to the set, the larger the probability of false positives.</p>
+</blockquote>
+<p>翻译过来就是：布隆过滤器由 Bloom 在 1970 年提出，它是一个非常节省空间的数据结构，且被用来测试一个元素是否在一个集合中。如果它告诉你「不在」，那就一定不在集合中；但如果它告诉你「在」，那也有可能不在。并且你可以向集合中添加更多的元素，但由此会带来更高的误判率。你也不能从集合中删除元素。</p>
+<h2>算法描述</h2>
+<p>通常我们去判断一个元素是否在集合中的方法是：将这个元素逐一与集合中的所有元素对比，但这种方法的时间复杂度为 $O(n)$，所以随着元素数量的增长，查询效率会下降。但布隆过滤器则通过 hash 的方法去查找，所以会快很多。</p>
+<!-- 通常，k需要远小于m且需要尽可能满足：对于每一个元素x，经过k个函数会映射到k个不同的位置上  -->
+<p>布隆过滤器本质上是一个很长的二进制数组，数组中每一个元素都是 0 或者 1，类似于 STL 中的 bitset，初始值都为 0。向集合中添加元素时，它将待查找的元素经过 k 个哈希函数的映射，得到 k 个值为（$v_1$,$v_2$....$v_k$) 的一个向量，对该向量的每一个值所对应的下标的数组元素置为 1。之后在查找某个元素时，也将这个元素经过同样的 k 个哈希函数，并检查是否这些值对应的数组下标都为 1。只要有一个是 0，则该元素肯定不在集合中；如下图，集合 {x,y,z} 经过三个哈希函数分别映射到数组下标 1，3，4，5，11，13，16 位置上，元素 w 映射到下标 4，13，15 位置上，由于 array[15]==0，所以 w 不在集合 {x,y,z} 中。反之，如果都为 1，则该元素有一定的概率 $P$ 在集合中，$1-P$ 的概率不在。因为当集合中元素很多的时候，数组中这 k 个元素可能是由其他元素置位的，导致误判。至于这个概率 $P$ 是多大，跟集合中元素数量 s、数组大小 m 和选取的 k 个哈希函数都有关。</p>
+<p><img src="../../image/3e0efa6d-1.png" alt="" /></p>
+<ul>
+<li>元素数量 n 越少，生成的 k 个哈希值碰撞的可能就越小，判断也就越准确；</li>
+<li>数组长度 m 越大，生成的 k 个哈希值碰撞的可能也就越小，判断也就越准确；</li>
+<li>k 个函数选取越准确，生成的 k 个哈希值碰撞的可能越小，判断越准确；</li>
+</ul>
+<p>由此可见，这三个因素都归并到了「哈希碰撞」这个问题上。所以布隆过滤器的设计过程很大程度上就是一个好的哈希算法的设计过程。</p>
+<h3>哈希算法</h3>
+<p>一个哈希算法由一个哈希数组、哈希函数组成。其思想是将元素经过哈希函数映射到数组中。但元素集合在很多情况下是无限或接近于无限的，而数组空间是有限的。这便必定产生矛盾--即碰撞。从逻辑上说，所有的哈希算法都是无法避免碰撞的（从无限集到有限集的映射），但应该尽可能地减少碰撞。</p>
+<p>当碰撞发生时，常见的处理方法有：开链法和闭散列法。开链法就是将映射到同一下标的所有元素形成一个链表，挂到该位置下面；闭散列法就是将冲突的元素按照某种方式向后排放。这两种方法都有弊端，开链法在极端情况下又会形成链表，时间复杂度也上升到了 $O(n)$。一种优化方法是当链表长度超过某一个值时，自动构造成一棵平衡树，但这并没有改变开链法的本质。闭散列法由于占用了其他元素的空间，当元素很多时就会没有空间可用，且会引起雪崩效应，即这次碰撞会影响到下个本来映射到该位置的元素。</p>
+<p>由此引出「负载因子」的概念。所谓负载因子，就是当前哈希表中存放的元素数和数组长度的比值。一般来说，负载因子超过 0.8，就需要对哈希表扩容。即重新构造一个更大的数组，将所有元素转移过去，再释放原有空间。</p>
+<h2>误判概率</h2>
+<p>让我们回到布隆过滤器上，计算一下对一个元素是否在集合中误判的概率。</p>
+<p>首先我们假设，待插入容器中的元素个数为 n，布隆过滤器的比特位数为 m，哈希函数个数为 k，并假设 k 个函数是独立的。那么在插入元素到容器中时，对任一个比特位而言，某个函数设置该位为 1 的概率是</p>
+<p>$$\frac{1}{m}$$</p>
+<p>则不为 1 的概率是</p>
+<p>$$1-\frac{1}{m}$$</p>
+<p>那么经过 k 个哈希函数该位仍然未被设置为 1 的概率是</p>
+<p>$$(1-\frac{1}{m})^k$$</p>
+<p>插入 n 个元素后，某个位仍然不为 1 的概率是</p>
+<p>$$(1-\frac{1}{m})^{nk}$$</p>
+<p>因此，这时候某个位为 1 的概率是</p>
+<p>$$1-(1-\frac{1}{m})^{nk}$$</p>
+<p>这时候 n 个元素插入完成。我们来测试某个元素不在容器中，但被误判的概率 $P$，也就是该元素经过 k 个哈希函数得到的向量中每一个元素对应的位置都恰好被其他元素置为 1 的概率：</p>
+<p>$$P=[1-(1-\frac{1}{m})^{nk}]^k$$</p>
+<p>根据公式</p>
+<p>$$ \lim_{x \to \infty}(1+x)^{\frac{1}{x}} \approx e $$</p>
+<p>我们有</p>
+<p>$$(1-\frac{1}{m})^{nk}=(1-\frac{1}{m})^{nk  \times  \frac{-m}{-m}}=((1-\frac{1}{m})^{-m})^{-\frac{nk}{m}} \approx e^{-\frac{nk}{m}}$$</p>
+<p>可得</p>
+<p>$$P \approx (1-e^{-\frac{nk}{m}})^k$$</p>
+<h2>哈希函数的最佳个数k</h2>
+<p>前面求得</p>
+<p>$$P \approx (1-e^{-\frac{nk}{m}})^k$$</p>
+<p>我们令</p>
+<p>$$b=e^{\frac{n}{m}}$$</p>
+<p>可得</p>
+<p>$$P=(1-b^{-k})^k$$</p>
+<p>两边同时取对数得</p>
+<p>$$\ln P=k \times \ln(1-b^{-k})$$</p>
+<p>然后两边同时对 k 求导，有</p>
+<p>$$\frac{1}{P} \times P^{'} = \ln(1-b^{-k})+k \times \frac{b^{-k} \times \ln b}{1-b^{-k}}$$</p>
+<p>令其值为 0，解得</p>
+<p>$$k=\frac{m}{n} \times \ln 2$$</p>
+<p>可以看出，当 $k=\frac{m}{n} \times  \ln 2 = 0.7\frac{m}{n}$ 时误判率最低，此时误判率 $P=0.6185 \frac{m}{n}$</p>
+<p>[画外音：这个数字熟悉不]</p>
+<p>所以要使得误判率不变，添加到容器中的元素个数应该和数组长度线性增加的。</p>
+<h2>布隆过滤器的使用场景</h2>
+<p>布隆过滤器实际上是一个二进制数组，其本质是一个容器。所以其主要功能是判断一个元素是否存在于集合中。</p>
+<p>传统的容器也能达到这个目的，比如数组、链表、哈希表、红黑树等数据结构。但这些数据结构在存储元素时，至少要存储元素本身，这就决定了传统数据结构在空间复杂度上的劣势。而且在查找元素时，数据、链表都是顺序查找，时间复杂度为 O(n)，红黑树为 O(lgn)，他们在时间复杂度上也处于劣势。哈希表好点，为 O(1)，但哈希表存在碰撞的因素，当数据量越来越大时，其时间复杂度会退化到 O(n) 或 O(lgn)。</p>
+<p>所以布隆过滤器适用于大数据量、高效、对误判不敏感的场景。具体有：</p>
+<ul>
+<li>Google 的分布式数据库 Bigtable 使用布隆过滤器来减少对磁盘的 I/O 次数。当一次查询请求到来时，先在 bloom filter 中查找，若不存在则直接返回，可以提高性能；</li>
+<li>网络爬虫程序中，需要对抓取到的 URL 进行遍历。若该 URL 之前已经访问过，则可以快速从 bloom filter 中感知到并跳过，否则访问之并加入到 bloom filter 中。当然，出现小概率误判时，don't care it.</li>
+<li>黑名单过滤。比如在网络请求中，可以将恶意访问的用户 id 或 IP 加入到布隆过滤器中，以阻止这些访问请求，起到防刷的作用。这里布隆过滤器的作用主要是降低黑名单的存储成本。类似的，还可以用于垃圾邮件过滤、垃圾短信过滤、恶意网址过滤等。</li>
+</ul>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

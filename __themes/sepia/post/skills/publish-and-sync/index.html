@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skill · 写完一篇 → 上线全流程 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/skills/publish-and-sync">
+<meta name="description" content="何时用**：写完一篇文章想发出去；或者要排查&#34;我 push 了为啥 sbrave.cn 没更新&#34;。 解决什么**：把&#34;敲完最后一个字 → sbrave.cn 上看到&#34;这条端到端链路拆成可观察的步骤。 端到端时序 整体时间：从 (a) 到 sbrave.cn 上看到，**1～2 分钟**为常态。 触发器 | 触发    …">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill · 写完一篇 → 上线全流程">
+<meta property="og:url" content="https://sbrave.cn/post/skills/publish-and-sync">
+<meta property="og:description" content="何时用**：写完一篇文章想发出去；或者要排查&#34;我 push 了为啥 sbrave.cn 没更新&#34;。 解决什么**：把&#34;敲完最后一个字 → sbrave.cn 上看到&#34;这条端到端链路拆成可观察的步骤。 端到端时序 整体时间：从 (a) 到 sbrave.cn 上看到，**1～2 分钟**为常态。 触发器 | 触发    …">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        <span class="badge badge-ai" title="AI 辅助">🤖 AI 辅助</span>
+        <span>2026-05-11 09:03:00</span>
+        <span>· 752 字</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>Skill · 写完一篇 → 上线全流程</h2>
+<blockquote>
+<p><strong>何时用</strong>：写完一篇文章想发出去；或者要排查&quot;我 push 了为啥 sbrave.cn 没更新&quot;。</p>
+<p><strong>解决什么</strong>：把&quot;敲完最后一个字 → sbrave.cn 上看到&quot;这条端到端链路拆成可观察的步骤。</p>
+</blockquote>
+<h3>端到端时序</h3>
+<pre><code>你按 Cmd+S
+   │
+   │ (a) Obsidian 写盘
+   │
+   │ (b) 如果开了 auto-push，30s 后插件触发 push 流程
+   │     （没开就走命令面板手动调&quot;Push blog repo&quot;）
+   ▼
+插件: gitInitIfMissing → gitStageAndDiff
+   │  (c) git add -A，跑 git diff --cached
+   ▼
+DiffConfirmModal 弹出 (默认开启)
+   │  (d) 你 review，点 Commit &amp; Push
+   │      （Cancel 会 git reset 解暂存，工作树不动）
+   ▼
+插件: gitCommitAndPush
+   │  (e) 生成 commit 信息（模板 obsidian sync: {{count}} file(s) at {{date}}）
+   │  (f) git commit -m &quot;...&quot;  + git push HEAD:master
+   ▼
+sbraveyoung/blog 的 .github/workflows/deploy.yml
+   │  (g) 仅有一个 step: 用 GH_PAT 调
+   │      POST /repos/sbraveyoung/sbraveyoung.github.io/dispatches
+   │      event_type=blog-update
+   ▼
+sbraveyoung.github.io 的 .github/workflows/deploy.yml
+   │  (h) checkout sbraveyoung/blog + sbraveyoung/gobog
+   │  (i) 读 _gobog.json → 拼 _gobog.toml → go build → ./gobog -export _dist
+   │  (j) scripts/check-export.sh _dist （死链 / 孤儿 / 可疑 URL 审计）
+   │  (k) 用 _dist/ 替换工作树（.git/.github/_gobog.json/scripts 保留）
+   │  (l) git commit + git push
+   ▼
+GitHub Pages 自动伺服
+   ▼
+sbrave.cn
+</code></pre>
+<p>整体时间：从 (a) 到 sbrave.cn 上看到，<strong>1～2 分钟</strong>为常态。</p>
+<h3>触发器</h3>
+<table>
+<thead>
+<tr>
+<th>触发</th>
+<th>来源</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主路径</td>
+<td>blog 仓库 push → repository_dispatch → github.io 跑 deploy</td>
+</tr>
+<tr>
+<td>手动</td>
+<td>github.io 仓库的 Actions 页 → Deploy → Run workflow</td>
+</tr>
+<tr>
+<td>兜底</td>
+<td>每天 06:00 UTC 跑一次 schedule，防止某次 webhook 没送达</td>
+</tr>
+</tbody>
+</table>
+<h3>该看哪个 Actions 页排查</h3>
+<ul>
+<li><strong>blog push 后 sbrave.cn 没更新</strong>：先看 <code>sbraveyoung/blog/actions</code>，确认 notify workflow 跑成功。如果是 <code>secrets.GH_PAT not configured</code> 这类错，去 blog 仓库 settings → secrets 加一下 GH_PAT。</li>
+<li><strong>notify 跑成功但 github.io 没动</strong>：看 <code>sbraveyoung/sbraveyoung.github.io/actions</code>，repository_dispatch 触发的 run 应该在那里。失败原因一般是 token 权限不够或者 <code>_gobog.toml</code> 拼接出错。</li>
+<li><strong>github.io 跑成功但页面看着是旧的</strong>：GitHub Pages 自己有缓存，等 1～2 分钟，或者 hard refresh。</li>
+</ul>
+<h3>必需的 secret</h3>
+<table>
+<thead>
+<tr>
+<th>仓库</th>
+<th>secret 名</th>
+<th>干啥</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sbraveyoung/blog</code></td>
+<td><code>GH_PAT</code></td>
+<td>Fine-grained PAT，对 <code>sbraveyoung/sbraveyoung.github.io</code> 有 Contents: R/W。</td>
+</tr>
+<tr>
+<td><code>sbraveyoung/sbraveyoung.github.io</code></td>
+<td><code>GH_PAT</code></td>
+<td>Fine-grained PAT，对 blog + gobog 有 Contents: Read，对自己有 R/W。</td>
+</tr>
+</tbody>
+</table>
+<p>公开仓库的话，github.io 可以 fallback 到默认的 <code>GITHUB_TOKEN</code>，但配 <code>GH_PAT</code> 更稳。</p>
+<h3>常见坑</h3>
+<ul>
+<li><strong>Diff 弹出后我点了 Cancel，但下次 push 还是显示一样的 diff</strong>：正常。Cancel 走的是 <code>git reset</code>，工作树不动；下次 stage 自然还是同一份变更。</li>
+<li><strong>插件说 &quot;pull is not fast-forward&quot;</strong>：你本地有 commit 远端也有 commit。手动 <code>git rebase origin/master</code> 解决，别图省事让插件强 reset。</li>
+<li><strong>deploy 失败，error: gobog binary not found</strong>：意味着 <code>go build</code> 那步出错了，看 Actions 日志里 setup-go / go build 是不是 fail 了。多半是 gobog 仓库的 <code>go.mod</code> 里某个包失踪。</li>
+<li><strong>新文章在首页死活不出现</strong>：检查 front-matter 是不是 <code>draft: true</code> 没去掉，或者 create_time 写错（gobog 用它排序）。</li>
+</ul>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>
