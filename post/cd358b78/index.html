@@ -1,77 +1,97 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>《高质量的C_C++编程指南》读书笔记 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/cd358b78">
+<meta name="description" content="第一章 文件结构 1. 头文件由三部分构成： 1. 头文件开头处的版权和版本声明。 2. 预处理块。 3. 函数和类结构声明等。 2. 为了防止头文件被重复引用，应当用 `ifndef/define/endif` 结构产生预处理块。 3. 头文件中只存放「声明」而不存放「定义」。 4. 定义文件由三部分组成： 1. 定…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《高质量的C_C++编程指南》读书笔记">
+<meta property="og:url" content="https://sbrave.cn/post/cd358b78">
+<meta property="og:description" content="第一章 文件结构 1. 头文件由三部分构成： 1. 头文件开头处的版权和版本声明。 2. 预处理块。 3. 函数和类结构声明等。 2. 为了防止头文件被重复引用，应当用 `ifndef/define/endif` 结构产生预处理块。 3. 头文件中只存放「声明」而不存放「定义」。 4. 定义文件由三部分组成： 1. 定…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>《高质量的C_C++编程指南》读书笔记</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>《高质量的C_C++编程指南》读书笔记</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-05-19 00:50:41</span>
+        <span>· 8340 字</span>
+        <span>· 34 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>《高质量的C_C++编程指南》读书笔记</h2>
 <h3>第一章 文件结构</h3>
-
 <ol>
-<li><p>头文件由三部分构成：</p>
-
+<li>
+<p>头文件由三部分构成：</p>
 <ol>
 <li>头文件开头处的版权和版本声明。</li>
 <li>预处理块。</li>
 <li>函数和类结构声明等。</li>
-</ol></li>
-
-<li><p>为了防止头文件被重复引用，应当用 <code>ifndef/define/endif</code> 结构产生预处理块。</p></li>
-
-<li><p>头文件中只存放「声明」而不存放「定义」。</p></li>
-
-<li><p>定义文件由三部分组成：</p>
-
+</ol>
+</li>
+<li>
+<p>为了防止头文件被重复引用，应当用 <code>ifndef/define/endif</code> 结构产生预处理块。</p>
+</li>
+<li>
+<p>头文件中只存放「声明」而不存放「定义」。</p>
+</li>
+<li>
+<p>定义文件由三部分组成：</p>
 <ol>
 <li>定义文件开头处的版权和版本声明。</li>
 <li>对一些头文件的引用。</li>
-<li>程序的实现体（包括数据和代码）。
-<br />
-<br /></li>
-</ol></li>
+<li>程序的实现体（包括数据和代码）。</li>
 </ol>
-
+</li>
+</ol>
 <h3>第二章 程序的版式</h3>
-
 <ol>
 <li>在每个类声明之后、每个函数定义结束之后都要加空行。在一个函数体内，逻揖上密切相关的语句之间不加空行，其它地方应加空行分隔。</li>
 <li>尽可能在定义变量的同时初始化该变量（就近原则）。</li>
@@ -79,212 +99,283 @@
 <li>注释的位置应与被描述的代码相邻，可以放在代码的上方或右方，不可放在下方。</li>
 <li>定义类时应主张将 public 类型的函数写在前面，而将 private 类型的数据写在后面，即「以行为为中心」。</li>
 </ol>
-
 <h3>第三章 命名规则</h3>
-
 <ol>
-<li>标识符应当直观且可以拼读，可望文知意，不必进行「解码」。</li>
-<li>标识符的长度应当符合 min-length 和 max-information 原则。</li>
-<li>程序中不要出现仅靠大小写区分的相似的标识符。</li>
-<li>程序中不要出现标识符完全相同的局部变量和全局变量，尽管两者的作用域不同而不会发生语法错误，但会使人误解。</li>
-
-<li><p>简单 Windows 程序命名规则：</p>
-
+<li>
+<p>标识符应当直观且可以拼读，可望文知意，不必进行「解码」。</p>
+</li>
+<li>
+<p>标识符的长度应当符合 min-length 和 max-information 原则。</p>
+</li>
+<li>
+<p>程序中不要出现仅靠大小写区分的相似的标识符。</p>
+</li>
+<li>
+<p>程序中不要出现标识符完全相同的局部变量和全局变量，尽管两者的作用域不同而不会发生语法错误，但会使人误解。</p>
+</li>
+<li>
+<p>简单 Windows 程序命名规则：</p>
 <ol>
 <li>类名和函数名用大写字母开头的单词组合而成。</li>
 <li>变量和参数用小写字母开头的单词组合而成。</li>
 <li>常量全用大写的字母，用下划线分割单词。</li>
 <li>静态变量加前缀 <code>s_</code>（表示 static）。如果不得已需要全局变量，则使全局变量加前缀 <code>g_</code>（表示 global）。</li>
-<li>类的数据成员加前缀 <code>m_</code>（表示 member），这样可以避免数据成员与成员函数的参数同名。
-<br />
-<br /></li>
-</ol></li>
+<li>类的数据成员加前缀 <code>m_</code>（表示 member），这样可以避免数据成员与成员函数的参数同名。</li>
 </ol>
-
+</li>
+</ol>
 <h3>第四章 表达式和基本语句</h3>
-
 <ol>
-<li>一元运算符 <code>+ - *</code> 的优先级高于对应的二元运算符。</li>
-<li>如果代码行中的运算符比较多，用括号确定表达式的操作顺序，避免使用默认的优先级。</li>
-
-<li><p><code>if</code> 语句中各种类型变量与零值比较：</p>
-
+<li>
+<p>一元运算符 <code>+ - *</code> 的优先级高于对应的二元运算符。</p>
+</li>
+<li>
+<p>如果代码行中的运算符比较多，用括号确定表达式的操作顺序，避免使用默认的优先级。</p>
+</li>
+<li>
+<p><code>if</code> 语句中各种类型变量与零值比较：</p>
 <ol>
 <li><code>bool</code> 变量：不可将布尔变量直接与 <code>TRUE</code>、<code>FALSE</code> 或者 <code>1</code>、<code>0</code> 进行比较。（应为<code>if(flag)</code>，<code>if(!flag)</code>）。</li>
 <li>整型变量：应当将整型变量用 <code>==</code> 或 <code>!=</code> 直接与 <code>0</code> 比较。</li>
 <li>浮点变量：不可将浮点变量用 <code>==</code> 或 <code>!=</code> 与任何数字比较。（浮点数有精度限制，应为 <code>if((x&gt;=-EPSINON) &amp;&amp; (x&lt;=EPSINON))</code>，其中 <code>EPSINON</code> 是允许的误差（即精度））。</li>
 <li>指针变量：应当将指针变量用 <code>==</code> 或 <code>!=</code> 与 <code>NULL</code> 比较。</li>
-<li>为防止将 <code>if(p==NULL)</code> 写成 <code>if(p=NULL)</code>，可以将其写成 <code>if(NULL==p)</code>。</li>
-</ol></li>
-
-<li><p>在多重循环中，如果有可能，应当将最长的循环放在最内层，最短的循环放在最外层，以减少 CPU 跨切循环层的次数。</p></li>
-
-<li><p>如果循环体内存在逻辑判断，并且循环次数很大，宜将逻辑判断移到循环体的外面。（循环「流水线」作业）。</p></li>
-
-<li><p>不可在 <code>for</code> 循环体内修改循环变量，防止 <code>for</code> 循环失去控制。</p></li>
-
-<li><p>建议 <code>for</code> 语句的循环控制变量的取值采用「半开半闭区间」写法。</p></li>
-
-<li><p>每个 <code>case</code> 语句的结尾不要忘了加 <code>break</code>，否则将导致多个分支重叠（除非有意使多个分支重叠）。</p></li>
-
-<li><p>不要忘记最后那个 <code>default</code> 分支。即使程序真的不需要 <code>default</code> 处理，也应该保留语句 <code>default: break;</code> 这样做并非多此一举，而是为了防止别人误以为你忘了 <code>default</code> 处理。</p></li>
 </ol>
-
+</li>
+<li>
+<p>为防止将 <code>if(p==NULL)</code> 写成 <code>if(p=NULL)</code>，可以将其写成 <code>if(NULL==p)</code>。</p>
+</li>
+<li>
+<p>在多重循环中，如果有可能，应当将最长的循环放在最内层，最短的循环放在最外层，以减少 CPU 跨切循环层的次数。</p>
+</li>
+<li>
+<p>如果循环体内存在逻辑判断，并且循环次数很大，宜将逻辑判断移到循环体的外面。（循环「流水线」作业）。</p>
+</li>
+<li>
+<p>不可在 <code>for</code> 循环体内修改循环变量，防止 <code>for</code> 循环失去控制。</p>
+</li>
+<li>
+<p>建议 <code>for</code> 语句的循环控制变量的取值采用「半开半闭区间」写法。</p>
+</li>
+<li>
+<p>每个 <code>case</code> 语句的结尾不要忘了加 <code>break</code>，否则将导致多个分支重叠（除非有意使多个分支重叠）。</p>
+</li>
+<li>
+<p>不要忘记最后那个 <code>default</code> 分支。即使程序真的不需要 <code>default</code> 处理，也应该保留语句 <code>default: break;</code> 这样做并非多此一举，而是为了防止别人误以为你忘了 <code>default</code> 处理。</p>
+</li>
+</ol>
 <h3>第五章 常量</h3>
-
 <ol>
-<li><p>常量是一种标识符，它的值在运行期间恒定不变。C 语言用 <code>#define</code> 来定义常量（称为宏常量）。C++ 语言除了 <code>#define</code> 外还可以用 <code>const</code> 来定义常量（称为 const 常量）。</p></li>
-
-<li><p><code>const</code> 与 <code>#define</code> 的比较：</p>
-
+<li>
+<p>常量是一种标识符，它的值在运行期间恒定不变。C 语言用 <code>#define</code> 来定义常量（称为宏常量）。C++ 语言除了 <code>#define</code> 外还可以用 <code>const</code> 来定义常量（称为 const 常量）。</p>
+</li>
+<li>
+<p><code>const</code> 与 <code>#define</code> 的比较：</p>
 <ol>
-<li><code>const</code> 常量有数据类型，而宏常量没有数据类型。编译器可以对前者进行类型安全检查。而对后者只进行字符替换，没有类型安全检查，并且在字符替换可能会产生意料不到的错误（边际效应）。</li>
-
-<li><p>有些集成化的调试工具可以对 <code>const</code> 常量进行调试，但是不能对宏常量进行调试。</p></li>
-
-<li><p>在 C++ 程序中只使用 <code>const</code> 常量而不使用宏常量，即 const 常量完全取代宏常量。</p></li>
-</ol></li>
-
-<li><p>不能在类声明中初始化 <code>const</code> 数据成员。<code>const</code> 数据成员的初始化只能在类构造函数的初始化表中进行。</p></li>
-
-<li><p>怎样才能建立在整个类中都恒定的常量呢？别指望 <code>const</code> 数据成员了，应该用类中的枚举常量来实现（是不是只能定义为整型常量？！见下一条）</p></li>
+<li>
+<p><code>const</code> 常量有数据类型，而宏常量没有数据类型。编译器可以对前者进行类型安全检查。而对后者只进行字符替换，没有类型安全检查，并且在字符替换可能会产生意料不到的错误（边际效应）。</p>
+</li>
+<li>
+<p>有些集成化的调试工具可以对 <code>const</code> 常量进行调试，但是不能对宏常量进行调试。</p>
+</li>
+<li>
+<p>在 C++ 程序中只使用 <code>const</code> 常量而不使用宏常量，即 const 常量完全取代宏常量。</p>
+</li>
 </ol>
-
+</li>
+<li>
+<p>不能在类声明中初始化 <code>const</code> 数据成员。<code>const</code> 数据成员的初始化只能在类构造函数的初始化表中进行。</p>
+</li>
+<li>
+<p>怎样才能建立在整个类中都恒定的常量呢？别指望 <code>const</code> 数据成员了，应该用类中的枚举常量来实现（是不是只能定义为整型常量？！见下一条）</p>
+</li>
+</ol>
 <pre><code class="language-C++">   class A{
        enum { SIZE1 = 100, SIZE2 = 200}; // 枚举常量
        int array1[SIZE1];
        int array2[SIZE2];
    };
 </code></pre>
-
-<ol>
+<ol start="5">
 <li>枚举常量不会占用对象的存储空间，它们在编译时被全部求值。枚举常量的缺点是：它的隐含数据类型是整数，其最大值有限，且不能表示浮点数（如 <code>PI=3.14159</code>）。</li>
 </ol>
-
 <h3>第六章 函数设计</h3>
-
 <ol>
-<li>如果参数是指针，且仅作输入用，则应在类型前加 <code>const</code>，以防止该指针在函数体内被意外修改。</li>
-<li>如果输入参数以值传递的方式传递对象，则宜改用 <code>const &amp;</code> 方式来传递，这样可以省去临时对象的构造和析构过程，从而提高效率。</li>
-<li>尽量不要使用类型和数目不确定的参数。这种风格的函数在编译时丧失了严格的类型安全检查。C 标准库函数 <code>printf</code> 是采用不确定参数的典型代表，其原型为：<code>int printf(const chat *format[, argument]…);</code></li>
-<li>不要省略返回值的类型：
-
+<li>
+<p>如果参数是指针，且仅作输入用，则应在类型前加 <code>const</code>，以防止该指针在函数体内被意外修改。</p>
+</li>
+<li>
+<p>如果输入参数以值传递的方式传递对象，则宜改用 <code>const &amp;</code> 方式来传递，这样可以省去临时对象的构造和析构过程，从而提高效率。</p>
+</li>
+<li>
+<p>尽量不要使用类型和数目不确定的参数。这种风格的函数在编译时丧失了严格的类型安全检查。C 标准库函数 <code>printf</code> 是采用不确定参数的典型代表，其原型为：<code>int printf(const chat *format[, argument]…);</code></p>
+</li>
+<li>
+<p>不要省略返回值的类型：</p>
 <ol>
 <li>C 语言中，凡不加类型说明的函数，一律自动按整型处理。这样做不会有什么好处，却容易被误解为 <code>void</code> 类型。</li>
 <li>C++ 语言有很严格的类型安全检查，不允许上述情况发生。</li>
-</ol></li>
-<li>函数名字与返回值类型在语义上不可冲突。违反这条规则的典型代表是 C 标准库函数 <code>getchar</code>。</li>
-<li>不要将正常值和错误标志混在一起返回。正常值用输出参数获得，而错误标志用 <code>return</code> 语句返回。</li>
-<li>有时候函数原本不需要返回值，但为了增加灵活性如支持链式表达，可以附加返回值。例如字符串拷贝函数 <code>strcpy</code> 的原型：<code>char *strcpy(char *strDest， const char *strSrc);</code></li>
-<li>如果函数的返回值是一个对象，有些场合用「引用传递」替换「值传递」可以提高效率。而有些场合只能用「值传递」而不能用「引用传递」，否则会出错。</li>
-<li>在函数体的入口处，对参数的有效性进行检查。</li>
-
-<li><p>在函数体的出口处，对 <code>return</code> 语句的正确性和效率进行检查。注意事项如下：</p>
-
+</ol>
+</li>
+<li>
+<p>函数名字与返回值类型在语义上不可冲突。违反这条规则的典型代表是 C 标准库函数 <code>getchar</code>。</p>
+</li>
+<li>
+<p>不要将正常值和错误标志混在一起返回。正常值用输出参数获得，而错误标志用 <code>return</code> 语句返回。</p>
+</li>
+<li>
+<p>有时候函数原本不需要返回值，但为了增加灵活性如支持链式表达，可以附加返回值。例如字符串拷贝函数 <code>strcpy</code> 的原型：<code>char *strcpy(char *strDest， const char *strSrc);</code></p>
+</li>
+<li>
+<p>如果函数的返回值是一个对象，有些场合用「引用传递」替换「值传递」可以提高效率。而有些场合只能用「值传递」而不能用「引用传递」，否则会出错。</p>
+</li>
+<li>
+<p>在函数体的入口处，对参数的有效性进行检查。</p>
+</li>
+<li>
+<p>在函数体的出口处，对 <code>return</code> 语句的正确性和效率进行检查。注意事项如下：</p>
 <ol>
 <li><code>return</code> 语句不可返回指向「栈内存」的「指针」或者「引用」，因为该内存在函数体结束时被自动销毁。</li>
 <li>要搞清楚返回的究竟是「值」、「指针」还是「引用」。</li>
 <li>如果函数返回值是一个对象，要考虑 return 语句的效率。eg：<code>return String(s1 + s2);</code>这是临时对象的语法，表示「创建一个临时对象并返回它」。不要以为它与「先创建一个局部对象 temp 并返回它的结果」是等价的，如 <code>String temp(s1 + s2); return temp;</code>实质不然，上述代码将发生三件事。首先， <code>temp</code> 对象被创建，同时完成初始化；然后拷贝构造函数把 <code>temp</code> 拷贝到保存返回值的外部存储单元中；最后， <code>temp</code> 在函数结束时被销毁（调用析构函数）。然而「创建一个临时对象并返回它」的过程是不同的，编译器直接把临时对象创建并初始化在外部存储单元中，省去了拷贝和析构的化费，提高了效率。</li>
-</ol></li>
-
-<li><p>【建议 6-4-4】不仅要检查输入参数的有效性，还要检查通过其它途径进入函数体内的变量的有效性，例如全局变量、文件句柄等。</p></li>
-
-<li><p>断言 <code>assert</code> 是仅在 Debug 版本起作用的宏，它用于检查「不应该」发生的情况。为了不在程序的 Debug 版本和 Release 版本引起差别， assert 不应该产生任何副作用。所以 assert 不是函数，而是宏。</p></li>
-
-<li><p>【规则 6-5-1】使用断言捕捉不应该发生的非法情况。不要混淆非法情况与错误情况之间的区别，后者是必然存在的并且是一定要作出处理的。</p></li>
-
-<li><p>指针与引用：</p>
-
-<ol>
-<li>引用被创建的同时必须被初始化（指针则可以在任何时候被初始化）。</li>
-<li>不能有 NULL 引用，引用必须与合法的存储单元关联（指针则可以是 NULL）。</li>
-
-<li><p>一旦引用被初始化，就不能改变引用的关系（指针则可以随时改变所指的对象）。</p></li>
-
-<li><p>引用的主要功能是传递函数的参数和返回值。 C++ 语言中，函数的参数和返回值的传递方式有三种：值传递、指针传递和引用传递。</p></li>
-</ol></li>
-
-<li><p>「引用传递」的性质象「指针传递」，而书写方式象「值传递」。</p></li>
 </ol>
-
-<h3>第七章 内存管理</h3>
-
+</li>
+<li>
+<p>【建议 6-4-4】不仅要检查输入参数的有效性，还要检查通过其它途径进入函数体内的变量的有效性，例如全局变量、文件句柄等。</p>
+</li>
+<li>
+<p>断言 <code>assert</code> 是仅在 Debug 版本起作用的宏，它用于检查「不应该」发生的情况。为了不在程序的 Debug 版本和 Release 版本引起差别， assert 不应该产生任何副作用。所以 assert 不是函数，而是宏。</p>
+</li>
+<li>
+<p>【规则 6-5-1】使用断言捕捉不应该发生的非法情况。不要混淆非法情况与错误情况之间的区别，后者是必然存在的并且是一定要作出处理的。</p>
+</li>
+<li>
+<p>指针与引用：</p>
 <ol>
-<li><p>内存分配方式有三种：</p>
-
+<li>
+<p>引用被创建的同时必须被初始化（指针则可以在任何时候被初始化）。</p>
+</li>
+<li>
+<p>不能有 NULL 引用，引用必须与合法的存储单元关联（指针则可以是 NULL）。</p>
+</li>
+<li>
+<p>一旦引用被初始化，就不能改变引用的关系（指针则可以随时改变所指的对象）。</p>
+</li>
+<li>
+<p>引用的主要功能是传递函数的参数和返回值。 C++ 语言中，函数的参数和返回值的传递方式有三种：值传递、指针传递和引用传递。</p>
+</li>
+</ol>
+</li>
+<li>
+<p>「引用传递」的性质象「指针传递」，而书写方式象「值传递」。</p>
+</li>
+</ol>
+<h3>第七章 内存管理</h3>
+<ol>
+<li>
+<p>内存分配方式有三种：</p>
 <ol>
 <li>从静态存储区域分配。内存在程序编译的时候就已经分配好，这块内存在程序的整个运行期间都存在。例如全局变量， static 变量。</li>
 <li>在栈上创建。在执行函数时，函数内局部变量的存储单元都可以在栈上创建，函数执行结束时这些存储单元自动被释放。栈内存分配运算内置于处理器的指令集中，效率很高，但是分配的内存容量有限。</li>
 <li>从堆上分配，亦称动态内存分配。程序在运行的时候用 <code>malloc</code> 或 <code>new</code> 申请任意多少的内存，程序员自己负责在何时用 <code>free</code> 或 <code>delete</code> 释放内存。动态内存的生存期由我们决定，使用非常灵活，但问题也最多。</li>
-</ol></li>
-
-<li><p>常见的内存错误及其对策如下：</p>
-
+</ol>
+</li>
+<li>
+<p>常见的内存错误及其对策如下：</p>
 <ol>
-<li>内存分配未成功，却使用了它。</li>
-<li>内存分配虽然成功，但是尚未初始化就引用它。</li>
-<li>内存分配成功并且已经初始化，但操作越过了内存的边界。</li>
-<li>忘记了释放内存，造成内存泄露。</li>
-
-<li><p>释放了内存却继续使用它。有三种情况：</p>
-
+<li>
+<p>内存分配未成功，却使用了它。</p>
+</li>
+<li>
+<p>内存分配虽然成功，但是尚未初始化就引用它。</p>
+</li>
+<li>
+<p>内存分配成功并且已经初始化，但操作越过了内存的边界。</p>
+</li>
+<li>
+<p>忘记了释放内存，造成内存泄露。</p>
+</li>
+<li>
+<p>释放了内存却继续使用它。有三种情况：</p>
+</li>
+<li>
+<p>程序中的对象调用关系过于复杂，实在难以搞清楚某个对象究竟是否已经释放了内存，此时应该重新设计数据结构，从根本上解决对象管理的混乱局面。</p>
+</li>
+<li>
+<p>函数的 <code>return</code> 语句写错了，注意不要返回指向「栈内存」的「指针」或者「引用」，因为该内存在函数体结束时被自动销毁。</p>
+</li>
+<li>
+<p>使用 <code>free</code> 或 <code>delete</code> 释放了内存后，没有将指针设置为 <code>NULL</code>。导致产生「野指针」（空悬指针)。</p>
+</li>
+</ol>
+</li>
+<li>
+<p>【规则 7-2-1】用 <code>malloc</code> 或 <code>new</code> 申请内存之后，应该立即检查指针值是否为 <code>NULL</code>。防止使用指针值为 <code>NULL</code> 的内存。</p>
+</li>
+<li>
+<p>【规则 7-2-2】不要忘记为数组和动态内存赋初值。防止将未被初始化的内存作为右值使用。</p>
+</li>
+<li>
+<p>【规则 7-2-3】避免数组或指针的下标越界，特别要当心发生「多 1」或者「少 1」操作。</p>
+</li>
+<li>
+<p>【规则 7-2-4】动态内存的申请与释放必须配对，防止内存泄漏。</p>
+</li>
+<li>
+<p>【规则 7-2-5】用 <code>free</code> 或 <code>delete</code> 释放了内存之后，立即将指针设置为 <code>NULL</code>，防止产生「野指针」。</p>
+</li>
+<li>
+<p>指针与数组：</p>
 <ol>
-<li>程序中的对象调用关系过于复杂，实在难以搞清楚某个对象究竟是否已经释放了内存，此时应该重新设计数据结构，从根本上解决对象管理的混乱局面。</li>
-<li>函数的 <code>return</code> 语句写错了，注意不要返回指向「栈内存」的「指针」或者「引用」，因为该内存在函数体结束时被自动销毁。</li>
-<li>使用 <code>free</code> 或 <code>delete</code> 释放了内存后，没有将指针设置为 <code>NULL</code>。导致产生「野指针」（空悬指针)。</li>
-</ol></li>
-</ol></li>
-
-<li><p>【规则 7-2-1】用 <code>malloc</code> 或 <code>new</code> 申请内存之后，应该立即检查指针值是否为 <code>NULL</code>。防止使用指针值为 <code>NULL</code> 的内存。</p></li>
-
-<li><p>【规则 7-2-2】不要忘记为数组和动态内存赋初值。防止将未被初始化的内存作为右值使用。</p></li>
-
-<li><p>【规则 7-2-3】避免数组或指针的下标越界，特别要当心发生「多 1」或者「少 1」操作。</p></li>
-
-<li><p>【规则 7-2-4】动态内存的申请与释放必须配对，防止内存泄漏。</p></li>
-
-<li><p>【规则 7-2-5】用 <code>free</code> 或 <code>delete</code> 释放了内存之后，立即将指针设置为 <code>NULL</code>，防止产生「野指针」。</p></li>
-
-<li><p>指针与数组：</p>
-
+<li>
+<p>数组要么在静态存储区被创建（如全局数组），要么在栈上被创建。数组名对应着（而不是指向）一块内存，其地址与容量在生命期内保持不变，只有数组的内容可以改变。</p>
+</li>
+<li>
+<p>指针可以随时指向任意类型的内存块，它的特征是「可变」，所以我们常用指针来操作动态内存。指针远比数组灵活，但也更危险。</p>
+</li>
+<li>
+<p>不能对数组名进行直接复制与比较。应该用标准库函数 <code>strcpy</code> 进行复制，用标准库函数 <code>strcmp</code> 进行比较。</p>
+</li>
+<li>
+<p>用运算符 <code>sizeof</code> 可以计算出数组的容量（字节数）。但是 <code>sizeof(指针)</code>的值却是  4。C++/C 语言没有办法知道指针所指的内存容量，除非在申请内存时记住它。</p>
+</li>
+<li>
+<p>当数组作为函数的参数进行传递时，该数组自动退化为同类型的指针。</p>
+</li>
+</ol>
+</li>
+<li>
+<p>如果函数的参数是一个指针，不要指望用该指针去申请动态内存。如果非得要用指针参数去申请内存， 那么应该改用 「指向指针的指针」，或者用函数返回值来传递动态内存。</p>
+</li>
+<li>
+<p><code>free</code> 和 <code>delete</code> 只是把指针所指的内存给释放掉，但并没有把指针本身干掉。指针的地址仍然不变（非 <code>NULL</code>），只是该地址对应的内存是垃圾。此时如果不将指针设为 <code>NULL</code>，那么 <code>if(NULL==p)</code> 语句将不起作用。</p>
+</li>
+<li>
+<p>我们发现指针有一些「似是而非」的特征：</p>
 <ol>
-<li>数组要么在静态存储区被创建（如全局数组），要么在栈上被创建。数组名对应着（而不是指向）一块内存，其地址与容量在生命期内保持不变，只有数组的内容可以改变。</li>
-
-<li><p>指针可以随时指向任意类型的内存块，它的特征是「可变」，所以我们常用指针来操作动态内存。指针远比数组灵活，但也更危险。</p></li>
-
-<li><p>不能对数组名进行直接复制与比较。应该用标准库函数 <code>strcpy</code> 进行复制，用标准库函数 <code>strcmp</code> 进行比较。</p></li>
-
-<li><p>用运算符 <code>sizeof</code> 可以计算出数组的容量（字节数）。但是 <code>sizeof(指针)</code>的值却是  4。C++/C 语言没有办法知道指针所指的内存容量，除非在申请内存时记住它。</p></li>
-
-<li><p>当数组作为函数的参数进行传递时，该数组自动退化为同类型的指针。</p></li>
-</ol></li>
-
-<li><p>如果函数的参数是一个指针，不要指望用该指针去申请动态内存。如果非得要用指针参数去申请内存， 那么应该改用 「指向指针的指针」，或者用函数返回值来传递动态内存。</p></li>
-
-<li><p><code>free</code> 和 <code>delete</code> 只是把指针所指的内存给释放掉，但并没有把指针本身干掉。指针的地址仍然不变（非 <code>NULL</code>），只是该地址对应的内存是垃圾。此时如果不将指针设为 <code>NULL</code>，那么 <code>if(NULL==p)</code> 语句将不起作用。</p></li>
-
-<li><p>我们发现指针有一些「似是而非」的特征：</p>
-
-<ol>
-<li>指针消亡了，并不表示它所指的内存会被自动释放。</li>
-
-<li><p>内存被释放了，并不表示指针会消亡或者成了 <code>NULL</code> 指针。</p></li>
-
-<li><p>「野指针」不是 <code>NULL</code> 指针，是指向「垃圾」内存的指针。成因主要有几种：</p>
-
+<li>
+<p>指针消亡了，并不表示它所指的内存会被自动释放。</p>
+</li>
+<li>
+<p>内存被释放了，并不表示指针会消亡或者成了 <code>NULL</code> 指针。</p>
+</li>
+<li>
+<p>「野指针」不是 <code>NULL</code> 指针，是指向「垃圾」内存的指针。成因主要有几种：</p>
 <ol>
 <li>指针变量没有被初始化。</li>
 <li>指针 <code>p</code> 被 <code>free</code> 或者 <code>delete</code> 之后，没有置为 <code>NULL</code>。</li>
 <li>指针操作超越了变量的作用范围。</li>
-</ol></li>
-</ol></li>
-
-<li><p><code>malloc/free</code> 和 <code>new/delete</code>：前者是库函数，对于自定义的对象，不能自动调用其构造和析构函数；后者是关键字，可以调用构造函数和析构函数。对于内部数据类型两者是等价的。</p></li>
-
-<li><p>如果用 <code>free</code> 释放「 <code>new</code> 创建的动态对象」，那么该对象因无法执行析构函数而可能导致程序出错。 如果用 <code>delete</code> 释放「 <code>malloc</code> 申请的动态内存」，理论上讲程序不会出错，但是该程序的可读性很差。</p></li>
-
-<li><p>malloc、free、new、delete：</p>
-
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p><code>malloc/free</code> 和 <code>new/delete</code>：前者是库函数，对于自定义的对象，不能自动调用其构造和析构函数；后者是关键字，可以调用构造函数和析构函数。对于内部数据类型两者是等价的。</p>
+</li>
+<li>
+<p>如果用 <code>free</code> 释放「 <code>new</code> 创建的动态对象」，那么该对象因无法执行析构函数而可能导致程序出错。 如果用 <code>delete</code> 释放「 <code>malloc</code> 申请的动态内存」，理论上讲程序不会出错，但是该程序的可读性很差。</p>
+</li>
+<li>
+<p>malloc、free、new、delete：</p>
 <ol>
 <li><code>malloc</code> 返回值的类型是 <code>void *</code>，所以在调用 <code>malloc</code> 时要显式地进行类型转换，将 <code>void *</code> 转换成所需要的指针类型。</li>
 <li><code>malloc</code> 函数本身并不识别要申请的内存是什么类型，它只关心内存的总字节数。</li>
@@ -292,205 +383,264 @@
 <li><code>new</code> 内置了 <code>sizeof</code>、类型转换和类型安全检查功能。对于非内部数据类型的对象而言， <code>new</code> 在创建动态对象的同时完成了初始化工作。如果对象有多个构造函数，那么 <code>new</code> 的语句也可以有多种形式。</li>
 <li>如果用 <code>new</code> 创建对象数组，那么只能使用对象的无参数构造函数。eg：<code>Obj *objects = new Obj[100]; // 创建 100 个动态对象</code> 不能写成 <code>Obj *objects = new Obj[100](1);// 创建 100 个动态对象的同时赋初值 1</code></li>
 <li>在用 <code>delete</code> 释放对象数组时，留意不要丢了符号 ' []'。</li>
-</ol></li>
 </ol>
-
+</li>
+</ol>
 <p>​</p>
-
 <h3>第八章 C++函数的高级特性</h3>
-
 <ol>
-<li>对比于 C 语言的函数， C++ 增加了重载 （overloaded）、内联（ inline）、const 和 virtual 四种新机制。其中重载和内联机制既可用于全局函数也可用于类的成员函数， const 与 virtual 机制仅用于类的成员函数。</li>
-<li>如果 C++程序要调用已经被编译后的 C 函数，C++ 提供了一个 C 连接交换指定符号 <code>extern C</code> 来解决这个问题。</li>
-<li>注意并不是两个函数的名字相同就能构成重载。全局函数和类的成员函数同名不算重载，因为函数的作用域不同。全局函数被调用时应加 <code>::</code> 标志。</li>
-
-<li><p>成员函数的重载、覆盖与隐藏：</p>
-
+<li>
+<p>对比于 C 语言的函数， C++ 增加了重载 （overloaded）、内联（ inline）、const 和 virtual 四种新机制。其中重载和内联机制既可用于全局函数也可用于类的成员函数， const 与 virtual 机制仅用于类的成员函数。</p>
+</li>
+<li>
+<p>如果 C++程序要调用已经被编译后的 C 函数，C++ 提供了一个 C 连接交换指定符号 <code>extern C</code> 来解决这个问题。</p>
+</li>
+<li>
+<p>注意并不是两个函数的名字相同就能构成重载。全局函数和类的成员函数同名不算重载，因为函数的作用域不同。全局函数被调用时应加 <code> ::</code> 标志。</p>
+</li>
+<li>
+<p>成员函数的重载、覆盖与隐藏：</p>
 <ol>
-<li><p>成员函数被重载的特征:</p>
-
+<li>
+<p>成员函数被重载的特征:</p>
 <ol>
 <li>相同的范围（在同一个类中）；</li>
 <li>函数名字相同；</li>
 <li>参数不同；</li>
 <li><code>virtual</code> 关键字可有可无。</li>
-</ol></li>
-
-<li><p>覆盖是指派生类函数覆盖基类函数，特征是：</p>
-
+</ol>
+</li>
+<li>
+<p>覆盖是指派生类函数覆盖基类函数，特征是：</p>
 <ol>
 <li>不同的范围（分别位于派生类与基类）；</li>
 <li>函数名字相同；</li>
 <li>参数相同；</li>
 <li>基类函数必须有 <code>virtual</code> 关键字。</li>
-</ol></li>
-
-<li><p>隐藏是指派生类的函数屏蔽了与其同名的基类函数，规则如下：</p>
-
+</ol>
+</li>
+<li>
+<p>隐藏是指派生类的函数屏蔽了与其同名的基类函数，规则如下：</p>
 <ol>
 <li>如果派生类的函数与基类的函数同名，但是参数不同。此时，不论有无 <code>virtual</code> 关键字，基类的函数将被隐藏（注意别与重载混淆）。</li>
 <li>如果派生类的函数与基类的函数同名， 并且参数也相同， 但是基类函数没有 <code>virtual</code> 关键字。此时，基类的函数被隐藏（注意别与覆盖混淆）。</li>
-</ol></li>
-
-<li><p>【规则 8-3-1】参数缺省值只能出现在函数的声明中，而不能出现在定义体中。</p></li>
-</ol></li>
-
-<li><p>【规则 8-3-2】如果函数有多个参数，参数只能从后向前挨个儿缺省，否则将导致函数调用语句怪模怪样。</p></li>
-
-<li><p>运算符与普通函数在调用时的不同之处是：对于普通函数，参数出现在圆括号内；而对于运算符，参数出现在其左、右侧。</p></li>
-
-<li><p>如果运算符被重载为全局函数，那么只有一个参数的运算符叫做一元运算符，有两个参数的运算符叫做二元运算符。
-如果运算符被重载为类的成员函数，那么一元运算符没有参数，二元运算符只有一个右侧参数，因为对象自己成了左侧参数。</p></li>
 </ol>
-
-<p><!-- ![](file:///D:/%E4%B8%BA%E7%9F%A5%E7%AC%94%E8%AE%B0/temp/cecbaa3e-76e0-4cee-8d50-f7c3b5d036dc_128_files/42865b7d-8a88-452e-93c3-ec1121faae12.png) -->
-9. 在 C++ 运算符集合中，有一些运算符是不允许被重载的。这种限制是出于安全方面的考虑，可防止错误和混乱。（<code>sizeof</code>、<code>::</code>、<code>.</code>、<code>.*</code> 、 <code>?:</code> 、<code>typeid</code> 等等）</p>
-
-<ol>
-<li>不能改变 C++ 内部数据类型（如 <code>int</code>，<code>float</code> 等）的运算符。</li>
-<li>不能重载 <code>.</code>，因为 <code>.</code> 在类中对任何成员都有意义，已经成为标准用法。</li>
-<li>不能重载目前 C++ 运算符集合中没有的符号，如 <code>#</code>、<code>@</code>、<code>$</code> 等。原因有两点，一是难以理解，二是难以确定优先级。</li>
-
-<li><p>对已经存在的运算符进行重载时，不能改变优先级规则，否则将引起混乱。</p></li>
-
-<li><p>在 C 程序中，可以用宏代码提高执行效率。宏代码本身不是函数，但使用起来象函数。预处理器用复制宏代码的方式代替函数调用， 省去了参数压栈、生成汇编语言的 <code>CALL</code> 调用、返回参数、执行 <code>return</code> 等过程，从而提高了速度。使用宏代码最大的缺点是容易出错，预处理器在复制宏代码时常常产生意想不到的边际效应。使用宏代码还有另一种缺点：无法操作类的私有数据成员。</p></li>
-
-<li><p>对于任何内联函数，编译器在符号表里放入函数的声明（包括名字、参数类型、返回值类型）。如果编译器没有发现内联函数存在错误，那么该函数的代码也被放入符号表里。在调用一个内联函数时，编译器首先检查调用是否正确（进行类型安全检查，或者进行自动类型转换，当然对所有的函数都一样）。如果正确，内联函数的代码就会直接替换函数调用，于是省去了函数调用的开销。</p></li>
-
-<li><p>所以在 C++ 程序中，应该用内联函数取代所有宏代码，<code>assert</code> 恐怕是唯一的例外。 <code>assert</code> 是仅在 Debug 版本起作用的宏，它用于检查「不应该」发生的情况。为了不在程序的 Debug 版本和 Release 版本引起差别， <code>assert</code> 不应该产生任何副作用。 如果 <code>assert</code> 是函数， 由于函数调用会引起内存、 代码的变动， 那么将导致 Debug 版本与 Release 版本存在差异。 所以 <code>assert</code> 不是函数， 而是宏。</p></li>
-
-<li><p>关键字 <code>inline</code> 必须与函数定义体放在一起才能使函数成为内联，仅将 <code>inline</code> 放在函数声明前面不起任何作用。所以说， <code>inline</code> 是一种「用于实现的关键字」，而不是一种「用于声明的关键字」。</p></li>
-
-<li><p>定义在类声明之中的成员函数将自动地成为内联函数。</p></li>
-
-<li><p>以下情况不宜使用内联：</p>
-
+</li>
+</ol>
+</li>
+<li>
+<p>【规则 8-3-1】参数缺省值只能出现在函数的声明中，而不能出现在定义体中。</p>
+</li>
+<li>
+<p>【规则 8-3-2】如果函数有多个参数，参数只能从后向前挨个儿缺省，否则将导致函数调用语句怪模怪样。</p>
+</li>
+<li>
+<p>运算符与普通函数在调用时的不同之处是：对于普通函数，参数出现在圆括号内；而对于运算符，参数出现在其左、右侧。</p>
+</li>
+<li>
+<p>如果运算符被重载为全局函数，那么只有一个参数的运算符叫做一元运算符，有两个参数的运算符叫做二元运算符。
+如果运算符被重载为类的成员函数，那么一元运算符没有参数，二元运算符只有一个右侧参数，因为对象自己成了左侧参数。</p>
+</li>
+</ol>
+  <!-- ![](file:///D:/%E4%B8%BA%E7%9F%A5%E7%AC%94%E8%AE%B0/temp/cecbaa3e-76e0-4cee-8d50-f7c3b5d036dc_128_files/42865b7d-8a88-452e-93c3-ec1121faae12.png) -->
+<ol start="9">
+<li>
+<p>在 C++ 运算符集合中，有一些运算符是不允许被重载的。这种限制是出于安全方面的考虑，可防止错误和混乱。（<code>sizeof</code>、<code>::</code>、<code>.</code>、<code>.*</code> 、 <code>?:</code> 、<code> typeid</code> 等等）</p>
+</li>
+<li>
+<p>不能改变 C++ 内部数据类型（如 <code>int</code>，<code>float</code> 等）的运算符。</p>
+</li>
+<li>
+<p>不能重载 <code>.</code>，因为 <code>.</code> 在类中对任何成员都有意义，已经成为标准用法。</p>
+</li>
+<li>
+<p>不能重载目前 C++ 运算符集合中没有的符号，如 <code>#</code>、<code>@</code>、<code>$</code> 等。原因有两点，一是难以理解，二是难以确定优先级。</p>
+</li>
+<li>
+<p>对已经存在的运算符进行重载时，不能改变优先级规则，否则将引起混乱。</p>
+</li>
+<li>
+<p>在 C 程序中，可以用宏代码提高执行效率。宏代码本身不是函数，但使用起来象函数。预处理器用复制宏代码的方式代替函数调用， 省去了参数压栈、生成汇编语言的 <code>CALL</code> 调用、返回参数、执行 <code>return</code> 等过程，从而提高了速度。使用宏代码最大的缺点是容易出错，预处理器在复制宏代码时常常产生意想不到的边际效应。使用宏代码还有另一种缺点：无法操作类的私有数据成员。</p>
+</li>
+<li>
+<p>对于任何内联函数，编译器在符号表里放入函数的声明（包括名字、参数类型、返回值类型）。如果编译器没有发现内联函数存在错误，那么该函数的代码也被放入符号表里。在调用一个内联函数时，编译器首先检查调用是否正确（进行类型安全检查，或者进行自动类型转换，当然对所有的函数都一样）。如果正确，内联函数的代码就会直接替换函数调用，于是省去了函数调用的开销。</p>
+</li>
+<li>
+<p>所以在 C++ 程序中，应该用内联函数取代所有宏代码，<code>assert</code> 恐怕是唯一的例外。 <code>assert</code> 是仅在 Debug 版本起作用的宏，它用于检查「不应该」发生的情况。为了不在程序的 Debug 版本和 Release 版本引起差别， <code>assert</code> 不应该产生任何副作用。 如果 <code>assert</code> 是函数， 由于函数调用会引起内存、 代码的变动， 那么将导致 Debug 版本与 Release 版本存在差异。 所以 <code>assert</code> 不是函数， 而是宏。</p>
+</li>
+<li>
+<p>关键字 <code>inline</code> 必须与函数定义体放在一起才能使函数成为内联，仅将 <code>inline</code> 放在函数声明前面不起任何作用。所以说， <code>inline</code> 是一种「用于实现的关键字」，而不是一种「用于声明的关键字」。</p>
+</li>
+<li>
+<p>定义在类声明之中的成员函数将自动地成为内联函数。</p>
+</li>
+<li>
+<p>以下情况不宜使用内联：</p>
 <ol>
 <li>如果函数体内的代码比较长，使用内联将导致内存消耗代价较高。</li>
 <li>如果函数体内出现循环，那么执行函数体内代码的时间要比函数调用的开销大。</li>
 <li>类的构造函数和析构函数容易让人误解成使用内联更有效。要当心构造函数和析构函数可能会隐藏一些行为，如「偷偷地」执行了基类或成员对象的构造函数和析构函数。所以不要随便地将构造函数和析构函数的定义体放在类声明中。</li>
-</ol></li>
 </ol>
-
+</li>
+</ol>
 <p>​</p>
-
 <h3>第九章 类的构造函数、析构函数与赋值函数</h3>
-
 <ol>
-<li>每个类只有一个析构函数和一个赋值函数，但可以有多个构造函数（包含一个拷贝构造函数，其它的称为普通构造函数）。</li>
-
-<li><p>既然能自动生成函数，为什么还要程序员编写？原因如下：</p>
-
+<li>
+<p>每个类只有一个析构函数和一个赋值函数，但可以有多个构造函数（包含一个拷贝构造函数，其它的称为普通构造函数）。</p>
+</li>
+<li>
+<p>既然能自动生成函数，为什么还要程序员编写？原因如下：</p>
 <ol>
 <li>如果使用「缺省的无参数构造函数」和「缺省的析构函数」，等于放弃了自主「初始化」和「清除」的机会， C++ 发明人 Stroustrup 的好心好意白费了。</li>
 <li>「缺省的拷贝构造函数」和「缺省的赋值函数」均采用「位拷贝」而非「值拷贝」的方式来实现，倘若类中含有指针变量，这两个函数注定将出错。</li>
-</ol></li>
-
-<li><p>构造函数有个特殊的初始化方式叫「初始化表达式表」（简称初始化表）。初始化表位于函数参数表之后，却在函数体 {} 之前。这说明该表里的初始化工作发生在函数体内的任何代码被执行之前。</p></li>
-
-<li><p>构造函数初始化表的使用规则：</p>
-
+</ol>
+</li>
+<li>
+<p>构造函数有个特殊的初始化方式叫「初始化表达式表」（简称初始化表）。初始化表位于函数参数表之后，却在函数体 {} 之前。这说明该表里的初始化工作发生在函数体内的任何代码被执行之前。</p>
+</li>
+<li>
+<p>构造函数初始化表的使用规则：</p>
 <ol>
-<li>如果类存在继承关系，派生类必须在其初始化表里调用基类的构造函数。</li>
-<li>类的 <code>const</code> 常量只能在初始化表里被初始化，因为它不能在函数体内用赋值的方式来初始化。</li>
-
-<li><p>类的数据成员的初始化可以采用初始化表或函数体内赋值两种方式，这两种方式的效率不完全相同。</p></li>
-
-<li><p>非内部数据类型的成员对象应当采用第一种方式初始化，以获取更高的效率。（第二种方式会先创建其对象，调用无参构造函数，再调用其赋值函数）。</p></li>
-
-<li><p>对于内部数据类型的数据成员而言，两种初始化方式的效率几乎没有区别，但后者的程序版式似乎更清晰些。</p></li>
-</ol></li>
-
-<li><p>构造从类层次的最根处开始，在每一层中，首先调用基类的构造函数，然后调用成员对象的构造函数。析构则严格按照与构造相反的次序执行，该次序是唯一的，否则编译器将无法自动执行析构过程。成员对象初始化的次序完全不受它们在初始化表中次序的影响，只由成员对象在类中声明的次序决定。</p></li>
-
-<li><p>缺省的拷贝构造函数以「位拷贝」方式执行，以 string 类为例，将造成三个错误：</p>
-
+<li>
+<p>如果类存在继承关系，派生类必须在其初始化表里调用基类的构造函数。</p>
+</li>
+<li>
+<p>类的 <code>const</code> 常量只能在初始化表里被初始化，因为它不能在函数体内用赋值的方式来初始化。</p>
+</li>
+<li>
+<p>类的数据成员的初始化可以采用初始化表或函数体内赋值两种方式，这两种方式的效率不完全相同。</p>
+</li>
+<li>
+<p>非内部数据类型的成员对象应当采用第一种方式初始化，以获取更高的效率。（第二种方式会先创建其对象，调用无参构造函数，再调用其赋值函数）。</p>
+</li>
+<li>
+<p>对于内部数据类型的数据成员而言，两种初始化方式的效率几乎没有区别，但后者的程序版式似乎更清晰些。</p>
+</li>
+</ol>
+</li>
+<li>
+<p>构造从类层次的最根处开始，在每一层中，首先调用基类的构造函数，然后调用成员对象的构造函数。析构则严格按照与构造相反的次序执行，该次序是唯一的，否则编译器将无法自动执行析构过程。成员对象初始化的次序完全不受它们在初始化表中次序的影响，只由成员对象在类中声明的次序决定。</p>
+</li>
+<li>
+<p>缺省的拷贝构造函数以「位拷贝」方式执行，以 string 类为例，将造成三个错误：</p>
 <ol>
 <li>一是 <code>b.m_data</code> 原有的内存没被释放，造成内存泄露；</li>
-<li>二是 <code>b.m_data</code> 和 <code>a.m_data</code> 指向同一块内存， <code>a</code> 或 <code>b</code>任何一方变动都会影响另一方；</li>
+<li>二是 <code>b.m_data</code> 和 <code>a.m_data</code> 指向同一块内存， <code>a</code> 或 <code>b </code>任何一方变动都会影响另一方；</li>
 <li>三是在对象被析构时， <code>m_data</code> 被释放了两次。</li>
-</ol></li>
-
-<li><p>拷贝构造函数和赋值函数非常容易混淆，常导致错写、错用。拷贝构造函数是在对象被创建时调用的，而赋值函数只能被已经存在了的对象调用。</p></li>
-
-<li><p>类  string  拷贝构造函数与普通构造函数的区别是：在函数入口处无需与 <code>NULL</code> 进行比较，这是因为「引用」不可能是 <code>NULL</code>，而「指针」可以为 <code>NULL</code>。</p></li>
-
-<li><p>string 类拷贝构造函数四部曲：</p>
-
+</ol>
+</li>
+<li>
+<p>拷贝构造函数和赋值函数非常容易混淆，常导致错写、错用。拷贝构造函数是在对象被创建时调用的，而赋值函数只能被已经存在了的对象调用。</p>
+</li>
+<li>
+<p>类  string  拷贝构造函数与普通构造函数的区别是：在函数入口处无需与 <code>NULL</code> 进行比较，这是因为「引用」不可能是 <code>NULL</code>，而「指针」可以为 <code>NULL</code>。</p>
+</li>
+<li>
+<p>string 类拷贝构造函数四部曲：</p>
 <ol>
 <li>检查自赋值；</li>
 <li>释放原有空间；</li>
 <li>重新分配空间并拷贝；函数 <code>strlen</code> 返回的是有效字符串长度，不包含结束符 <code>\0</code>。函数 <code>strcpy</code> 则连 <code>\0</code> 一起复制。</li>
 <li>返回本对象的引用。目的是为了实现象 <code>a = b = c</code> 这样的链式表达。注意不要将 <code>return *this;</code> 错写成 <code>return this;</code> 。</li>
-</ol></li>
-
-<li><p>偷懒的办法处理拷贝构造函数与赋值函数：只需将拷贝构造函数和赋值函数声明为私有函数，不用编写代码。</p></li>
-
-<li><p>基类的构造函数、析构函数、赋值函数都不能被派生类继承。如果类之间存在继承关系，在编写上述基本函数时应注意以下事项：</p>
-
+</ol>
+</li>
+<li>
+<p>偷懒的办法处理拷贝构造函数与赋值函数：只需将拷贝构造函数和赋值函数声明为私有函数，不用编写代码。</p>
+</li>
+<li>
+<p>基类的构造函数、析构函数、赋值函数都不能被派生类继承。如果类之间存在继承关系，在编写上述基本函数时应注意以下事项：</p>
 <ol>
 <li>派生类的构造函数应在其初始化表里调用基类的构造函数。</li>
 <li>基类与派生类的析构函数应该为虚（即加 <code>virtual</code> 关键字）。如果析构函数不为虚，将不会调用派生类的析构函数。</li>
 <li>在编写派生类的赋值函数时，注意不要忘记对基类的数据成员重新赋值。即调用基类的赋值函数。（因为不能直接操作基类的私有成员）</li>
-</ol></li>
 </ol>
-
+</li>
+</ol>
 <p>​</p>
-
 <h3>第十章 类的继承与组合</h3>
-
 <ol>
 <li>继承：若在逻辑上 B 是 A 的「一种」，并且 A 的所有功能和属性对 B 而言都有意义，则允许 B 继承 A 的功能和属性。</li>
 <li>组合：若在逻辑上 A 是 B 的「一部分」（ a part of），则不允许 B 从 A 派生，而是要用 A 和其它东西组合出 B。</li>
 </ol>
-
 <h3>第十一章 其他编程经验</h3>
-
 <ol>
-<li><p>使用 <code>const</code> 提高函数的健壮性：<code>const</code> 不止能定义 <code>const</code> 常量，更大的魅力是它可以修饰函数的参数、返回值，甚至函数的定义体。</p>
-
+<li>
+<p>使用 <code>const</code> 提高函数的健壮性：<code>const</code> 不止能定义 <code>const</code> 常量，更大的魅力是它可以修饰函数的参数、返回值，甚至函数的定义体。</p>
+</li>
+<li>
+<p><code>const</code> 修饰函数参数：</p>
 <ol>
-<li><p><code>const</code> 修饰函数参数：</p>
-
-<ol>
-<li>如果参数作输出用，不论它是什么数据类型，也不论它采用「指针传递」还是「引用传递」，都不能加 <code>const</code> 修饰，否则该参数将失去输出功能。</li>
-
-<li><p><code>const</code> 只能修饰输入参数：</p>
-
+<li>
+<p>如果参数作输出用，不论它是什么数据类型，也不论它采用「指针传递」还是「引用传递」，都不能加 <code>const</code> 修饰，否则该参数将失去输出功能。</p>
+</li>
+<li>
+<p><code>const</code> 只能修饰输入参数：</p>
 <ol>
 <li>如果输入参数采用「指针传递」，那么加 <code>const</code> 修饰可以防止意外地改动该指针，起到保护作用。</li>
 <li>如果输入参数采用「值传递」，由于函数将自动产生临时变量用于复制该参数，该输入参数本来就无需保护，所以不要加 <code>const</code> 修饰。</li>
-</ol></li>
-</ol></li>
-
-<li><p>对于非内部数据类型的参数而言，像 <code>void Func(A a)</code> 这样声明的函数注定效率比较底。因为函数体内将产生 <code>A</code> 类型的临时对象用于复制参数 <code>a</code>，而临时对象的构造、复制、析构过程都将消耗时间。
-<!-- ![](file:///D:/%E4%B8%BA%E7%9F%A5%E7%AC%94%E8%AE%B0/temp/cecbaa3e-76e0-4cee-8d50-f7c3b5d036dc_128_files/f1aebe95-8c64-41f4-92c1-ae1e3a309bdf.png) --></p></li>
-
-<li><p>const 修饰函数的返回值：</p>
-
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>对于非内部数据类型的参数而言，像 <code>void Func(A a)</code> 这样声明的函数注定效率比较底。因为函数体内将产生 <code>A</code> 类型的临时对象用于复制参数 <code>a</code>，而临时对象的构造、复制、析构过程都将消耗时间。</p>
+</li>
+</ol>
+<!-- ![](file:///D:/%E4%B8%BA%E7%9F%A5%E7%AC%94%E8%AE%B0/temp/cecbaa3e-76e0-4cee-8d50-f7c3b5d036dc_128_files/f1aebe95-8c64-41f4-92c1-ae1e3a309bdf.png) -->
+<ol start="4">
+<li>
+<p>const 修饰函数的返回值：</p>
 <ol>
 <li>如果给以「指针传递」方式的函数返回值加 <code>const</code> 修饰，那么函数返回值（即指针）的内容不能被修改，该返回值只能被赋给加 <code>const</code> 修饰的同类型指针。eg：<code>const char * GetString(void);</code></li>
 <li>如果函数返回值采用「值传递方式」，由于函数会把返回值复制到外部临时的存储单元中，加 <code>const</code> 修饰没有任何价值。</li>
 <li>如果返回值不是内部数据类型，将函数 <code>A GetA(void)</code> 改写为 <code>const A&amp; GetA(void)</code> 的确能提高效率。但此时千万千万要小心，一定要搞清楚函数究竟是想返回一个对象的「拷贝」还是仅返回「别名」就可以了，否则程序会出错。</li>
-</ol></li>
-
-<li><p>函数返回值采用「引用传递」的场合并不多，这种方式一般只出现在类的赋值函数中，目的是为了实现链式表达。</p></li>
-
-<li><p><code>const</code> 成员函数：任何不会修改数据成员的函数都应该声明为 <code>const</code> 类型。<code>const</code> 成员函数的声明看起来怪怪的： <code>const</code> 关键字只能放在函数声明的尾部，大概是因为其它地方都已经被占用了。</p></li>
-</ol></li>
 </ol>
+</li>
+<li>
+<p>函数返回值采用「引用传递」的场合并不多，这种方式一般只出现在类的赋值函数中，目的是为了实现链式表达。</p>
+</li>
+<li>
+<p><code>const</code> 成员函数：任何不会修改数据成员的函数都应该声明为 <code>const</code> 类型。<code>const</code> 成员函数的声明看起来怪怪的： <code>const</code> 关键字只能放在函数声明的尾部，大概是因为其它地方都已经被占用了。</p>
+</li>
+</ol>
+<p>. 【建议 11-3-2】变量（指针、数组）被创建之后应当及时把它们初始化，以防止把未被初始化的变量当成右值使用。</p>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>数据库的事务及隔离级别 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/de570784/d87d70ee">
+<meta name="description" content="在操作数据库时，经常需要将一系列操作打包成一个原子操作：要么全部执行，要么全部不执行。一个最常被用来举例子的场景是银行转账问题，假设有两个用户 A 和 B，A 要向 B 转账 100 元需要进行以下操作： 查询 A 的余额； 若余额大于 100，则减去 100，并写回数据库； B 的余额加上 100，并写回数据库； 这…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库的事务及隔离级别">
+<meta property="og:url" content="https://sbrave.cn/post/de570784/d87d70ee">
+<meta property="og:description" content="在操作数据库时，经常需要将一系列操作打包成一个原子操作：要么全部执行，要么全部不执行。一个最常被用来举例子的场景是银行转账问题，假设有两个用户 A 和 B，A 要向 B 转账 100 元需要进行以下操作： 查询 A 的余额； 若余额大于 100，则减去 100，并写回数据库； B 的余额加上 100，并写回数据库； 这…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2018-08-02 08:57:34</span>
+        <span>· 1252 字</span>
+        <span>· 6 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>数据库的事务及隔离级别</h2>
+<p>在操作数据库时，经常需要将一系列操作打包成一个原子操作：要么全部执行，要么全部不执行。一个最常被用来举例子的场景是银行转账问题，假设有两个用户 A 和 B，A 要向 B 转账 100 元需要进行以下操作：</p>
+<ul>
+<li>查询 A 的余额；</li>
+<li>若余额大于 100，则减去 100，并写回数据库；</li>
+<li>B 的余额加上 100，并写回数据库；</li>
+</ul>
+<p>这时候若第二步执行成功，但第三步失败了，会导致 A 平白无故损失 100 元，引发不一致的情况。因此需要进行特殊保护。</p>
+<p>很多数据库提供了事务的概念。所谓「事务」，就是发送给数据库的一系列操作的集合。这些操作需满足 ACID 特性，即：</p>
+<ul>
+<li>A：原子性（Atomicity），事务作为一个整体被执行，包含在其中的对数据库的操作要么全部被执行，要么都不执行。</li>
+<li>C：一致性（Consistency），事务应确保数据库的状态从一个一致状态转变为另一个一致状态。一致状态的含义是数据库中的数据应满足完整性约束。</li>
+<li>I：隔离性（Isolation），多个事务并发执行时，一个事务的执行不应影响其他事务的执行。</li>
+<li>D：持久性（Durability），已被提交的事务对数据库的修改应该永久保存在数据库中。</li>
+</ul>
+<p>以最常见的 MySQL 为例，假设有两张表：</p>
+<h6>用户表 user</h6>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>uid</th>
+<th>uname</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>A</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2</td>
+<td>B</td>
+</tr>
+<tr>
+<td>3</td>
+<td>3</td>
+<td>C</td>
+</tr>
+</tbody>
+</table>
+<h6>余额表 money</h6>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>uid</th>
+<th>money</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>500</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2</td>
+<td>200</td>
+</tr>
+<tr>
+<td>3</td>
+<td>3</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+<p>则对应的事务语句为：</p>
+<pre><code class="language-mysql">BEGIN;
+
+select money from money,user where money.uid = user.uid and uname = 'A';
+#suppose Amoney is greater than 100
+update money set money = Amoney-100 where uid = (select uid from user where uname = 'A');
+select money from money,user where money.uid = user.uid and uname = 'B';
+update money set money = Bmoney+100 where uid = (select uid from user where uname = 'B');
+
+COMMIT;
+</code></pre>
+<h2>事务的隔离级别</h2>
+<p>事务解决了原子性的问题。但如果用户 A 同时给 B 和 C 分别转了 100 元，来看看会有什么问题：</p>
+<table>
+<thead>
+<tr>
+<th>事务1</th>
+<th>事务2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BEGIN</td>
+<td>BEGIN</td>
+</tr>
+<tr>
+<td>select A: money==500</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>select A: money==500</td>
+</tr>
+<tr>
+<td>update A: money==400</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>update A: money==400</td>
+</tr>
+<tr>
+<td>select B: money==200</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>select C: money==100</td>
+</tr>
+<tr>
+<td>update B: money==300</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>update C: money=200</td>
+</tr>
+<tr>
+<td>COMMIT</td>
+<td>COMMIT</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>最后的结果是，B 和 C 的账户分别增加了 100 元，但 A 的账户只减少了 100 元，而不是 200！原因在于事务 1 写回 A 的余额之前，事务 2 已经读取了 A 的余额，导致事务 2 的 update 语句覆盖了事务 1 update 的结果。</p>
+<p>因此，人们规定了四种隔离级别来在不同层次上防止这些情况：</p>
+<h3>未提交读（read uncommitted）</h3>
+<p>未提交读其实就是上面写到的这种情况：事务 2 读到了被事务 1 修改的数据，但事务 1 没有 COMMIT，而是 ROLLBACK，导致「脏读」。这是一种安全性最低的隔离级别，一般很少有这种实现。</p>
+<h3>已提交读（read committed）</h3>
+<p>已提交读可以预防「脏读」，其原理就是一个事务无法读到被另一个事务修改但没有提交的数据。如下：</p>
+<table>
+<thead>
+<tr>
+<th>事务1</th>
+<th>事务2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BEGIN</td>
+<td>BEGIN</td>
+</tr>
+<tr>
+<td>select A: money==500</td>
+<td></td>
+</tr>
+<tr>
+<td>update A: money==400</td>
+<td></td>
+</tr>
+<tr>
+<td>select B: money==200</td>
+<td></td>
+</tr>
+<tr>
+<td>update B: money==300</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>select A: money==500</td>
+</tr>
+<tr>
+<td>COMMIT</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>select A: money==400</td>
+</tr>
+<tr>
+<td></td>
+<td>update A: money==300</td>
+</tr>
+<tr>
+<td></td>
+<td>select C: money==100</td>
+</tr>
+<tr>
+<td></td>
+<td>update C: monty==200</td>
+</tr>
+<tr>
+<td></td>
+<td>COMMIT</td>
+</tr>
+</tbody>
+</table>
+<p>已提交读是大多数数据库默认的隔离级别（MySQL InnoDB 引擎除外），它可以解决「脏读」的问题，但也带来了「不可重复读」的问题：即两次对 A 的余额读取的结果不一样。</p>
+<h3>可重复读（repeatable read）</h3>
+<p>MySQL 的 InnoDB 引擎默认设置为此级别。其保证了数据在一个事务连续的两次读取中结果相同：</p>
+<table>
+<thead>
+<tr>
+<th>事务1</th>
+<th>事务2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BEGIN</td>
+<td>BEGIN</td>
+</tr>
+<tr>
+<td>select A: money==500</td>
+<td></td>
+</tr>
+<tr>
+<td>update A: money==400</td>
+<td></td>
+</tr>
+<tr>
+<td>select B: money==200</td>
+<td></td>
+</tr>
+<tr>
+<td>update B: money==300</td>
+<td></td>
+</tr>
+<tr>
+<td>delete A: A is nil</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>select A: money==500</td>
+</tr>
+<tr>
+<td>COMMIT</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>select A: money==500</td>
+</tr>
+<tr>
+<td></td>
+<td>update A: Error! A is not exists!</td>
+</tr>
+</tbody>
+</table>
+<p>事务 2 在事务 1 COMMIT 前后去查询用户 A 的余额，都明确告知存在，且值为 500，但当事务 2 尝试更新用户 A 的余额时，会报错：用户 A 不存在！这就出现了「幻读」。</p>
+<h3>可串行化（serializable）</h3>
+<p>可串行化是最高的隔离级别，当然也是性能最低的。但它保证了数据的完全一致性，不会再出现「脏读」、「不可重复读」、「幻读」等现象。总结为下表：</p>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>未提交读</th>
+<th>已提交读</th>
+<th>可重复读</th>
+<th>可串行化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>脏读</td>
+<td>是</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td>不可重复读</td>
+<td>是</td>
+<td>是</td>
+<td>否</td>
+<td>否</td>
+</tr>
+<tr>
+<td>幻读</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

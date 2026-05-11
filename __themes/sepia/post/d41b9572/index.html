@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>利用 hexo 搭建博客并推送到企业微信 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/d41b9572">
+<meta name="description" content="欢迎访问，这是在我司内部搭建使用的一个博客系统。实现流程图如下： 采用这个架构主要有以下这些考虑: hexo 是一个轻量级的静态博客框架，利用 Node.js 带来的超快生成速度，可以让上百个页面在几秒内完成渲染； hexo 原生支持 [Markdown](https://github.github.com/gfm/)…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用 hexo 搭建博客并推送到企业微信">
+<meta property="og:url" content="https://sbrave.cn/post/d41b9572">
+<meta property="og:description" content="欢迎访问，这是在我司内部搭建使用的一个博客系统。实现流程图如下： 采用这个架构主要有以下这些考虑: hexo 是一个轻量级的静态博客框架，利用 Node.js 带来的超快生成速度，可以让上百个页面在几秒内完成渲染； hexo 原生支持 [Markdown](https://github.github.com/gfm/)…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2017-08-21 11:35:43</span>
+        <span>· 939 字</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>利用 hexo 搭建博客并推送到企业微信</h2>
+<p>欢迎访问，这是在我司内部搭建使用的一个博客系统。实现流程图如下：</p>
+<pre><code>               push                        webhooks
+Server(Hexo)----------&gt;repository(github)------------&gt;tools---&gt;企业微信
+    ^                                                            |
+    |                                                            |
+    |       read                            send msg             |
+    +---------------------people&lt;--------------------------------+
+</code></pre>
+<h2>采用这个架构主要有以下这些考虑:</h2>
+<ul>
+<li>hexo 是一个轻量级的静态博客框架，利用 Node.js 带来的超快生成速度，可以让上百个页面在几秒内完成渲染；</li>
+<li>hexo 原生支持 <a href="https://github.github.com/gfm/">Markdown</a>的所有功能；</li>
+<li>新建文章一键部署；</li>
+<li>丰富的插件和主题支持；</li>
+<li>博客的核心是文章，不容有失。因此采用 gitlab 进行托管；</li>
+<li>接入企业微信。发表一篇新文章时会自动推送；</li>
+<li>...</li>
+</ul>
+<h2>博客搭建流程</h2>
+<ul>
+<li><a href="https://hexo.io/zh-cn/docs/">安装 hexo</a>,需提前安装好 Node.js 和 git</li>
+<li>建站。执行以下命令:</li>
+</ul>
+<pre><code class="language-shell">$ hexo init &lt;folder&gt;
+$ cd &lt;folder&gt;
+$ npm install
+</code></pre>
+<ul>
+<li>安装插件</li>
+</ul>
+<pre><code class="language-shell">$ npm install hexo-generator-feed --save
+$ npm install hexo-abbrlink --save  #固定链接
+$ npm install hexo-generator-sitemap --save  #SEO优化
+$ npm install hexo-math --save  #支持LaTeX语法
+$ npm install hexo-deployer-rsync --save  #支持部署到vps上
+</code></pre>
+<!--hexo 支持emoji:https://https://ppxu.me/2015/12/24/enable-emoji-in-hexo/  -->
+<ul>
+<li>修改默认配置文件(<code>&lt;folder&gt;/_config.yml</code>)，需要修改部分如下。其他配置文件参见<a href="https://hexo.io/zh-cn/docs/configuration.html">这里</a>,可根据需要修改。</li>
+</ul>
+<pre><code class="language-yaml">title: your title
+language: zh-Hans
+permalink: post/:abbrlink/
+plugin:
+- hexo-generator-feed
+deploy:
+- type: git
+  repository: git@github.com:SmartBrave/SmartBrave.github.io.git
+  branch: master
+- type: rsync
+  host: &lt;主机地址&gt;
+  user: &lt;用户名&gt;
+  root: &lt;需要放置博客的根目录&gt;
+  port: &lt;端口&gt;
+  delete: [true|false]  #是否删除主机上的旧目录
+  verbose: [true|false]  #显示调试信息
+  ignore_errors: [true|false]  #忽略错误
+abbrlink:
+  alg: crc32
+  rep: hex
+math:
+  engine: 'mathjax'
+  mathjax:
+    src: custom_mathjaxsource
+    config:
+      # MathJax config
+    katex:
+      css: custom_csssource
+      js: custom_jssource
+      config:
+        # KaTeX config
+</code></pre>
+<ul>
+<li>可根据需要安装自己喜欢的<a href="https://hexo.io/themes/">主题</a>。若文章中用到 LaTeX 公式，需在主题配置文件中将 mathjax 下的 enable 和 per_page 改为<code>true</code>，并在文章头部添加<code>mathjax: true</code>。</li>
+<li>下载 tools 并编译（请参考 README）</li>
+</ul>
+<pre><code class="language-shell">$ git clone https://github.com/SmartBrave/blog_tools.git ~/blog_tools
+$ cd ~/blog_tools
+$ go build
+</code></pre>
+<ul>
+<li>部署</li>
+</ul>
+<pre><code class="language-shell">$ cd ~ &amp;&amp; nohup ~/blog_tools &gt;/dev/null 2&gt;&amp;1 &amp;
+$ cd &lt;folder&gt; &amp;&amp; nohup hexo server &gt;/dev/null 2&gt;&amp;1 &amp;
+</code></pre>
+<ul>
+<li>在 gitlab 仓库中将 webhooks 配置成 tools 所监听的地址</li>
+</ul>
+<!--
+9. 如果要使用自己的域名访问，请在域名控制台添加一条 CNAME 记录，指向 <user>.github.io，并在`<folder>/source`目录下创建 CNAME 文件，输入域名即可。
+-->
+<p>**以上3步，可以直接在 docker 上获取我配置好的镜像**</p>
+<pre><code class="language-shell">$ docker pull smartbrave/docker-hexo
+</code></pre>
+<p>配置完成后，使用下面的命令运行</p>
+<pre><code class="language-shell">$ docker run -d -v /www/blog/source/_post/_config.yml:/www/blog/_config.yml:rw -v /www/blog/source/_posts/source:/www/blog/source:rw -v /www/blog/source/_posts/themes:/www/blog/themes:rw -p 4001:4000 --privileged=true docker.io/smartbrave/docker-hexo bash -c 'cd /www/blog &amp;&amp; hexo server'
+</code></pre>
+<h2>写作流程</h2>
+<h3>1. 写博客</h3>
+<ol>
+<li>登录到服务器，在文章存放目录下(<code>&lt;folder&gt;/source/_post</code>）新建一个 md 文件，命名为<code>文章名.md</code>；</li>
+<li>或者使用 <code>hexo new article</code> 新建文章，然后编辑；</li>
+<li>编辑文章，完成后保存退出。文章中图片资源可存放在 <code>/www/blog/source/images/</code> 文件夹下，通过 <code>/images/xxx.jpg</code> 引用(或通过图床引用，在此不表)；</li>
+</ol>
+<h3>2. 部署到 github</h3>
+<ol>
+<li>在博客目录下执行:</li>
+</ol>
+<pre><code class="language-shell">$ hexo g -d
+</code></pre>
+<p>若提示找不到 git，请执行：</p>
+<pre><code class="language-shell">$ npm install hexo-deployer-git --save
+</code></pre>
+<h2>可能遇到的问题</h2>
+<ol>
+<li>若博客无法访问，请检查网络是否连通；没问题之后检查 server 是否被 kill，若被干掉了需要启动 server:</li>
+</ol>
+<pre><code class="language-shell">$ cd &lt;folder&gt;
+$ nohup hexo server &gt;/dev/null 2&gt;&amp;1 &amp;
+</code></pre>
+<ol start="2">
+<li>同理，若无法推送到企业微信,有可能是 blog_tools 被 kill，启动即可；</li>
+</ol>
+<h6><a href="https://github.com/SmartBrave/blog_tools">项目仓库</a></h6>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

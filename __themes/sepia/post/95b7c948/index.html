@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UML 五分钟入门 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/95b7c948">
+<meta name="description" content="昨晚临下班时，有位同事说自己想做一套 XXX 系统。于是我们在会议室讨论了近一个小时，将此系统的执行流程、接口定义、数据格式等进行了设计，使用的工具就是 UML 图。这里简单做一个温故知新。 UML（Unified Modeling Language）全称为统一建模语言，是用来对各种软件系统进行可视化建模的语言，由 O…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UML 五分钟入门">
+<meta property="og:url" content="https://sbrave.cn/post/95b7c948">
+<meta property="og:description" content="昨晚临下班时，有位同事说自己想做一套 XXX 系统。于是我们在会议室讨论了近一个小时，将此系统的执行流程、接口定义、数据格式等进行了设计，使用的工具就是 UML 图。这里简单做一个温故知新。 UML（Unified Modeling Language）全称为统一建模语言，是用来对各种软件系统进行可视化建模的语言，由 O…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2019-08-24 20:59:55</span>
+        <span>· 1126 字</span>
+        <span>· 5 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>UML 五分钟入门</h2>
+<p>昨晚临下班时，有位同事说自己想做一套 XXX 系统。于是我们在会议室讨论了近一个小时，将此系统的执行流程、接口定义、数据格式等进行了设计，使用的工具就是 UML 图。这里简单做一个温故知新。</p>
+<p>UML（Unified Modeling Language）全称为统一建模语言，是用来对各种软件系统进行可视化建模的语言，由 OMG（Object Management Group，对象管理组织）发布于 1997 年。作为一种与编程语言无关的语言，UML 能够在项目之初就对整个系统绘制蓝图，以便于人们后期能够按部就班地一步步完成整个项目周期。</p>
+<p>UML 标准包括类图、对象图、组件图、部署图、用例图、交互图、状态图、活动图等。这里我们只关注类图和对象图。</p>
+<h3>UML 类图</h3>
+<p>说到类，自然离不开接口、对象和面向对象，离不开其三大特性：抽象、继承和多态。UML 通过定义「事物」和它们之间的「关系」，来表示一个系统中面向对象设计的概况。</p>
+<p>事物是实体抽象化的结果，是 UML 构建块最重要的组成部分。在类图中，存在「类」和「接口」事物。类是具有相同属性、方法、关系和语义的对象的集合：</p>
+<p><img src="../../image/class.jpeg" alt="" /></p>
+<p>其中 <code>+</code> 表示该成员或方法的属性为 publish，<code>-</code> 表示属性为 private，同样的，还有 <code>#</code> 表示 protected；</p>
+<p>接口也叫做抽象类，是指类或组件所提供的方法，描述了类或组件对外可见的动作：</p>
+<p><img src="../../image/interface.jpeg" alt="" /></p>
+<p>「关系」描述元素之间如何彼此关联，类之间有如下关系：</p>
+<h4>实现关系</h4>
+<p>实现关系用一条带空心箭头的虚线表示；比如「猫」这个类就实现了「动物」这个接口：</p>
+<p><img src="../../image/realize.jpeg" alt="" /></p>
+<p>在代码中表现为「猫」继承了「动物」这个抽象类。</p>
+<h4>泛化关系</h4>
+<p>泛化关系也表示继承，但跟实现关系不同的是，泛化关系继承的不是抽象类，而是另一个非抽象类。用一条带空心箭头的实线表示，比如「家猫」继承「猫」：</p>
+<p><img src="../../image/generalization.jpeg" alt="" /></p>
+<h4>聚合关系</h4>
+<p>聚合关系表示对象实体之间的关联，表示由部分构成整体的语义，例如一个部门由多个员工组成。但与组合关系不同的是，整体和部分不是强依赖的，即使整体不存在了，部分仍然存在。用一条带空心菱形箭头的实线表示：</p>
+<p><img src="../../image/aggregation.jpeg" alt="" /></p>
+<h4>组合关系</h4>
+<p>组合关系表示强依赖的特殊聚合关系，如果整体不存在了，部分也就不存在。如公司不存在了，部门也就不存在了。组合关系使用一条带实心菱形箭头表示：</p>
+<p><img src="../../image/composition.jpeg" alt="" /></p>
+<h3>UML对象图</h3>
+<p>UML 对象图显示某个时刻对象和对象之间的关系。一个 UML 对象图可以看成一个类图的特殊用例，或者系统内对象在某一时刻的快照。所以对象图几乎使用和类图完全相同的标识，并且只在系统某一段时间内存在。以下是一个对象图的例子：</p>
+<p><img src="../../image/object.jpeg" alt="" /></p>
+<p>可以看出，对象图除了名字含有下划线外，其余和类图完全一样。</p>
+<p>对象之间的关系有两种：</p>
+<h4>关联关系</h4>
+<p>关联关系描述不同对象之间的结构关系，通常与运行状态无关，而是根据常识决定的，比如「学生」类就依赖于「学校」类，用一根直线表示，如果强调方向，也可以带上箭头：</p>
+<p><img src="../../image/association.jpeg" alt="" /></p>
+<h4>依赖关系</h4>
+<p>依赖关系用一条带箭头的虚线表示，表示一个对象会在运行期用到另一个对象，比如一个订单对象就依赖于一个商品对象：</p>
+<p><img src="../../image/dependency.jpeg" alt="" /></p>
+<p>运行期间产生，并且其状态也会不断改变。</p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

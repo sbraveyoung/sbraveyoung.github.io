@@ -1,67 +1,82 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题5：从尾到头打印链表 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/d44a3e2a">
+<meta name="description" content="题目：输入一个链表的头结点，从尾到头反过来打印出每个节点的值。** 分析 这道题有如下几种解决方案： 1. 将链表逆置，然后顺次打印 2. 递归方案 3. 迭代方案 如果逆置链表的话，会改变链表原先的结构。我们可以在面试时询问面试过是否可以改变链表，如果是肯定的回答，就可以采用这种办法。否则只能采用后面的方法。 逆置链…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题5：从尾到头打印链表">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/d44a3e2a">
+<meta property="og:description" content="题目：输入一个链表的头结点，从尾到头反过来打印出每个节点的值。** 分析 这道题有如下几种解决方案： 1. 将链表逆置，然后顺次打印 2. 递归方案 3. 迭代方案 如果逆置链表的话，会改变链表原先的结构。我们可以在面试时询问面试过是否可以改变链表，如果是肯定的回答，就可以采用这种办法。否则只能采用后面的方法。 逆置链…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>面试题5：从尾到头打印链表</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>面试题5：从尾到头打印链表</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-05-24 15:56:39</span>
+        <span>· 476 字</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题5：从尾到头打印链表</h2>
 <p><strong>题目：输入一个链表的头结点，从尾到头反过来打印出每个节点的值。</strong></p>
-
 <h3>分析</h3>
-
 <p>这道题有如下几种解决方案：</p>
-
 <ol>
 <li>将链表逆置，然后顺次打印</li>
 <li>递归方案</li>
 <li>迭代方案</li>
 </ol>
-
 <p>如果逆置链表的话，会改变链表原先的结构。我们可以在面试时询问面试过是否可以改变链表，如果是肯定的回答，就可以采用这种办法。否则只能采用后面的方法。</p>
-
 <p>逆置链表也很简单，只需要从第二个节点开始，顺次摘取一个节点头插就可以。</p>
-
 <h3>代码如下</h3>
-
 <pre><code class="language-c">list* PrintListInReversedOrder(list* head)
 {
     if(head==NULL || head-&gt;next==NULL)
@@ -86,11 +101,8 @@
     return head;
 }
 </code></pre>
-
 <p>递归方案很简单，如果当前函数参数所指向的节点是尾节点，则打印之。否则先打印它的下一个节点即可。</p>
-
 <h3>代码如下</h3>
-
 <pre><code class="language-c">void PrintListInReversedOrder(list* head)
 {
     if(head==NULL)
@@ -99,11 +111,8 @@
     cout &lt;&lt; head-&gt;data &lt;&lt; &quot; &quot;;
 }
 </code></pre>
-
 <p>但如果链表太长，采用递归的话可能会导致 Stack OverFlow，所以更好的办法是用循环来控制。而递归在本质上就是一个栈结构（系统栈），所以我们可以用自定义的栈（数据结构栈）来模拟递归的行为以实现这种效果</p>
-
 <h3>代码如下</h3>
-
 <pre><code>#include&lt;stack&gt;
 void PrintListInReversedOrder(list* head){
 //此处不用判断head是否为空，并非忘记
@@ -121,24 +130,45 @@ void PrintListInReversedOrder(list* head){
     }
 }
 </code></pre>
-
 <p><strong>以上</strong></p>
-
 <p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
-
 <p>完整代码及测试用例在github上：[点我前往]()</p>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

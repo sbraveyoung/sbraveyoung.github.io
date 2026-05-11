@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题14：调整数组顺序使奇数位于偶数前面 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：输入一个整数数组，实现一个函数来调整数组中数字的顺序，是得所有的奇数位于数组的前半部分，所有偶数位于数组的后半部分。** 分析 最简单的办法就是开辟和原数组同样大小的空间，顺次扫描原数组 2 次，第一次将所有奇数放进新数组中，第二次将偶数放入就可以。这种方法的时间复杂度为 O(n)，空间复杂度为 O(n)。 代码…">
+<meta property="og:title" content="面试题14：调整数组顺序使奇数位于偶数前面">
+<meta property="og:description" content="题目：输入一个整数数组，实现一个函数来调整数组中数字的顺序，是得所有的奇数位于数组的前半部分，所有偶数位于数组的后半部分。** 分析 最简单的办法就是开辟和原数组同样大小的空间，顺次扫描原数组 2 次，第一次将所有奇数放进新数组中，第二次将偶数放入就可以。这种方法的时间复杂度为 O(n)，空间复杂度为 O(n)。 代码…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/99207d23">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-06-04
+    </div>
+    <h1 class="article-title">面试题14：调整数组顺序使奇数位于偶数前面</h1>
+    <p class="article-lede">题目：输入一个整数数组，实现一个函数来调整数组中数字的顺序，是得所有的奇数位于数组的前半部分，所有偶数位于数组的后半部分。** 分析 最简单的办法就是开辟和原数组同样大小的空间，顺次扫描原数组 2 次，第一次将所有奇数放进新数组中，第二次将偶数放入就可以。这种方法的时间复杂度为 O(n)，空间复杂度为 O(n)。 代码…</p>
+    <div class="article-meta">
+      <span>2 min read</span>
+      <span>417 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>面试题14：调整数组顺序使奇数位于偶数前面</h2>
+<p><strong>题目：输入一个整数数组，实现一个函数来调整数组中数字的顺序，是得所有的奇数位于数组的前半部分，所有偶数位于数组的后半部分。</strong></p>
+<h3>分析</h3>
+<p>最简单的办法就是开辟和原数组同样大小的空间，顺次扫描原数组 2 次，第一次将所有奇数放进新数组中，第二次将偶数放入就可以。这种方法的时间复杂度为 O(n)，空间复杂度为 O(n)。</p>
+<p>代码如下：</p>
+<pre><code class="language-C">void ReorderOddEven(vector&lt;int&gt;&amp; arr)
+{
+    vector&lt;int&gt; newarr;
+    int i;
+    for(i=0;i&lt;arr.size();++i)
+    {
+        if(arr[i]&amp;0x1)
+        {
+            newarr.push_back(arr[i]);
+        }
+    }
+    for(i=0;i&lt;arr.size();++i)
+    {
+        if(!(arr[i]&amp;0x1))
+        {
+            newarr.push_back(arr[i]);
+        }
+    }
+    arr.clear();
+    arr=newarr;
+}
+</code></pre>
+<p>以上算法的优点是不会改变原数据的相对顺序。我们也可以只扫描原数组一次，若为奇数，则从新数组前面开始往后放；若为偶数，则从新数组后面开始往前放。这种方法缺点是会使偶数的相对顺序翻转。代码从略。</p>
+<p>一种更好的思路是，受快速排序算法的启发，我们模仿快速排序的 partition 函数，从原数组的两端向中间扫描，前、后指针分别遇到偶数和奇数就停下来，然后交换他们即可。</p>
+<p>代码如下：</p>
+<pre><code class="language-C">void ReorderOddEven(vector&lt;int&gt;&amp; arr)
+{
+    int i=0,j=arr.size()-1;
+    while(i&lt;j)
+    {
+        while(i&lt;j &amp;&amp; (arr[i] &amp; 0x1))
+            i++;
+        while(i&lt;j &amp;&amp; !(arr[j] &amp; 0x1))
+            j--;
+        swap(arr[i],arr[j]);
+    }
+}
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/14_ReorderArray/main.cpp">点我前往</a></p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

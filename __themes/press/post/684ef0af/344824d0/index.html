@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题18：树的子结构 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：输入两颗二叉树A和B，判断B是不是A的子结构。二叉树的节点定义如下：** 分析 要判断 B 是不是 A 的子结构，也就是要判断 B 是不是 A 的子树。我们可以先遍历 A，如果某一个 S 节点的 value 和 B 树的根节点相同，就判断 S 和 B 的左右子树是否相等，如果相等，B 就是 A 的子结构；否则跳过…">
+<meta property="og:title" content="面试题18：树的子结构">
+<meta property="og:description" content="题目：输入两颗二叉树A和B，判断B是不是A的子结构。二叉树的节点定义如下：** 分析 要判断 B 是不是 A 的子结构，也就是要判断 B 是不是 A 的子树。我们可以先遍历 A，如果某一个 S 节点的 value 和 B 树的根节点相同，就判断 S 和 B 的左右子树是否相等，如果相等，B 就是 A 的子结构；否则跳过…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/344824d0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Tuesday, June 7, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · June 7, 2016</div>
+    <h1 class="press-article-title">
+      面试题18：树的子结构
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目：输入两颗二叉树A和B，判断B是不是A的子结构。二叉树的节点定义如下：** 分析 要判断 B 是不是 A 的子结构，也就是要判断 B 是不是 A 的子树。我们可以先遍历 A，如果某一个 S 节点的 value 和 B 树的根节点相同，就判断 S 和 B 的左右子树是否相等，如果相等，B 就是 A 的子结构；否则跳过…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 2 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题18：树的子结构</h2>
+<p><strong>题目：输入两颗二叉树A和B，判断B是不是A的子结构。二叉树的节点定义如下：</strong></p>
+<pre><code class="language-C">struct BinaryTreeNode{
+    int value;
+    BinaryTreeNode* left;
+    BinaryTreeNode* right;
+    BinaryTreeNode(int data=int()):value(data),left(NULL),right(NULL)
+    {}
+};
+</code></pre>
+<h3>分析</h3>
+<p>要判断 B 是不是 A 的子结构，也就是要判断 B 是不是 A 的子树。我们可以先遍历 A，如果某一个 S 节点的 value 和 B 树的根节点相同，就判断 S 和 B 的左右子树是否相等，如果相等，B 就是 A 的子结构；否则跳过 S 继续建立 A，直到遍历完成。</p>
+<p>代码如下：</p>
+<pre><code class="language-C">bool HasSubTree(BinaryTreeNode* root1,BinaryTreeNode* root2)
+{
+    if(root1==NULL)
+    {
+        if(root2==NULL)
+            return true;
+        else
+            return false;
+    }
+    if(root2==NULL)
+        return true;
+    if(root1-&gt;value==root2-&gt;value)
+    {
+        if(HasSubTree(root1-&gt;left,root2-&gt;left) &amp;&amp;
+                HasSubTree(root1-&gt;right,root2-&gt;right))
+        {
+            return true;
+        }
+        else
+        {
+            if(HasSubTree(root1-&gt;left,root2) || HasSubTree(root1-&gt;right,root2))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+    else
+    {
+        if(HasSubTree(root1-&gt;left,root2) || HasSubTree(root1-&gt;right,root2))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="hhttps://github.com/SmartBrave/Sword-to-Offer/blob/master/18_SubstructureInTree/main.cpp">点我前往</a></p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 入门到精通 06 · AI 训练实战 · sbraveyoung · 字里行间</title>
+<meta name="description" content="学校教你 "怎么写模型"，工业界要你 "怎么把训练跑稳跑快跑出效果"。 90% 的工程师卡在这一章 —— 论文复现不了、loss 训不动、显存爆了、几张卡跑不起来。 一、训练一个模型涉及哪些事 每一环都能写一本书。本章给你"先跑通、再调优"的完整路径。 二、知识点 2.1 数据工程（决定上限） 数据采集**：自有日志、…">
+<meta property="og:title" content="AI 入门到精通 06 · AI 训练实战">
+<meta property="og:description" content="学校教你 "怎么写模型"，工业界要你 "怎么把训练跑稳跑快跑出效果"。 90% 的工程师卡在这一章 —— 论文复现不了、loss 训不动、显存爆了、几张卡跑不起来。 一、训练一个模型涉及哪些事 每一环都能写一本书。本章给你"先跑通、再调优"的完整路径。 二、知识点 2.1 数据工程（决定上限） 数据采集**：自有日志、…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/31477598/79c30475">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2026 · NO. §1888</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · April 26, 2026
+      </div>
+      <h1 class="article-title">AI 入门到精通 06 · AI 训练实战</h1>
+      <p class="article-lede">学校教你 "怎么写模型"，工业界要你 "怎么把训练跑稳跑快跑出效果"。 90% 的工程师卡在这一章 —— 论文复现不了、loss 训不动、显存爆了、几张卡跑不起来。 一、训练一个模型涉及哪些事 每一环都能写一本书。本章给你"先跑通、再调优"的完整路径。 二、知识点 2.1 数据工程（决定上限） 数据采集**：自有日志、…</p>
+      <div class="article-meta">
+        <span>8 min read</span>
+        <span>·</span>
+        <span>1888 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>AI 入门到精通 06 · AI 训练实战</h2>
+<blockquote>
+<p>学校教你 &quot;怎么写模型&quot;，工业界要你 &quot;怎么把训练跑稳跑快跑出效果&quot;。
+90% 的工程师卡在这一章 —— 论文复现不了、loss 训不动、显存爆了、几张卡跑不起来。</p>
+</blockquote>
+<h2>一、训练一个模型涉及哪些事</h2>
+<pre><code>数据 → 实验设计 → 分布式 → 训练循环 → 监控 / 调参 → checkpoint → 评测 → 复盘
+</code></pre>
+<p>每一环都能写一本书。本章给你&quot;先跑通、再调优&quot;的完整路径。</p>
+<h2>二、知识点</h2>
+<h3>2.1 数据工程（决定上限）</h3>
+<ul>
+<li><strong>数据采集</strong>：自有日志、爬取（合规）、合成数据、开源数据集（HF Hub / opendatalab / ModelScope）。</li>
+<li><strong>数据清洗</strong>：去重（MinHash / SimHash / Bloom Filter）、去毒、去 PII、语种识别、质量打分（fastText / 困惑度过滤）。</li>
+<li><strong>数据混合</strong>：不同来源 / 不同领域的配比；DoReMi、RegMix 等自动配比方法。</li>
+<li><strong>数据格式</strong>：parquet / arrow / WebDataset / Mosaic Streaming / HF datasets streaming —— 大规模训练用 streaming 才不会撑爆磁盘。</li>
+<li><strong>打 token / 打包</strong>：高效 packing（不浪费 padding）、blocked sequence 策略。</li>
+<li><strong>数据版本化</strong>：DVC / LakeFS / 自建 manifest；可复现的关键。</li>
+</ul>
+<h3>2.2 实验设计</h3>
+<ul>
+<li><strong>小步快跑</strong>：先在 1% 数据 + 小模型上跑通，再扩规模。</li>
+<li><strong>Sanity check</strong>：单样本能过拟合吗？前 100 step loss 走势对不对？</li>
+<li><strong>对照组</strong>：每个 trick 都要有 ablation；一次只改一个变量。</li>
+<li><strong>种子 (seed)</strong>：固定 seed，不然没法对比。</li>
+<li><strong>预算管理</strong>：用小模型做 scaling law 推算大模型最优配置（learning rate / batch size / 数据量）。</li>
+</ul>
+<h3>2.3 分布式训练</h3>
+<p>按&quot;显存 / 算力 / 通信&quot;三个维度展开：</p>
+<table>
+<thead>
+<tr>
+<th>并行策略</th>
+<th>拆什么</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Data Parallel (DDP)</strong></td>
+<td>数据</td>
+<td>单机多卡，模型放得下单卡</td>
+</tr>
+<tr>
+<td><strong>ZeRO-1/2/3 (DeepSpeed)</strong></td>
+<td>优化器状态 / 梯度 / 参数</td>
+<td>显存吃紧</td>
+</tr>
+<tr>
+<td><strong>FSDP (PyTorch)</strong></td>
+<td>同 ZeRO-3 思路</td>
+<td>PyTorch 原生</td>
+</tr>
+<tr>
+<td><strong>Tensor Parallel (TP)</strong></td>
+<td>单层权重切分</td>
+<td>模型单卡放不下，机内多卡</td>
+</tr>
+<tr>
+<td><strong>Pipeline Parallel (PP)</strong></td>
+<td>模型按层切到多机</td>
+<td>跨节点扩展</td>
+</tr>
+<tr>
+<td><strong>Sequence Parallel (SP)</strong></td>
+<td>长序列切分</td>
+<td>长上下文训练</td>
+</tr>
+<tr>
+<td><strong>Expert Parallel (EP)</strong></td>
+<td>MoE 专家分布</td>
+<td>MoE 模型</td>
+</tr>
+<tr>
+<td><strong>3D / 4D / 5D Parallel</strong></td>
+<td>上述组合</td>
+<td>千亿参数及以上</td>
+</tr>
+</tbody>
+</table>
+<p>工具栈：<code>torch.distributed</code> / DeepSpeed / Megatron-LM / Megatron-DeepSpeed / <code>accelerate</code> / Colossal-AI / NVIDIA NeMo / Mosaic Composer。</p>
+<h3>2.4 训练加速 trick</h3>
+<ul>
+<li><strong>混合精度</strong>：bf16（H100 / A100 首选）/ fp16；AMP / GradScaler。</li>
+<li><strong>梯度 checkpointing</strong>：用算力换显存。</li>
+<li><strong>Flash Attention 2 / 3</strong>：必开。</li>
+<li><strong>Fused kernels</strong>：FusedAdam / FusedRMSNorm / FusedSwiGLU。</li>
+<li><strong><code>torch.compile</code> / TorchInductor</strong>：免费加速 10-30%。</li>
+<li><strong>CPU offload / NVMe offload</strong>：极限省显存。</li>
+<li><strong>Activation Checkpointing / Sequence Packing / Variable Length Attention</strong>。</li>
+<li><strong>Communication overlap</strong>：通信和计算重叠。</li>
+</ul>
+<h3>2.5 调参与训练动力学</h3>
+<ul>
+<li><strong>学习率</strong>：最重要的超参；warmup + cosine decay 是默认范式。</li>
+<li><strong>Batch size</strong>：和 learning rate 有平方根关系（线性缩放规则）。</li>
+<li><strong>Weight decay</strong>：现代 Transformer 一般 0.1。</li>
+<li><strong>Gradient clipping</strong>：global norm 1.0 是默认。</li>
+<li><strong>Loss spike</strong>：梯度 / 数据问题；解决：跳过坏 batch、回滚 checkpoint、降低 LR、改 init。</li>
+<li><strong>看 loss 曲线判断问题</strong>：欠拟合 / 过拟合 / 数据 bug / LR 太大 / 优化器问题各有特征。</li>
+</ul>
+<h3>2.6 监控、可观测性、复盘</h3>
+<ul>
+<li><strong>指标监控</strong>：loss / accuracy / 学习率 / 梯度范数 / 参数范数 / 激活分布。</li>
+<li><strong>资源监控</strong>：GPU 利用率 (<code>nvidia-smi</code>) / 显存 / NVLink / 网络 / 磁盘 IO。</li>
+<li><strong>实验跟踪</strong>：W&amp;B / TensorBoard / MLflow / Aim。</li>
+<li><strong>配置管理</strong>：Hydra / OmegaConf / 自建 yaml。</li>
+<li><strong>故障恢复</strong>：checkpoint 自动保存 + 自动 resume + 弹性训练（PyTorch Elastic / TorchX）。</li>
+<li><strong>训练日志</strong>：长跑必须有 structured log，出了问题能回查每一步。</li>
+</ul>
+<h3>2.7 强化学习训练（chap 05 RLHF / RLVR 的工程细节）</h3>
+<ul>
+<li><strong>PPO / GRPO / RLOO</strong> 的实现要点。</li>
+<li><strong>Reward Model 训练</strong>：偏好对齐、过拟合监控。</li>
+<li><strong>Rollout / Replay Buffer / Advantage 估计</strong>。</li>
+<li><strong>采样 - 训练分离架构</strong>：vLLM 做 rollout + 训练框架做更新。</li>
+<li><strong>Reward Hacking 检测与防御</strong>。</li>
+<li>框架：<a href="https://github.com/OpenRLHF/OpenRLHF">OpenRLHF</a> / <a href="https://github.com/volcengine/verl">veRL (字节)</a> / <a href="https://github.com/huggingface/trl">TRL</a> / <a href="https://github.com/hiyouga/LLaMA-Factory">LLaMA-Factory</a>。</li>
+</ul>
+<h2>三、参考资料</h2>
+<h3>系统类</h3>
+<ul>
+<li><strong>Hugging Face 《Performance and Scalability》文档</strong> —— 单卡 → 多卡 → 多机的完整指南。</li>
+<li><strong>DeepSpeed 官方文档</strong> + ZeRO 论文。</li>
+<li><strong>Megatron-LM 论文 + 仓库</strong> —— 学习 TP / PP 的标杆。</li>
+<li><strong>PyTorch FSDP / DTensor 文档</strong>。</li>
+<li><strong>NVIDIA Deep Learning Performance Guide</strong>。</li>
+<li><strong>《How to Scale Your Model》</strong>（Google JAX 团队的最新指南）。</li>
+</ul>
+<h3>论文 / 技术报告</h3>
+<ul>
+<li><em>ZeRO</em> (Rajbhandari 2019) / <em>ZeRO-Offload</em> / <em>ZeRO-Infinity</em>。</li>
+<li><em>Megatron-LM</em> (2019) — Tensor Parallel 经典。</li>
+<li><em>GPipe</em> / <em>PipeDream</em> — Pipeline Parallel。</li>
+<li><em>FlashAttention 1/2/3</em>。</li>
+<li><em>DeepSeek-V3 Technical Report</em> — 公开的最详尽训练实践之一。</li>
+<li><em>Llama 3 Technical Report</em>。</li>
+<li><em>Pre-training Data Curation</em> 相关综述。</li>
+</ul>
+<h3>实战材料</h3>
+<ul>
+<li><a href="https://huggingface.co/spaces/HuggingFaceTB/smol-training-playbook">Hugging Face 《The Smol Training Playbook》</a>。</li>
+<li><a href="https://github.com/stas00/ml-engineering">Stas Bekman 《Machine Learning Engineering Open Book》</a> —— 工业界最实用的训练手册。</li>
+<li><a href="https://github.com/EleutherAI/cookbook">Eleuther AI Cookbook</a> —— 训练大模型的踩坑合集。</li>
+<li>[Anthropic / OpenAI / DeepMind blog 中关于训练的工程文章]。</li>
+</ul>
+<h2>四、动手实践</h2>
+<p>按算力分档，挑你能负担的做。</p>
+<h3>入门（单卡 24G 显存以下）</h3>
+<ol>
+<li><strong>手搓 DDP</strong>：用 <code>torch.distributed.launch</code> 在 CPU 多进程上模拟多 worker，理解通信。</li>
+<li><strong>LoRA 微调</strong>：用 unsloth / LLaMA-Factory 在 7B 模型上微调，体会显存优化的威力。</li>
+<li><strong>加 Flash Attention + bf16 + torch.compile</strong>：测训练速度提升。</li>
+<li><strong>数据流水线优化</strong>：自己写一个 streaming dataset，对比磁盘版本的吞吐。</li>
+<li><strong>监控</strong>：把上面所有训练接 W&amp;B，建一个 dashboard。</li>
+</ol>
+<h3>进阶（多卡 / 租云）</h3>
+<ol>
+<li><strong>多机多卡训练</strong>：在 2 台 8 卡机器上跑一个 1.5B 模型 SFT；走通 NCCL / 网络配置。</li>
+<li><strong>ZeRO-3 / FSDP 实操</strong>：训练一个 7B 模型，对比单机多卡 vs 多机多卡的 throughput。</li>
+<li><strong>从零做一次预训练</strong>：拿 FineWeb 一个子集，预训练一个 200M-1B 的中文 / 英文小模型。</li>
+<li><strong>完整 RL 流程</strong>：用 OpenRLHF / veRL 跑一遍 SFT + RM + PPO（或 SFT + DPO），数据集用公开偏好集。</li>
+<li><strong>复现 RLVR</strong>：在数学数据上用 GRPO 训一个推理模型，复现 R1-zero 的某种小规模版本。</li>
+<li><strong>debug 一次失败的训练</strong>：故意把 LR 调爆 / 数据混入脏数据，记录现象、定位、修复全过程，写复盘。</li>
+</ol>
+<h2>五、通关标志</h2>
+<ul>
+<li><input disabled="" type="checkbox" /> 能在多机多卡上跑通一次完整训练 (SFT 或 pretrain)。</li>
+<li><input disabled="" type="checkbox" /> 看 loss 曲线 + GPU 利用率，能给出&quot;瓶颈在哪、怎么优化&quot;的判断。</li>
+<li><input disabled="" type="checkbox" /> 能讲清楚 ZeRO 1/2/3、TP、PP 的区别和适用场景。</li>
+<li><input disabled="" type="checkbox" /> 能用 Flash Attention / bf16 / gradient checkpointing 把 OOM 救回来。</li>
+<li><input disabled="" type="checkbox" /> 能从零规划一次微调实验：数据准备 → 配置 → 训练 → 评测 → 部署。</li>
+<li><input disabled="" type="checkbox" /> 你的 wandb 上至少有 50+ 次实验记录。</li>
+</ul>
+<p>下一站：<a href="/__themes/tufte/post/31477598/cae63e29">07. AI 推理与部署</a></p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2026-04-26<br>
+          <em>read in</em> 8 min<br>
+          <em>words</em> 1888<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/31477598/79c30475">https://sbrave.cn/post/31477598/79c30475</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

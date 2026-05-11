@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题38：数字在排序数组中出现的次数 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：统计一个数字在排序数组中出现的次数。例如输入数组{1,2,3,3,3,3,4,5}和数字3，由于3在数组中出现了4次，因此输出4.** 分析 看到排序数组，我们自然而然会想到二分法。但平常的二分法只能找到这个数字，并不能找出出现的次数，或者该数字的最左和最右边界。那么我们就需要改进一下： 假设数组是升序排列的，当…">
+<meta property="og:title" content="面试题38：数字在排序数组中出现的次数">
+<meta property="og:description" content="题目：统计一个数字在排序数组中出现的次数。例如输入数组{1,2,3,3,3,3,4,5}和数字3，由于3在数组中出现了4次，因此输出4.** 分析 看到排序数组，我们自然而然会想到二分法。但平常的二分法只能找到这个数字，并不能找出出现的次数，或者该数字的最左和最右边界。那么我们就需要改进一下： 假设数组是升序排列的，当…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/4d0eb241">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-07-03
+    </div>
+    <h1 class="article-title">面试题38：数字在排序数组中出现的次数</h1>
+    <p class="article-lede">题目：统计一个数字在排序数组中出现的次数。例如输入数组{1,2,3,3,3,3,4,5}和数字3，由于3在数组中出现了4次，因此输出4.** 分析 看到排序数组，我们自然而然会想到二分法。但平常的二分法只能找到这个数字，并不能找出出现的次数，或者该数字的最左和最右边界。那么我们就需要改进一下： 假设数组是升序排列的，当…</p>
+    <div class="article-meta">
+      <span>3 min read</span>
+      <span>571 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>面试题38：数字在排序数组中出现的次数</h2>
+<p><strong>题目：统计一个数字在排序数组中出现的次数。例如输入数组{1,2,3,3,3,3,4,5}和数字3，由于3在数组中出现了4次，因此输出4.</strong></p>
+<hr />
+<h3>分析</h3>
+<p>看到排序数组，我们自然而然会想到二分法。但平常的二分法只能找到这个数字，并不能找出出现的次数，或者该数字的最左和最右边界。那么我们就需要改进一下：</p>
+<p>假设数组是升序排列的，当我们用二分法找到这个数时，再继续用二分法去找它的左右边界，因此需要分别写两个函数。以找左边界为例，设现在有left，right和mid分别指向数组的最左，最右和中间数字，且中间数字恰好为我们要找的数字。这时候就在left和mid之间用二分法去找，假设mid2=left+(mid-left)/2；此时有如下几种情况：</p>
+<ul>
+<li>arr[mid2]==我们要找的数字，且arr[mid2-1]不等于我们要找的数字，则return mid2。否则继续在left和mid2之间找。</li>
+<li>arr[mid2]&lt;我们要找的数字，则在mid2和mid之间找。</li>
+<li>arr[mid2]&gt;我们要找的数字？？what？这是不可能滴！因为数组是升序排序的，且arr[mid]==我们要找的数字且mid&gt;mid2.</li>
+</ul>
+<p>综上，我们可以利用递归去找最左和最右的数字，将其下标相减就可以得到该数字出现的次数。</p>
+<p>代码如下：</p>
+<pre><code class="language-template&lt;typename">int _GetLeft(const vector&lt;T&gt;&amp;amp; v,int left,int right,const T&amp;amp; k)
+{
+    if(left==right)
+        return right;
+    int mid=left+(right-left)/2;
+    if(v[mid]==k)
+        return _GetLeft(v,left,mid,k);
+    else
+        return _GetLeft(v,mid+1,right,k);
+}
+
+template&lt;typename T&gt;
+int _GetRight(const vector&lt;T&gt;&amp;amp; v,int left,int right,const T&amp;amp; k)
+{
+    if(left==right)
+        return left;
+    if(left==right-1)
+    {
+        if(v[left]==k)
+            return left;
+        else
+            return right;
+    }
+    int mid=left+(right-left)/2;
+    if(v[mid]==k)
+        return _GetRight(v,mid,right,k);
+    else
+        return _GetRight(v,left,mid-1,k);
+}
+
+template&lt;typename T&gt;
+int _NumberOfK(const vector&lt;T&gt;&amp;amp; v,int left,int right,const T&amp;amp; k)
+{
+    if(left&gt;right)
+        return 0;
+    int mid=left+(right-left)/2;
+    if(v[mid]&gt;k)
+        return _NumberOfK(v,left,mid-1,k);
+    else if(v[mid]&lt;k)
+        return _NumberOfK(v,mid+1,right,k);
+    else
+    {
+        int r=_GetRight(v,mid,right,k);
+        int l=_GetLeft(v,left,mid,k);
+        //cout&lt;&lt;l&lt;&lt;&quot; &quot;&lt;&lt;r&lt;&lt;endl;
+        return r-l+1;
+    }
+}
+
+template&lt;typename T&gt;
+int NumberOfK(const vector&lt;T&gt;&amp;amp; v,const T&amp;amp; k)
+{
+    return _NumberOfK(v,0,v.size()-1,k);
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/38_NumbreOfK/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

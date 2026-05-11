@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题41：和为S的两个数字VS和为s的连续正数序列 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目一：输入一个递增排序的数组和一个数字s,在数组中查找两个数，使得他们的和正好是s。如果有多对数字的和等于s,输出任意一对即可。** 分析 今天上课，老师说了，在面试的时候不要一上来就去找最优的解法，因为你一时半会儿可能会找不到最优的。而且就算立即做出来了，面试官会认为你以前刷过这道题。所以可以先将最简单的思路哪怕是…">
+<meta property="og:title" content="面试题41：和为S的两个数字VS和为s的连续正数序列">
+<meta property="og:description" content="题目一：输入一个递增排序的数组和一个数字s,在数组中查找两个数，使得他们的和正好是s。如果有多对数字的和等于s,输出任意一对即可。** 分析 今天上课，老师说了，在面试的时候不要一上来就去找最优的解法，因为你一时半会儿可能会找不到最优的。而且就算立即做出来了，面试官会认为你以前刷过这道题。所以可以先将最简单的思路哪怕是…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/6dbf5b3c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-07-08
+    </div>
+    <h1 class="article-title">面试题41：和为S的两个数字VS和为s的连续正数序列</h1>
+    <p class="article-lede">题目一：输入一个递增排序的数组和一个数字s,在数组中查找两个数，使得他们的和正好是s。如果有多对数字的和等于s,输出任意一对即可。** 分析 今天上课，老师说了，在面试的时候不要一上来就去找最优的解法，因为你一时半会儿可能会找不到最优的。而且就算立即做出来了，面试官会认为你以前刷过这道题。所以可以先将最简单的思路哪怕是…</p>
+    <div class="article-meta">
+      <span>4 min read</span>
+      <span>783 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>面试题41：和为S的两个数字VS和为s的连续正数序列</h2>
+<p><strong>题目一：输入一个递增排序的数组和一个数字s,在数组中查找两个数，使得他们的和正好是s。如果有多对数字的和等于s,输出任意一对即可。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>今天上课，老师说了，在面试的时候不要一上来就去找最优的解法，因为你一时半会儿可能会找不到最优的。而且就算立即做出来了，面试官会认为你以前刷过这道题。所以可以先将最简单的思路哪怕是暴力穷举也可以告诉面试官，然后在逐步去寻找最优解。</p>
+<p>这道题的最简单办法是遍历数组，每到一个数字，就去遍历它后面的数字，直到找到两个数的和等于s即可。</p>
+<p>然而这种方法的时间复杂度是O(n<sup>2</sup>)。并且没有用的排序数组这个特性。</p>
+<p>更好一点的办法是设立两个指针i和j分别指向数组的头和尾。我们比较他们两个数的和，如果大于给定的数字sum，则可推断出j及其后面的数字和i相加都会大于sum，所以我们把j减1，也就是向移动一个数字。同理，如果两个数字之和小于给定的数字，我们就把i加1.</p>
+<p>基于以上分析，写出代码如下：</p>
+<pre><code class="language-bool">{
+    int left=0,right=v.size()-1;
+    while(left&lt;=right)
+    {
+        if(v[left]+v[right]==sum)
+        {
+            n1=v[left];
+            n2=v[right];
+            return true;
+        }
+        else if(v[left]+v[right]&gt;sum)
+        {
+            right--;
+        }
+        else
+        {
+            left++;
+        }
+    }
+    return false;
+}
+</code></pre>
+<p><strong>题目二:输入一个正数s，打印出所有和为s的连续正数序列（至少含有两个数）。例如输入15，由于1+2+3+4+55=4+5+6=7+8=15，所以打印出3个连续序列1~5,4~6和7~8.</strong></p>
+<hr />
+<h3>分析</h3>
+<p>和上一道题一样，我们也可以设置两个指针i和j，只不过他两被初始化为1和2.然后在一个循环中我们判断i+…+j是否等于给定的数字sum？是，就打印从i到j的所有数字.否则，如果i+…+j&gt;sum，就令i加1；否则就令j+1(i+…+j&lt;sum)。循环直到i超过了sum/2就结束。</p>
+<p><img src="/__themes/letter/images/test.png" alt="" /></p>
+<p>代码如下：</p>
+<pre><code class="language-void">{
+    int i;
+    for(i=left;i&lt;=right;++i)
+    {
+        cout&lt;&lt;i&lt;&lt;&quot; &quot;;
+    }
+    cout&lt;&lt;endl;
+}
+
+bool FindContinuousSequence(int sum)
+{
+    if(sum&lt;3)
+        return false;
+    int middle=(sum+1)/2;
+    int left=1,right=2;
+    int cursum=left+right;
+    while(left&lt;=middle)
+    {
+        if(cursum==sum)
+        {
+            print(left,right);
+            cursum-=left;
+            left++;
+        }
+        else if(cursum&lt;sum)
+        {
+            right++;
+            cursum+=right;
+        }
+        else
+        {
+            cursum-=left;
+            left++;
+        }
+    }
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/41_1_TowNumbersWithSum/main.cpp">点我前往(题目一)</a>  <a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/41_2_ContinuesSequenceWithSum/main.cpp">点我前往(题目二)</a></p>
+<div style="position: absolute; width: 0px; height: 0px; overflow: hidden; padding: 0px; border: 0px; margin: 0px;"><div id="MathJax_Font_Test" style="position: absolute; visibility: hidden; top: 0px; left: 0px; width: auto; padding: 0px; border: 0px; margin: 0px; white-space: nowrap; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; font-size: 40px; font-weight: normal; font-style: normal; font-family: MathJax_Math-italic, sans-serif;"></div></div>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

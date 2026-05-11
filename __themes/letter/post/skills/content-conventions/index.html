@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skill · 内容目录约定 · sbraveyoung · 字里行间</title>
+<meta name="description" content="何时用**：新建一篇文章 / 一个系列 / 一个独立页面，或者搞不清图片该放哪里的时候。 解决什么**：把 `sbraveyoung/blog/source/` 下的目录契约一次说清，配几个具体例子。 三个顶级目录，各有各的语义 仅此三个。**source/ 下别加其他东西**——不是说技术上不行，是 gobog 不认…">
+<meta property="og:title" content="Skill · 内容目录约定">
+<meta property="og:description" content="何时用**：新建一篇文章 / 一个系列 / 一个独立页面，或者搞不清图片该放哪里的时候。 解决什么**：把 `sbraveyoung/blog/source/` 下的目录契约一次说清，配几个具体例子。 三个顶级目录，各有各的语义 仅此三个。**source/ 下别加其他东西**——不是说技术上不行，是 gobog 不认…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/skills/content-conventions">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2026-05-11
+    </div>
+    <h1 class="article-title">Skill · 内容目录约定</h1>
+    <p class="article-lede">何时用**：新建一篇文章 / 一个系列 / 一个独立页面，或者搞不清图片该放哪里的时候。 解决什么**：把 `sbraveyoung/blog/source/` 下的目录契约一次说清，配几个具体例子。 三个顶级目录，各有各的语义 仅此三个。**source/ 下别加其他东西**——不是说技术上不行，是 gobog 不认…</p>
+    <div class="article-meta">
+      <span>3 min read</span>
+      <span>732 words</span>
+      
+      <span class="ai-badge">🤖 AI 辅助</span>
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>Skill · 内容目录约定</h2>
+<blockquote>
+<p><strong>何时用</strong>：新建一篇文章 / 一个系列 / 一个独立页面，或者搞不清图片该放哪里的时候。</p>
+<p><strong>解决什么</strong>：把 <code>sbraveyoung/blog/source/</code> 下的目录契约一次说清，配几个具体例子。</p>
+</blockquote>
+<h3>三个顶级目录，各有各的语义</h3>
+<pre><code>source/
+├── post/                 文章（递归扫描，子目录自动变 group）
+├── pages/                顶层独立页（pages/about.md → /about）
+└── resource/image/       图片 / 附件，最终被服务为 /image/...
+</code></pre>
+<p>仅此三个。<strong>source/ 下别加其他东西</strong>——不是说技术上不行，是 gobog 不认。</p>
+<h3>post/ 怎么组织</h3>
+<ul>
+<li>直接放在 <code>post/</code> 下面的 <code>.md</code>，是单篇文章。URL = <code>/post/&lt;slug-of-basename&gt;</code>。</li>
+<li><code>post/&lt;某某系列&gt;/&lt;chapter&gt;.md</code>，子目录自动被识别为 group：
+<ul>
+<li>group 自身有一个着陆页，URL = <code>/post/&lt;某某系列&gt;/</code>，列出所有子文章。</li>
+<li>子文章 URL = <code>/post/&lt;某某系列&gt;/&lt;chapter-slug&gt;</code>。</li>
+</ul>
+</li>
+<li>再深一层的目录也可以（<code>post/A/B/C.md</code>），URL 跟着叠。</li>
+</ul>
+<blockquote>
+<p>排序细节单独写在 <a href="/__themes/letter/post/skills/publish-and-sync">Skill · publish-and-sync</a> 里。简单说：默认按 create_time 倒序，文件名带数字前缀（<code>00-</code>、<code>01-</code>）的 group 自动按数字升序。</p>
+</blockquote>
+<h3>pages/ 怎么用</h3>
+<p><code>pages/&lt;name&gt;.md</code> 自动渲染到 <code>/&lt;name&gt;</code>。最常见的是 <code>pages/about.md</code> → <code>/about</code>，但完全可以扩展：</p>
+<pre><code>pages/
+├── about.md          → /about
+├── contact.md        → /contact
+├── now.md            → /now
+└── projects.md       → /projects
+</code></pre>
+<p>加新页面 = 加 markdown 文件，<strong>不需要改 gobog 代码、不需要改主题模板</strong>。pages 自动出现在站点的导航条里。</p>
+<p><code>pages/</code> 下的子目录是被忽略的——可以放草稿、暂存版本而不会被发布。</p>
+<h3>resource/image/ 怎么用</h3>
+<p>所有图片附件都丢这里。引用方式两种都支持：</p>
+<pre><code class="language-markdown">&lt;!-- 标准 markdown --&gt;
+![diagram](./resource/image/diagram.png)
+![diagram](/image/diagram.png)
+
+&lt;!-- Obsidian 语法 --&gt;
+diagram.png
+</code></pre>
+<ul>
+<li>链接用 <code>/image/&lt;basename&gt;</code> 是最干净的形式（部署后稳定）。</li>
+<li><code>./resource/image/...</code> 在 Obsidian 里能直接预览。</li>
+<li><code>name.png</code> 不需要写路径，gobog 会从基名反查到文件位置。</li>
+</ul>
+<p>向后兼容：老布局 <code>source/image/...</code> 仍然能解析（fallback），但新文章请用 <code>resource/image/</code>。</p>
+<h3>命名规则</h3>
+<ul>
+<li>文件名用中文 OK，slug 化时会回退到稳定的 hex hash，URL 始终可寻址。</li>
+<li>别用半角的特殊字符（<code>/</code>、<code>\</code>、<code>?</code>、<code>&amp;</code>、<code>#</code>），文件系统和 URL 都会闹脾气。</li>
+<li>想做&quot;系列&quot;，请在文件名前加 <code>00-</code>、<code>01-</code> 这种数字前缀；或者在 front-matter 里写 <code>order: &lt;n&gt;</code>。详见 <a href="/__themes/letter/post/skills/front-matter-reference">Skill · ai-attribution 之前的 series 那一段</a>。</li>
+</ul>
+<h3>不发布的东西放哪</h3>
+<ul>
+<li>草稿：front-matter 里写 <code>draft: true</code>，文件留在原地，不进发布列表。</li>
+<li>暂时下线：<code>hidden: true</code>，语义跟 draft 一样但暗示&quot;以后会回来&quot;。</li>
+<li>私密：<code>private: true</code>，列表里看得到，正文需要 HTTP Basic auth；静态导出会直接过滤掉（GitHub Pages 没法做 auth）。</li>
+<li>完全不该公开的内容：<strong>别放进 source/</strong>，留在 vault 别的目录。</li>
+</ul>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

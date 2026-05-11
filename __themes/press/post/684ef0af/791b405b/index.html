@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题33：把数组排成最小的数 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：输入一个正整数数组，把数组中所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。例如输入数组{3,32,321}，则打印出这3个数字能排列成的最小数字321323。** 分析 很容易想到的是求出所有整数的全排列，然后将它们拼接为一个数字，找出最小的一组。但这种方法存在两个问题： 假设数组有n个整数，全…">
+<meta property="og:title" content="面试题33：把数组排成最小的数">
+<meta property="og:description" content="题目：输入一个正整数数组，把数组中所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。例如输入数组{3,32,321}，则打印出这3个数字能排列成的最小数字321323。** 分析 很容易想到的是求出所有整数的全排列，然后将它们拼接为一个数字，找出最小的一组。但这种方法存在两个问题： 假设数组有n个整数，全…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/791b405b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Sunday, June 26, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · June 26, 2016</div>
+    <h1 class="press-article-title">
+      面试题33：把数组排成最小的数
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目：输入一个正整数数组，把数组中所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。例如输入数组{3,32,321}，则打印出这3个数字能排列成的最小数字321323。** 分析 很容易想到的是求出所有整数的全排列，然后将它们拼接为一个数字，找出最小的一组。但这种方法存在两个问题： 假设数组有n个整数，全…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 3 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题33：把数组排成最小的数</h2>
+<p><strong>题目：输入一个正整数数组，把数组中所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。例如输入数组{3,32,321}，则打印出这3个数字能排列成的最小数字321323。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>很容易想到的是求出所有整数的全排列，然后将它们拼接为一个数字，找出最小的一组。但这种方法存在两个问题：</p>
+<ul>
+<li>假设数组有n个整数，全排列有n!中可能，求全排列的话，时间复杂度太大。</li>
+<li>整型最大只能表示到2147483647，也就是全部9位数字和部分10位数字。要是拼接出来的整数大于9位的话就可能产生溢出。所以这还是一道大数问题。</li>
+</ul>
+<p>所以我直接跳过这种方法，来看第二种方法：</p>
+<p>先将这些整数转化为字符串存储起来，然后对他们排序，排序的规则就是他们拼接起来的字符串的“大小”。比如两个字符串m和n，可以拼接成mn和nm，由于他们的长度相同，所以可以用strcmp(mn,nm)来比较。如果strcmp函数返回1，表明字符串mn“大于”nm；否则nm“大于”mn。然后将他们顺次拼接起来即可。因为在排序函数中会将字符串两两比较，所以可以确保他们拼接出来的是有序的。</p>
+<p>代码如下：</p>
+<pre><code>bool compair(const string&amp;amp; s1,const string&amp;amp; s2)
+{
+    string news1=s1+s2;
+    string news2=s2+s1;
+    int ret=strcmp(news1.c_str(),news2.c_str());
+    if(ret&lt;=0)
+        return true;
+    else
+        return false;
+}
+
+void PrintMinNumber(vector&lt;int&gt; v)
+{
+    if(v.size()==0)
+        return;
+    vector&lt;string&gt; vs;
+    char tmp[11];
+    int i;
+    for(i=0;i&lt;v.size();++i)
+    {
+        sprintf(tmp,&quot;%d&quot;,v[i]);
+        vs.push_back(string(tmp));
+    }
+    sort(vs.begin(),vs.end(),compair);
+    for(i=0;i&lt;vs.size();++i)
+    {
+        cout&lt;&lt;vs[i];
+    }
+    cout&lt;&lt;endl;
+    return;
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/33_SortArrayForMinNumber/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

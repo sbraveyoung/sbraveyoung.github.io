@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题28：字符串的排列 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：输入一个字符串，打印出该字符串中字符的所有排列。例如输入“abc”，则打印出”abc”,”acb”,”bac”,”bca”,”cab”,”cba”。** 分析 此题即求某个序列的全排列。此序列可以是数组或字符串等。求全排列的方法我介绍两种： 直接用STL算法 自己实现 套用STL的话非常简单，只需要包含头文件`#…">
+<meta property="og:title" content="面试题28：字符串的排列">
+<meta property="og:description" content="题目：输入一个字符串，打印出该字符串中字符的所有排列。例如输入“abc”，则打印出”abc”,”acb”,”bac”,”bca”,”cab”,”cba”。** 分析 此题即求某个序列的全排列。此序列可以是数组或字符串等。求全排列的方法我介绍两种： 直接用STL算法 自己实现 套用STL的话非常简单，只需要包含头文件`#…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/19deb5aa">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Sunday, June 19, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · June 19, 2016</div>
+    <h1 class="press-article-title">
+      面试题28：字符串的排列
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目：输入一个字符串，打印出该字符串中字符的所有排列。例如输入“abc”，则打印出”abc”,”acb”,”bac”,”bca”,”cab”,”cba”。** 分析 此题即求某个序列的全排列。此序列可以是数组或字符串等。求全排列的方法我介绍两种： 直接用STL算法 自己实现 套用STL的话非常简单，只需要包含头文件`#…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 2 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题28：字符串的排列</h2>
+<p><strong>题目：输入一个字符串，打印出该字符串中字符的所有排列。例如输入“abc”，则打印出”abc”,”acb”,”bac”,”bca”,”cab”,”cba”。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>此题即求某个序列的全排列。此序列可以是数组或字符串等。求全排列的方法我介绍两种：</p>
+<ul>
+<li>直接用STL算法</li>
+<li>自己实现</li>
+</ul>
+<p>套用STL的话非常简单，只需要包含头文件<code>#include&lt;algorithm&gt;</code>，然后使用下面代码即可：</p>
+<pre><code class="language-void">{
+    sort(str.begin(),str.end());
+    do
+    {
+        cout&lt;&lt;str&lt;&lt;endl;
+    }while(next_permutation(str.begin(),str.end());
+}
+</code></pre>
+<p>需要注意的是，以上代码在do-while循环之前必须保证字符串是有序的，否则会只输出部分的全排列序列。</p>
+<p>自己实现的思想如下：</p>
+<p>我们可以将字符串看成两部分：第一部分是第一个字符，第二部分是后面所有字符。先求出第一部分，然后可以递归地处理第二部分。</p>
+<p>而可能出现在第一部分的字符就是将所有字符与第一部分交换而得到的。</p>
+<p>代码如下：</p>
+<pre><code class="language-void">{
+    if(start&gt;=end)
+        cout&lt;&lt;str&lt;&lt;endl;
+    else
+    {
+        int i=start;
+        for(i=start;i&lt;end;++i)
+        {
+            swap(str[i],str[start]);
+            _Permutation(str,start+1,end);
+            swap(str[i],str[start]);
+        }
+    }
+}
+
+void Permutation(string str)
+{
+    if(str.size()&lt;=0)
+        return;
+    _Permutation(str,0,str.size());
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/28_StringPermutation/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一个简单的Vector实现 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/61d9b4f">
+<meta name="description" content="众所周知，STL 库以高效而闻名。而且使用它可以很方便的实现我们的主要逻辑，不需要关心各种底层的实现细节。本文模拟实现了一个简单的 vector 容器。关于 vector 的介绍请移步：[浅谈STL](/post/cf4cc8e2/e66fb74) 代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个简单的Vector实现">
+<meta property="og:url" content="https://sbrave.cn/post/e660f1d5/61d9b4f">
+<meta property="og:description" content="众所周知，STL 库以高效而闻名。而且使用它可以很方便的实现我们的主要逻辑，不需要关心各种底层的实现细节。本文模拟实现了一个简单的 vector 容器。关于 vector 的介绍请移步：[浅谈STL](/post/cf4cc8e2/e66fb74) 代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-20 11:15:45</span>
+        <span>· 290 字</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>一个简单的Vector实现</h2>
+<p>众所周知，STL 库以高效而闻名。而且使用它可以很方便的实现我们的主要逻辑，不需要关心各种底层的实现细节。本文模拟实现了一个简单的 vector 容器。关于 vector 的介绍请移步：<a href="/__themes/sepia/post/cf4cc8e2/e66fb74">浅谈STL</a></p>
+<p>代码如下：</p>
+<pre><code class="language-C++">#ifndef _VECTOR_
+#define _VECTOR_
+
+#include&lt;iostream&gt;
+#include&lt;assert.h&gt;
+#include&lt;memory.h&gt;
+using namespace std;
+
+template&lt;typename T&gt;
+class MyVector{
+public:
+    MyVector()
+    {
+        _array=new T[1];
+        _size=0;
+        _capacity=1;
+    }
+
+    MyVector(T* arr,size_t size)
+    {
+        if(arr==NULL)
+        {
+            MyVector();
+            return;
+        }
+        _array=new T[size];
+        int i;
+        for(i=0;i&lt;size;++i)
+        {
+            _array[i]=arr[i];
+        }
+        _size=size;
+        _capacity=size;
+    }
+
+    ~MyVector()
+    {
+        delete[] _array;
+        _array=NULL;
+        _capacity=0;
+        _size=0;
+    }
+
+    MyVector(const MyVector&lt;T&gt;&amp; v)
+    {
+        _capacity=v._capacity;
+        _size=v._size;
+        _array=new T[this-&gt;_capacity];
+        memmove(this-&gt;_array,v._array,sizeof(T)*this-&gt;_size);
+    }
+
+    MyVector&amp; operator=(const MyVector&lt;T&gt;&amp; v)
+    {
+        if(&amp;v!=this)
+        {
+            T* tmp=new T[this-&gt;_capacity];
+            memmove(tmp,this-&gt;_array,sizeof(T)*this-&gt;_size);
+            swap(tmp,_array);
+            delete[] tmp;
+        }
+    }
+
+    void push_back(const T&amp; t)
+    {
+        if(_size==_capacity)
+            _Increase(_capacity*2);
+        _array[_size++]=t;
+    }
+
+    void push_front(const T&amp; t)
+    {
+        if(_size==_capacity)
+            _Increase(_capacity*2);
+        memmove(_array,_array+1,sizeof(T)*_size++);
+        _array[0]=t;
+    }
+
+    void pop_back()
+    {
+        if(_size&gt;0)
+            _size--;
+    }
+
+    void pop_front()
+    {
+        if(_size&gt;0)
+            memmove(_array+1,_array,sizeof(T)*--_size);
+    }
+
+    T&amp; operator[](size_t pos)
+    {
+        assert(pos&lt;_size);
+        return _array[pos];
+    }
+
+    size_t size()
+    {
+        return _size;
+    }
+
+    bool empty()
+    {
+        return _size&lt;=0;
+    }
+
+    void resize(size_t size)
+    {
+        if(size&lt;=_size)
+            return;
+        _Increase(size);
+        _size=size;
+    }
+
+private:
+    void _Increase(size_t size)
+    {
+        if(size&lt;=_capacity)
+            return;
+        _capacity=size;
+        T* tmp=new T[_capacity];
+        memmove(tmp,_array,sizeof(T)*_size);
+        swap(tmp,_array);
+        delete []tmp;
+    }
+
+private:
+    T* _array;
+    size_t _capacity;
+    size_t _size;
+};
+
+#endif
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/Vector">点我前往</a>
+)</p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

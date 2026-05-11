@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题21：包含min函数的栈 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的min函数。在该栈中，调用min，push及pop函数的时间复杂度都是O(1)。 分析 栈应该是我们很熟悉的一种数据结构了，它是一种“后进先出”的数据结构，并且只能在栈的一端(栈顶)进行操作。所以其push和pop操作的时间复杂度都是O(1)。如果题目没…">
+<meta property="og:title" content="面试题21：包含min函数的栈">
+<meta property="og:description" content="题目：定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的min函数。在该栈中，调用min，push及pop函数的时间复杂度都是O(1)。 分析 栈应该是我们很熟悉的一种数据结构了，它是一种“后进先出”的数据结构，并且只能在栈的一端(栈顶)进行操作。所以其push和pop操作的时间复杂度都是O(1)。如果题目没…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/4135afc8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-06-09
+    </div>
+    <h1 class="article-title">面试题21：包含min函数的栈</h1>
+    <p class="article-lede">题目：定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的min函数。在该栈中，调用min，push及pop函数的时间复杂度都是O(1)。 分析 栈应该是我们很熟悉的一种数据结构了，它是一种“后进先出”的数据结构，并且只能在栈的一端(栈顶)进行操作。所以其push和pop操作的时间复杂度都是O(1)。如果题目没…</p>
+    <div class="article-meta">
+      <span>3 min read</span>
+      <span>547 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>面试题21：包含min函数的栈</h2>
+<h3>题目：定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的min函数。在该栈中，调用min，push及pop函数的时间复杂度都是O(1)。</h3>
+<hr />
+<h3>分析</h3>
+<p>栈应该是我们很熟悉的一种数据结构了，它是一种“后进先出”的数据结构，并且只能在栈的一端(栈顶)进行操作。所以其push和pop操作的时间复杂度都是O(1)。如果题目没有要求min函数的时间复杂度的话，我们可以在min函数里面遍历所有的元素并将其保存起来，找到最小的元素后再将所有元素以相反的顺序放回去。但现在这种方案显然不行。</p>
+<p>我们可以定义两个栈，一个存放我们需要的元素，称为元素栈。另一个存放当前元素栈里面最小的一个元素值，称为最小值栈。这样，当调用min函数时，直接返回最小值栈的栈顶就可以了，达到了O(1)的时间复杂度。这是一个“以空间换时间”的方法。</p>
+<p>这样，在插入元素时，先将其插入元素栈里，并判断该元素是否小于最小值栈的栈顶元素，若小于，则将该元素插入最小值栈，否则，将最小值栈的栈顶元素在此插入最小值栈。pop时，两个都pop即可。</p>
+<p>代码如下：</p>
+<pre><code>
+class StackIsEmpty{};
+
+template&lt;typename T&gt;
+class MyStack{
+public:
+    void push(const T&amp; t)
+    {
+        if(s.empty())
+        {
+            m.push(t);
+        }
+        else
+        {
+            if(t&lt;m.top())
+            {
+                m.push(t);
+            }
+            else
+            {
+                m.push(m.top());
+            }
+        }
+        s.push(t);
+    }
+    void pop()
+    {
+        if(!s.empty())
+        {
+            s.pop();
+            m.pop();
+        }
+        else
+            throw StackIsEmpty();
+    }
+    T&amp; min()
+    {
+        if(!s.empty())
+        {
+            return m.top();
+        }
+        else
+            throw StackIsEmpty();
+    }
+    bool empty()
+    {
+        return s.empty();
+    }
+private:
+    stack&lt;T&gt; s;
+    stack&lt;T&gt; m;//min
+};
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/21_MinInStack/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

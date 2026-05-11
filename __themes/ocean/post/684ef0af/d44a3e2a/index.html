@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题5：从尾到头打印链表 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/d44a3e2a">
+<meta name="description" content="题目：输入一个链表的头结点，从尾到头反过来打印出每个节点的值。** 分析 这道题有如下几种解决方案： 1. 将链表逆置，然后顺次打印 2. 递归方案 3. 迭代方案 如果逆置链表的话，会改变链表原先的结构。我们可以在面试时询问面试过是否可以改变链表，如果是肯定的回答，就可以采用这种办法。否则只能采用后面的方法。 逆置链…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题5：从尾到头打印链表">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/d44a3e2a">
+<meta property="og:description" content="题目：输入一个链表的头结点，从尾到头反过来打印出每个节点的值。** 分析 这道题有如下几种解决方案： 1. 将链表逆置，然后顺次打印 2. 递归方案 3. 迭代方案 如果逆置链表的话，会改变链表原先的结构。我们可以在面试时询问面试过是否可以改变链表，如果是肯定的回答，就可以采用这种办法。否则只能采用后面的方法。 逆置链…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-05-24 15:56:39</span>
+        <span>· 476 字</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题5：从尾到头打印链表</h2>
+<p><strong>题目：输入一个链表的头结点，从尾到头反过来打印出每个节点的值。</strong></p>
+<h3>分析</h3>
+<p>这道题有如下几种解决方案：</p>
+<ol>
+<li>将链表逆置，然后顺次打印</li>
+<li>递归方案</li>
+<li>迭代方案</li>
+</ol>
+<p>如果逆置链表的话，会改变链表原先的结构。我们可以在面试时询问面试过是否可以改变链表，如果是肯定的回答，就可以采用这种办法。否则只能采用后面的方法。</p>
+<p>逆置链表也很简单，只需要从第二个节点开始，顺次摘取一个节点头插就可以。</p>
+<h3>代码如下</h3>
+<pre><code class="language-c">list* PrintListInReversedOrder(list* head)
+{
+    if(head==NULL || head-&gt;next==NULL)
+        return head;
+    list* tmp=NULL;
+    list* cur=head-&gt;next;
+    head-&gt;next=NULL;
+    while(cur!=NULL)
+    {
+        tmp=cur-&gt;next;
+        cur-&gt;next=head;
+        head=cur;
+        cur=tmp;
+    }
+    cur=head;
+    while(cur!=NULL)
+    {
+        cout &lt;&lt; cur-&gt;data &lt;&lt; &quot; &quot;;
+        cur=cur-&gt;next;
+    }
+    cout &lt;&lt; endl;
+    return head;
+}
+</code></pre>
+<p>递归方案很简单，如果当前函数参数所指向的节点是尾节点，则打印之。否则先打印它的下一个节点即可。</p>
+<h3>代码如下</h3>
+<pre><code class="language-c">void PrintListInReversedOrder(list* head)
+{
+    if(head==NULL)
+        return;
+    PrintListInReversedOrder(head-&gt;next);
+    cout &lt;&lt; head-&gt;data &lt;&lt; &quot; &quot;;
+}
+</code></pre>
+<p>但如果链表太长，采用递归的话可能会导致 Stack OverFlow，所以更好的办法是用循环来控制。而递归在本质上就是一个栈结构（系统栈），所以我们可以用自定义的栈（数据结构栈）来模拟递归的行为以实现这种效果</p>
+<h3>代码如下</h3>
+<pre><code>#include&lt;stack&gt;
+void PrintListInReversedOrder(list* head){
+//此处不用判断head是否为空，并非忘记
+    stack&lt;list*&gt; s;
+    list* cur=head;
+    while(cur!=NULL)
+    {
+        s.push(cur);
+        cur=cur-&gt;next;
+    }
+    while(!s.empty())
+    {
+        cout &lt;&lt; s.top()-&gt;data &lt;&lt; &quot; &quot;;
+        s.pop();
+    }
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：[点我前往]()</p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

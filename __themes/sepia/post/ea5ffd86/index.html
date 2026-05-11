@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>音视频系列 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-group">
+  <nav class="crumbs"><a href="/__themes/sepia/">Home</a><span>›</span><span>音视频系列</span></nav>
+  <header class="group-head">
+    <h1>音视频系列</h1>
+    <p class="group-count">5 篇</p>
+  </header>
+
+  <section class="post-list">
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/ea5ffd86/af1830cd">下一代直播--低延迟直播技术探索</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">一、背景 互联网直播的发展大致可分为 4 个阶段：创新期、演进期、量产期和瓶颈期，分别对应着不同的直播场景、实现技术，相应地会有不同的延迟及用户体验。 创新期**：直播技术从无到有的时期，革命性地将观众的观看体验从线下/离线文件转移到线上。但这个时期直播体验较差，体现在延迟上就是分钟级别的。 演进期**：这一时期随着互…</p>
+      <div class="entry-meta">
+        <span>2020-12-16 18:46:29</span>
+        <span>· 16 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/ea5ffd86/f4cdc5ec">H.264五分钟入门</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">一、前言 随着人类文明的发展，信息的传递方式也发生了巨大的转变。从 1G 到 5G，信息的传递方式由文字、语音，逐渐过渡到现在的视频，对信息的需求越来越高。如果不对信息进行压缩，需要传输或存储的信息量将远远超过目前通信信道的传输、处理能力。而目前在视频领域主流的是 H.264 压缩标准，因此适当了解一下其压缩原理是很有…</p>
+      <div class="entry-meta">
+        <span>2020-09-14 20:37:25</span>
+        <span>· 19 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/ea5ffd86/8c61a296">低延迟 hls 调研</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">一、目标 1. 1~2秒延迟； 2. 不影响 hls 原有特性，如码率自适应、CDN 分发等； 3. 完全向后兼容； 二、常规 hls 方案 不考虑 CDN 的情况 ![low-hls-1|100%](../../../image/low-hls-1.png) 客户端播放 hls 的流程如上图： 1. 服务端先生成 6…</p>
+      <div class="entry-meta">
+        <span>2020-07-24 18:46:29</span>
+        <span>· 6 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/ea5ffd86/3b27d2a4">图像高斯模糊算法简介</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">我司的图片编解码服务承载了整个集团二十余个业务的图片处理功能。一种常见的业务需求就是对图像进行模糊处理。 近期，部分业务有对图像进行模糊处理的需求，因此大概学习了一下图像的模糊处理算法，记录如下。 我们知道，一幅图片由多个像素点组成。对图片进行模糊处理，本质上是对这些像素点找到一种「平滑」的算法，使得每个像素都被周围的…</p>
+      <div class="entry-meta">
+        <span>2020-05-03 22:14:03</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/ea5ffd86/1229577b">直播答题背后的技术原理</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">2018 年仅仅过去了一个礼拜，就迎来了今年的第一个风口--直播答题闯关赢现金。这场由国民老公点燃的战火一触即发，大有愈演愈烈之势。不仅有思聪力挺的冲顶大会，更有作为花椒直播背后的老板周鸿祎，西瓜视频老板张一鸣等大佬也纷纷加入到这场「大撒币」中来。直播答题的具体规则如下： 平台方在某个整点有一名出题官发起直播，并设有一…</p>
+      <div class="entry-meta">
+        <span>2018-02-09 01:50:15</span>
+        <span>· 8 min</span>
+        
+      </div>
+    </article>
+    
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

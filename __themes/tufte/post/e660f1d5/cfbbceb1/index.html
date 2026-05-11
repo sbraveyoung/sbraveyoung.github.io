@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一个简单的Deque实现 · sbraveyoung · 字里行间</title>
+<meta name="description" content="一个双向队列,底层使用 list 实现，因为 list 在 push\_back，push\_front，pop\_back，pop\_front 这些函数中效率较高。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/Sma…">
+<meta property="og:title" content="一个简单的Deque实现">
+<meta property="og:description" content="一个双向队列,底层使用 list 实现，因为 list 在 push\_back，push\_front，pop\_back，pop\_front 这些函数中效率较高。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/Sma…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/cfbbceb1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2016 · NO. §152</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · July 26, 2016
+      </div>
+      <h1 class="article-title">一个简单的Deque实现</h1>
+      <p class="article-lede">一个双向队列,底层使用 list 实现，因为 list 在 push\_back，push\_front，pop\_back，pop\_front 这些函数中效率较高。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/Sma…</p>
+      <div class="article-meta">
+        <span>1 min read</span>
+        <span>·</span>
+        <span>152 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>一个简单的Deque实现</h2>
+<p>一个双向队列,底层使用 list 实现，因为 list 在 push_back，push_front，pop_back，pop_front 这些函数中效率较高。</p>
+<pre><code class="language-C">#ifndef _DEQUE_
+#define _DEQUE_
+
+#include&lt;iostream&gt;
+#include&quot;../List/MyList.h&quot;
+
+template&lt;typename T&gt;
+class Deque{
+public:
+    Deque():mylist()
+    {}
+
+    Deque(const Deque&lt;T&gt;&amp; dq)
+    {
+        this-&gt;mylist=dq.mylist;
+    }
+
+    Deque&amp; operator=(const Deque&lt;T&gt;&amp; dq)
+    {
+        this-&gt;mylist=dq.mylist;
+    }
+
+    ~Deque()
+    {}
+
+    size_t size()
+    {
+        return mylist.size();
+    }
+
+    bool empty()
+    {
+        return mylist.empty();
+    }
+
+    const T&amp; front()
+    {
+        return mylist.begin()-&gt;data;
+    }
+
+    void push_back(const T&amp; t)
+    {
+        mylist.push_back(t);
+    }
+
+    void push_front(const T&amp; t)
+    {
+        mylist.push_front(t);
+    }
+
+    void pop_back()
+    {
+        mylist.pop_back();
+    }
+
+    void pop_front()
+    {
+        mylist.pop_front();
+    }
+
+private:
+    List&lt;T&gt; mylist;
+};
+
+#endif
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/Deque">点我前往</a>
+)</p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2016-07-26<br>
+          <em>read in</em> 1 min<br>
+          <em>words</em> 152<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2016 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/e660f1d5/cfbbceb1">https://sbrave.cn/post/e660f1d5/cfbbceb1</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

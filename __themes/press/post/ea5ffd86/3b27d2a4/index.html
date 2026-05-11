@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>图像高斯模糊算法简介 · sbraveyoung · 字里行间</title>
+<meta name="description" content="我司的图片编解码服务承载了整个集团二十余个业务的图片处理功能。一种常见的业务需求就是对图像进行模糊处理。 近期，部分业务有对图像进行模糊处理的需求，因此大概学习了一下图像的模糊处理算法，记录如下。 我们知道，一幅图片由多个像素点组成。对图片进行模糊处理，本质上是对这些像素点找到一种「平滑」的算法，使得每个像素都被周围的…">
+<meta property="og:title" content="图像高斯模糊算法简介">
+<meta property="og:description" content="我司的图片编解码服务承载了整个集团二十余个业务的图片处理功能。一种常见的业务需求就是对图像进行模糊处理。 近期，部分业务有对图像进行模糊处理的需求，因此大概学习了一下图像的模糊处理算法，记录如下。 我们知道，一幅图片由多个像素点组成。对图片进行模糊处理，本质上是对这些像素点找到一种「平滑」的算法，使得每个像素都被周围的…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/ea5ffd86/3b27d2a4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2020</span>
+    <span>Sunday, May 3, 2020</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · May 3, 2020</div>
+    <h1 class="press-article-title">
+      图像高斯模糊算法简介
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>我司的图片编解码服务承载了整个集团二十余个业务的图片处理功能。一种常见的业务需求就是对图像进行模糊处理。 近期，部分业务有对图像进行模糊处理的需求，因此大概学习了一下图像的模糊处理算法，记录如下。 我们知道，一幅图片由多个像素点组成。对图片进行模糊处理，本质上是对这些像素点找到一种「平滑」的算法，使得每个像素都被周围的…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 3 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>图像高斯模糊算法简介</h2>
+<p>我司的图片编解码服务承载了整个集团二十余个业务的图片处理功能。一种常见的业务需求就是对图像进行模糊处理。</p>
+<p>近期，部分业务有对图像进行模糊处理的需求，因此大概学习了一下图像的模糊处理算法，记录如下。</p>
+<p>我们知道，一幅图片由多个像素点组成。对图片进行模糊处理，本质上是对这些像素点找到一种「平滑」的算法，使得每个像素都被周围的像素平均化，从而损失一部分的精度。与此相反的是对图片做锐化处理，在此不做展开。</p>
+<h3>原理</h3>
+<p>较为常见的模糊处理算法是高斯模糊，一维的高斯函数形式为
+$$
+f(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+$$
+其中，$\sigma$ 为高斯标准差，$\mu$ 为 x 的均值。由于高斯函数的图像关于 $x=\mu$ 对称，因此可将图像中心移动到与 y 轴重合，即可令 $\mu=0$ ，因此 $f(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{x^2}{2\sigma^2}}$。如下图可看出，$\sigma$ 值越大，置信区间越集中。对应地，图像越陡峭。</p>
+<p><img src="../../../image/20160928083711092.jpg" alt="" /></p>
+<p>由于图像是二维数据，因此我们需要二维的高斯函数，其形式为：
+$$
+\begin{align}
+G(x,y)&=\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{x^2}{2\sigma^2}} \cdot \frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{y^2}{2\sigma^2}}\\\
+&=\frac{1}{2\pi\sigma^2}e^{-\frac{(x^2+y^2)}{2\sigma^2}}
+\end{align}
+$$
+对应图像为：</p>
+<p><img src="../../../image/bg2012110708.png" alt="" /></p>
+<hr />
+<p>在图像的高斯模糊处理中，输入参数有 radius 和 sigma。radius 为对中心点周围半径为某一值以内的所有像素做平均处理，其值越大，中心像素越收到更多周围像素的影响，生成的图片越模糊。如下图所示，中心点像素原始值为 2，半径为 1 以内的周围像素值都为 1。</p>
+<p><img src="../../../image/IMG_0F4C7A8B732F-1.jpeg" alt="" /></p>
+<p>最容易想到的方法是对中心点周围的所有像素求平均值。但由于图片存在空间局部性原理，即越靠近中心点的像素，跟中心点的关系越密切。因此使用高斯函数进行加权平均是一种更合理的方法，越靠近中心点的像素权重越高，输入参数中的 sigma 就对应了高斯二维函数中的 $\sigma$，其值越大，高斯函数图像越平缓，离中心点越远的像素分配的权重越大，生成的图像越模糊。</p>
+<h3>效果</h3>
+<p>有如下一张图片：</p>
+<p><img src="../../../image/MTU3Nzc5NTM1MjM5OTczMzcyMyM0NjUjaW1hZ2U=.png" alt="" /></p>
+<p>给定 radius=5,sigma=10 得到的模糊图片如下：</p>
+<p><img src="../../../image/MTU3Nzc5NTM1MjM5OTczMzcyMyM0NjUjaW1hZ2U=&amp;c=0&amp;h=427&amp;m=1&amp;s=60&amp;t=4&amp;w=640&amp;blur=1&amp;radius=5&amp;sigma=10.png" alt="" /></p>
+<p>【完】</p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2020 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

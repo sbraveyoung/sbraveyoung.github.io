@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一个简单的Heap实现 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/d548bd19">
+<meta name="description" content="以下代码实现了一个堆，可以传入仿函数来决定生成最大堆或最小堆。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Heap) )">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个简单的Heap实现">
+<meta property="og:url" content="https://sbrave.cn/post/e660f1d5/d548bd19">
+<meta property="og:description" content="以下代码实现了一个堆，可以传入仿函数来决定生成最大堆或最小堆。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Heap) )">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-23 13:37:53</span>
+        <span>· 303 字</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>一个简单的Heap实现</h2>
+<p>以下代码实现了一个堆，可以传入仿函数来决定生成最大堆或最小堆。</p>
+<pre><code class="language-C++">#ifndef _HEAP_
+#define _HEAP_
+
+#include&quot;../Vector/Vector.h&quot;
+#include&lt;string&gt;
+using namespace std;
+
+template&lt;typename T&gt;
+class Less{
+public:
+    bool operator()(const T&amp; t1,const T&amp; t2)
+    {
+        return t1&lt;t2;
+    }
+};
+
+template&lt;typename T&gt;
+class Greater{
+public:
+    bool operator()(const T&amp; t1,const T&amp; t2)
+    {
+        return t1&gt;t2;
+    }
+};
+
+template&lt;typename T,typename Compair=Less&lt;T&gt;&gt;
+class heap{
+public:
+    heap():_vector()
+    {}
+
+    heap(const MyVector&lt;T&gt;&amp; v):_vector(v)
+    {
+        make_heap();
+    }
+
+    ~heap()
+    {}
+
+    heap(const heap&amp; h)
+    {
+        _vector=h._vector;
+    }
+
+    heap&amp; operator=(const heap&amp; h)
+    {
+        _vector=h._vector;
+    }
+
+    const T&amp; top()
+    {
+        if(empty())
+            throw new string(&quot;heap is null!&quot;);
+        return _vector[0];
+    }
+
+    void make_heap()
+    {
+        int i;
+        int n=_vector.size();
+        for(i=n/2;i&gt;=0;--i)
+        {
+            _JustDown(i,n);
+        }
+    }
+
+    void push_heap(const T&amp; t)
+    {
+        Compair cp;
+        _vector.push_back(t);
+        int i=_vector.size()-1;
+        for(;i&gt;=0;)
+        {
+            if(cp(_vector[i],_vector[i/2]))
+            {
+                swap(_vector[i],_vector[i/2]);
+                i=i/2;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    bool empty()
+    {
+        return _vector.empty();
+    }
+
+    size_t size()
+    {
+        return _vector.size();
+    }
+
+    T pop_heap()
+    {
+        if(empty())
+            throw new string(&quot;heap is null!&quot;);
+        swap(_vector[0],_vector[_vector.size()-1]);
+        T tmp=_vector[_vector.size()-1];
+        _vector.pop_back();
+        _JustDown(0,_vector.size());
+        return tmp;
+    }
+
+    void sort_heap()
+    {
+        if(empty())
+            throw new string(&quot;heap is null!&quot;);
+        int i=_vector.size()-1;
+        for(;i&gt;0;)
+        {
+            swap(_vector[0],_vector[i]);
+            _JustDown(0,i);
+            i--;
+        }
+    }
+
+    void Print()
+    {
+        int i;
+        for(i=0;i&lt;_vector.size();++i)
+        {
+            cout&lt;&lt;_vector[i]&lt;&lt;&quot; &quot;;
+        }
+        cout&lt;&lt;endl;
+    }
+
+private:
+    void _JustDown(int s,int n)
+    {
+        Compair cp;
+        if(n&lt;=1)
+            return;
+        if(s&gt;=n)
+            return;
+        int i;
+        for(i=s;i&lt;n;)
+        {
+            if(i*2+2&lt;n)
+            {
+                int select=cp(_vector[i*2+1],_vector[i*2+2])?i*2+1:i*2+2;
+                select=cp(_vector[select],_vector[i])?select:i;
+                if(i!=select)
+                {
+                    swap(_vector[i],_vector[select]);
+                    i=select;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else if(i*2+1&lt;n)
+            {
+                if(cp(_vector[i*2+1],_vector[i]))
+                    swap(_vector[i],_vector[i*2+1]);
+                i=i*2+1;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+private:
+    MyVector&lt;T&gt; _vector;
+};
+#endif
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/Heap">点我前往</a>
+)</p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

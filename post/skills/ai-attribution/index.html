@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skill · AI 标识三档约定 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/skills/ai-attribution">
+<meta name="description" content="何时用**：写完一篇文章决定要不要标 AI / 标哪一档时；或者别人来问&#34;你这博客 AI 标签是啥意思&#34;时甩链接给他。 解决什么**：把&#34;哪种程度的 AI 参与对应哪种 badge&#34;明文化，跟读者建立预期，跟自己建立纪律。 三档来历 借鉴的是 [IPTC digitalSourceType](https://cv.ip…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill · AI 标识三档约定">
+<meta property="og:url" content="https://sbrave.cn/post/skills/ai-attribution">
+<meta property="og:description" content="何时用**：写完一篇文章决定要不要标 AI / 标哪一档时；或者别人来问&#34;你这博客 AI 标签是啥意思&#34;时甩链接给他。 解决什么**：把&#34;哪种程度的 AI 参与对应哪种 badge&#34;明文化，跟读者建立预期，跟自己建立纪律。 三档来历 借鉴的是 [IPTC digitalSourceType](https://cv.ip…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        <span class="badge badge-ai" title="AI 辅助">🤖 AI 辅助</span>
+        <span>2026-05-11 09:08:00</span>
+        <span>· 931 字</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>Skill · AI 标识三档约定</h2>
+<blockquote>
+<p><strong>何时用</strong>：写完一篇文章决定要不要标 AI / 标哪一档时；或者别人来问&quot;你这博客 AI 标签是啥意思&quot;时甩链接给他。</p>
+<p><strong>解决什么</strong>：把&quot;哪种程度的 AI 参与对应哪种 badge&quot;明文化，跟读者建立预期，跟自己建立纪律。</p>
+</blockquote>
+<h3>三档来历</h3>
+<p>借鉴的是 <a href="https://cv.iptc.org/newscodes/digitalsourcetype">IPTC digitalSourceType</a> 这个媒体溯源词表：</p>
+<ul>
+<li><code>trainedAlgorithmicMedia</code> — 纯 AI 生成</li>
+<li><code>compositeWithTrainedAlgorithmicMedia</code> — 人 + AI 混合</li>
+<li><code>algorithmicallyEnhancedMedia</code> — 人为主，AI 增强</li>
+</ul>
+<p>翻译成日常说法：<strong>生成 / 协作 / 校对</strong>——刚好对应博客上的 <strong>AI 生成 / AI 辅助 / AI 校对</strong>。再加上&quot;模型署名&quot;这个常见用法，一共四种：</p>
+<table>
+<thead>
+<tr>
+<th>front-matter <code>ai:</code></th>
+<th>badge</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>true</code> / <code>yes</code> / <code>1</code> / <code>on</code> / <code>assisted</code></td>
+<td>🤖 AI 辅助</td>
+<td>我主笔，AI 帮我顺手（默认档）</td>
+</tr>
+<tr>
+<td><code>generated</code> / <code>wrote</code> / <code>written</code></td>
+<td>🤖 AI 生成</td>
+<td>AI 主笔，我审稿 / 改 / 校</td>
+</tr>
+<tr>
+<td><code>edited</code> / <code>reviewed</code> / <code>polished</code></td>
+<td>🤖 AI 校对</td>
+<td>我写完，AI 帮我润色 / 校对错字</td>
+</tr>
+<tr>
+<td><code>claude</code> / <code>gpt-4o</code> / <code>&lt;任何字符串&gt;</code></td>
+<td>🤖 &lt;原样&gt;</td>
+<td>模型署名，原样显示</td>
+</tr>
+<tr>
+<td><code>false</code> / <code>no</code> / <code>0</code> / <code>off</code> / 留空</td>
+<td>（无 badge）</td>
+<td>我自己写的，AI 没碰</td>
+</tr>
+</tbody>
+</table>
+<p>值大小写不敏感（<code>True</code> / <code>Generated</code> / <code>EDITED</code> 都能识别）。</p>
+<h3>我自己的判断准则</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>标什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>我用 IDE 跟 Copilot / Claude Code 一起写代码并解释，文章完全是我自己敲的</td>
+<td>（不标）</td>
+</tr>
+<tr>
+<td>我让 AI 帮我列了大纲，正文我写的</td>
+<td><code>ai: true</code></td>
+</tr>
+<tr>
+<td>我跟 AI 反复对话，最终 AI 写大段文字我顺手改了一些</td>
+<td><code>ai: generated</code></td>
+</tr>
+<tr>
+<td>我写完整篇，让 AI 检查错字 / 改通顺</td>
+<td><code>ai: edited</code></td>
+</tr>
+<tr>
+<td>我用 Claude 把一篇英文文章翻译过来</td>
+<td><code>ai: claude</code></td>
+</tr>
+</tbody>
+</table>
+<p>不绝对，但<strong>别假装独立写作</strong>——这是核心。AI 帮过忙就标，标得越具体越好。</p>
+<h3>怎么写</h3>
+<p>front-matter 里加一行：</p>
+<pre><code class="language-yaml">---
+title: ...
+ai: true       # 或 generated / edited / &lt;model name&gt;
+---
+</code></pre>
+<p>仅此而已。badge 自动出现在文章顶部 meta 行里。</p>
+<h3>不标的反而更可疑</h3>
+<p>我的潜在底线：<strong>写得越流畅、越规整的内容越要主动标</strong>。读者看到一篇行文工整、术语精确、转折流畅的技术文章，会下意识觉得&quot;作者写得很认真&quot;。如果实际上是 AI 帮了一大半的忙，不标 = 误导。</p>
+<p>反过来，写得磕磕巴巴、有典型口头禅的内容（&quot;<del>xxx</del>&quot;、&quot;哎&quot;、&quot;我也不知道为啥&quot;），反而是人味的标志，不标也基于读者直觉自洽。</p>
+<h3>同行做法</h3>
+<ul>
+<li><strong>少数派 (sspai)</strong>：有 &quot;AI 辅助&quot; 的内容标签。</li>
+<li><strong>Medium</strong>：作者发布时有 &quot;AI usage&quot; 选项（Assisted / Generated）。</li>
+<li><strong>Nature 期刊</strong>：要求论文里使用 generative AI 必须在 methods 或 acknowledgments 中说明。</li>
+<li><strong>AP Stylebook</strong>：建议在新闻报道里实质性使用 AI 时披露。</li>
+<li><strong>Anthropic Claude Code</strong>：commit 信息里加 <code>Co-Authored-By: Claude &lt;noreply@anthropic.com&gt;</code> trailer。</li>
+<li><strong>C2PA / Adobe / OpenAI</strong>：在 DALL-E 等产物里嵌入加密的 provenance manifest。</li>
+</ul>
+<p>我这个三档就是把上面&quot;披露要分级&quot;的精神放到博客上了——选择粒度，自己决定。</p>
+<h3>一处约定，全栈生效</h3>
+<p><code>AILabel()</code> 函数在 <code>sbraveyoung/gobog/src/article/article.go</code>。改这个枚举 = 影响所有主题、所有 badge 渲染、atom feed 是否带这个标签——全栈一处。</p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

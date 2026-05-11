@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题29：数组中出现次数超过一半的数字 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：数组中有一个数字出现的次数超过了数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2出现了5此，超过了数组的一半，因此输出2.** 分析 最直观的解决办法就是将数组排序，然后取其中位数即可。但排序最快也需要O(nlgn)的时间复杂度，效率不是特别高。代码略。">
+<meta property="og:title" content="面试题29：数组中出现次数超过一半的数字">
+<meta property="og:description" content="题目：数组中有一个数字出现的次数超过了数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2出现了5此，超过了数组的一半，因此输出2.** 分析 最直观的解决办法就是将数组排序，然后取其中位数即可。但排序最快也需要O(nlgn)的时间复杂度，效率不是特别高。代码略。">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/fbf1e86c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Tuesday, June 21, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · June 21, 2016</div>
+    <h1 class="press-article-title">
+      面试题29：数组中出现次数超过一半的数字
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目：数组中有一个数字出现的次数超过了数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2出现了5此，超过了数组的一半，因此输出2.** 分析 最直观的解决办法就是将数组排序，然后取其中位数即可。但排序最快也需要O(nlgn)的时间复杂度，效率不是特别高。代码略。</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 2 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题29：数组中出现次数超过一半的数字</h2>
+<p><strong>题目：数组中有一个数字出现的次数超过了数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1,2,3,2,2,2,5,4,2}。由于数字2出现了5此，超过了数组的一半，因此输出2.</strong></p>
+<hr />
+<h3>分析</h3>
+<ul>
+<li>
+<p>最直观的解决办法就是将数组排序，然后取其中位数即可。但排序最快也需要O(nlgn)的时间复杂度，效率不是特别高。代码略。</p>
+</li>
+<li>
+<p>还可以基于快速排序中的partition函数来求解。partition函数每次能确定一个值在数组中的确切位置。因此在找到位于数组中间位置的数字即可停止。
+代码如下：</p>
+</li>
+</ul>
+<pre><code>template&lt;typename t=&quot;&quot;&gt;
+int Partition(vector&lt;t&gt;&amp;amp; v,int left,int right)
+{
+    int i=left,j=right-1;
+    T tmp=v[left];
+    while(i&lt;j)
+    {
+        while(i&lt;j &amp;amp;&amp;amp; v[i]&lt;=tmp)
+            i++;
+        swap(v[i],v[j]);
+        while(i&lt;j vj=&quot;&quot;&gt;=tmp)
+            j--;
+        swap(v[i],v[j]);
+    }
+    return i;
+}
+
+template&lt;typename t=&quot;&quot;&gt;
+T _MoreThanHalfNum(vector&lt;t&gt;&amp;amp; v,int left,int right)throw (NoNumIsMoreThanHalf)
+{
+    int mid=Partition(v,left,right);
+    if(mid==v.size()/2)
+    {
+        if(CheckNumIsMoreThanHalf(v,mid))
+            return v[mid];
+        else
+            throw NoNumIsMoreThanHalf();
+    }
+    else if(mid&lt;v.size()/2)
+        return _MoreThanHalfNum(v,mid+1,right);
+    else
+        return _MoreThanHalfNum(v,left,mid);
+}
+
+template&lt;typename t=&quot;&quot;&gt;
+T MoreThanHalfNum(vector&lt;t&gt;&amp;amp; v)
+{
+    _MoreThanHalfNum(v,0,v.size());
+}
+&lt;/t&gt;&lt;/typename&gt;&lt;/t&gt;&lt;/typename&gt;&lt;/j&gt;&lt;/t&gt;&lt;/typename&gt;```
+
+*   最优的方法是设置两个数字num和time，num表示数组中的某一个数字，time代表num出现的次数。我们可以从前往后遍历数组，如果当前值等于num，就给time++；如果不等于，就time–；当time减少到0时，用下一个数字替换num的值。这样下来，只需要遍历一遍数组，就可以找出出现次数超过一半的数字。
+代码如下：
+
+</code></pre>
+<p>template<typename t="">
+T MoreThanHalfNum(const vector<t>&amp; v)
+{
+if(v.size()==0)
+throw NoNumIsMoreThanHalf();
+T num=v[0];
+int time=1;
+int i;
+for(i=1;i&lt;v.sizei iftime=&quot;&quot;&gt;0)
+{
+if(v[i]==num)
+{
+time++;
+}
+else
+{
+time--;
+}
+}
+else
+{
+num=v[i];
+time=1;
+}
+}
+if(CheckNumIsMoreThanHalf(v,num))
+return num;
+else
+throw NoNumIsMoreThanHalf();
+}
+&lt;/v.sizei&gt;</t></typename>```</p>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/29_MoreThanHalfNumber/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题4：替换空格 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/a202f9ef">
+<meta name="description" content="题目：请实现一个函数，把字符串中的每个空格替换成“%20”。例如输入“We are happy.”，则输出“We%20are%20happy.”。 分析 最容易想到的办法就是从前向后扫描字符串，如果遇到空格，就把它后面的子串向后移动2个字节长度。 代码如下 string ReplaceBlank(string str)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题4：替换空格">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/a202f9ef">
+<meta property="og:description" content="题目：请实现一个函数，把字符串中的每个空格替换成“%20”。例如输入“We are happy.”，则输出“We%20are%20happy.”。 分析 最容易想到的办法就是从前向后扫描字符串，如果遇到空格，就把它后面的子串向后移动2个字节长度。 代码如下 string ReplaceBlank(string str)">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-05-22 16:40:55</span>
+        <span>· 549 字</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题4：替换空格</h2>
+<h3>题目：请实现一个函数，把字符串中的每个空格替换成“%20”。例如输入“We are happy.”，则输出“We%20are%20happy.”。</h3>
+<h3>分析</h3>
+<p>最容易想到的办法就是从前向后扫描字符串，如果遇到空格，就把它后面的子串向后移动2个字节长度。</p>
+<h3>代码如下</h3>
+<pre><code>string ReplaceBlank(string str)
+{
+    int i,j;
+    int len=str.size();
+    for(i=0;i&amp;amp;lt;len;++i)
+    {
+        if(str[i]==&amp;amp;#039; &amp;amp;#039;)
+        {
+            len+=2;
+            str.resize(len);
+            for(j=len-3;j&amp;amp;gt;i;--j)
+            {
+                str[j+2]=str[j];
+            }
+            str[i++]=&amp;amp;#039;%&amp;amp;#039;;
+            str[i++]=&amp;amp;#039;2&amp;amp;#039;;
+            str[i]=&amp;amp;#039;0&amp;amp;#039;;
+        }
+    }
+}
+````
+
+以上代码还可以优化的地方有
+</code></pre>
+<ol>
+<li>
+<p>先扫描一遍字符串，统计空格个数，然后一次性分配足够的空间</p>
+</li>
+<li>
+<p>使用memmove代替一个一个地拷贝（具体效率取决于memmove的效率）</p>
+<p>不过，以上代码的时间复杂度为O(n^2)，在面试中写出这样的代码，妥妥的不通过！</p>
+<p>究其原因，时间主要浪费在了每个空格后面子串的拷贝上了。因为没遇到一个空格，我们都要讲它后面的子串拷贝一次。所以可从这个角度着手改进。</p>
+<p>我们可以从后往前拷贝，这样就可以减少拷贝的次数，每个字符至多移动一次就可以完成。思想是：</p>
+</li>
+<li>
+<p>先扫描一次字符串，统计出空格的个数。然后在尾部分配足够的空间。</p>
+</li>
+<li>
+<p>设两个指针i和j，i指向当前待拷贝的字符，j指向str[i]应拷贝到的位置。</p>
+</li>
+<li>
+<p>从后往前拷贝，如果str[i]不为空格，则str[j--]=str[i--]；</p>
+</li>
+<li>
+<p>否则使i减1，在j及其前面两个字符位置处填充&quot;%20&quot;。</p>
+<h3>代码如下</h3>
+<pre><code>string ReplaceBlank(string str)
+{
+    int len=str.size();
+    if(len==0)
+        return str;
+    int BlankCount=0;
+    int i=0;
+    while(i&amp;amp;lt;len)
+    {
+        if(str[i++]==&amp;amp;#039; &amp;amp;#039;)
+            BlankCount++;
+    }
+    str.resize(len+BlankCount&amp;amp;lt;&amp;amp;lt;1);
+    int j=str.size()-1;
+    i--;
+    while(i&amp;amp;gt;=0)
+    {
+        if(str[i]!=&amp;amp;#039; &amp;amp;#039;)
+        {
+            str[j--]=str[i--];
+        }
+        else
+        {
+            str[j--]=&amp;amp;#039;0&amp;amp;#039;;
+            str[j--]=&amp;amp;#039;2&amp;amp;#039;;
+            str[j--]=&amp;amp;#039;%&amp;amp;#039;;
+            i--;
+        }
+    }
+    return str;
+}
+</code></pre>
+</li>
+</ol>
+<p>这个算法的时间复杂度是O(n)，比上一个要好很多。</p>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：[点我前往]()</p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

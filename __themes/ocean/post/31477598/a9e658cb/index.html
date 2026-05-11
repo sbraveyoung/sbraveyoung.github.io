@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 入门到精通 05 · 大语言模型 (LLM) · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/31477598/a9e658cb">
+<meta name="description" content="当前 AI 浪潮的中心。GPT / Claude / Gemini / Qwen / DeepSeek / Llama —— 看似五花八门，本质是同一个范式：**Decoder-only Transformer + Scale + 后训练对齐**。 一、LLM 的&#34;三板斧&#34;范式 理解这三步及其在过去两年的演化（特别是 …">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI 入门到精通 05 · 大语言模型 (LLM)">
+<meta property="og:url" content="https://sbrave.cn/post/31477598/a9e658cb">
+<meta property="og:description" content="当前 AI 浪潮的中心。GPT / Claude / Gemini / Qwen / DeepSeek / Llama —— 看似五花八门，本质是同一个范式：**Decoder-only Transformer + Scale + 后训练对齐**。 一、LLM 的&#34;三板斧&#34;范式 理解这三步及其在过去两年的演化（特别是 …">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2026-04-26 10:05:00</span>
+        <span>· 1642 字</span>
+        <span>· 7 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>AI 入门到精通 05 · 大语言模型 (LLM)</h2>
+<blockquote>
+<p>当前 AI 浪潮的中心。GPT / Claude / Gemini / Qwen / DeepSeek / Llama —— 看似五花八门，本质是同一个范式：<strong>Decoder-only Transformer + Scale + 后训练对齐</strong>。</p>
+</blockquote>
+<h2>一、LLM 的&quot;三板斧&quot;范式</h2>
+<pre><code>Pretrain  →  SFT  →  RLHF / DPO / RLVR
+(海量文本    (指令对齐    (偏好/可验证奖励对齐)
+ 自监督)     微调)
+</code></pre>
+<p>理解这三步及其在过去两年的演化（特别是 2024-2025 的 RLVR / &quot;推理模型&quot; 范式），就抓住了 LLM 的主线。</p>
+<h2>二、必须吃透的概念</h2>
+<h3>2.1 架构</h3>
+<ul>
+<li><strong>Decoder-only Transformer</strong>：主流（GPT / Llama / Qwen / DeepSeek 全是）。Encoder-only (BERT) 现在主要做 embedding。</li>
+<li><strong>Tokenization</strong>：BPE / WordPiece / SentencePiece / Tiktoken；中文 / 多语言 tokenizer 的取舍。</li>
+<li><strong>Position Encoding 的演进</strong>：sinusoidal → Learned → RoPE → ALiBi → YaRN（长上下文）。</li>
+<li><strong>归一化</strong>：LayerNorm → RMSNorm（更省算力）。</li>
+<li><strong>激活</strong>：ReLU → GeLU → SwiGLU。</li>
+<li><strong>Attention 优化</strong>：MHA → MQA → GQA → MLA (DeepSeek)。</li>
+<li><strong>Mixture-of-Experts (MoE)</strong>：稀疏激活，容量大但算力少（Mixtral / DeepSeek-V3 / Qwen3-MoE）。</li>
+<li><strong>Long Context</strong>：RoPE 外推、YaRN、滑窗注意力、Ring Attention、KV Cache 压缩。</li>
+</ul>
+<h3>2.2 训练范式</h3>
+<ul>
+<li><strong>预训练 (Pretraining)</strong>：next token prediction，对几 T-几十 T tokens 跑一遍。
+<ul>
+<li>数据：CommonCrawl 清洗 / 代码 / 数学 / 多语言混合配比。</li>
+<li>数据质量 &gt;&gt; 数据数量（Phi 系列、FineWeb 都在证明这点）。</li>
+</ul>
+</li>
+<li><strong>持续预训练 (Continued Pretraining)</strong>：在领域 / 语言 / 长上下文上继续训。</li>
+<li><strong>SFT (Supervised Fine-Tuning)</strong>：用 (instruction, response) 对教模型听话。</li>
+<li><strong>偏好对齐</strong>：
+<ul>
+<li><strong>RLHF (Reinforcement Learning from Human Feedback)</strong>：奖励模型 + PPO，OpenAI 经典路线。</li>
+<li><strong>DPO (Direct Preference Optimization)</strong>：直接用偏好对优化，无需 reward model；当前社区主流。</li>
+<li><strong>RLVR (RL with Verifiable Rewards)</strong>：数学 / 代码等可验证答案做 reward；DeepSeek-R1 / OpenAI o1 / o3 路线，<strong>催生了&quot;推理模型&quot;</strong>。</li>
+</ul>
+</li>
+<li><strong>蒸馏 (Distillation)</strong>：大模型 → 小模型；当前小模型几乎都是蒸馏出来的。</li>
+<li><strong>参数高效微调 (PEFT)</strong>：LoRA / QLoRA / IA³ / Adapter / Prefix Tuning；个人 / 小团队微调首选。</li>
+</ul>
+<h3>2.3 推理与解码</h3>
+<ul>
+<li><strong>Greedy / Beam Search / Sampling</strong>；temperature / top-k / top-p / min-p 采样。</li>
+<li><strong>KV Cache</strong>：加速生成的核心；显存占用计算。</li>
+<li><strong>Speculative Decoding</strong> / <strong>Medusa</strong> / <strong>EAGLE</strong>：并行解码加速。</li>
+<li><strong>Constrained Decoding</strong>：JSON / 正则约束输出。</li>
+<li><strong>结构化输出 / Function Calling</strong>：当前应用层的实操关键。</li>
+</ul>
+<h3>2.4 涌现能力与 Scaling</h3>
+<ul>
+<li><strong>Scaling Laws</strong>：Kaplan (2020) → Chinchilla (2022) → DeepSeek scaling laws (2024)。</li>
+<li><strong>涌现能力 (Emergent Abilities)</strong>：In-context learning、CoT、Few-shot 在某规模后突现。</li>
+<li><strong>Chain-of-Thought (CoT)</strong>：Prompt 让模型&quot;想一步再答&quot;。</li>
+<li><strong>Test-Time Compute</strong>：花更多推理算力换质量（o1 / R1 范式）。</li>
+</ul>
+<h3>2.5 评测</h3>
+<ul>
+<li><strong>基础</strong>：MMLU / MMLU-Pro / BBH / GSM8K / MATH / HumanEval / MBPP / HellaSwag。</li>
+<li><strong>代码</strong>：SWE-Bench / LiveCodeBench / MultiPL-E。</li>
+<li><strong>推理</strong>：AIME / GPQA / ARC-AGI。</li>
+<li><strong>Agent / 工具</strong>：τ-Bench / WebArena / OSWorld。</li>
+<li><strong>多语言 / 中文</strong>：C-Eval / CMMLU / SuperCLUE。</li>
+<li><strong>人评 + 排行榜</strong>：<a href="https://lmarena.ai/">Chatbot Arena</a> / <a href="https://livebench.ai/">LiveBench</a>。</li>
+<li><strong>重点意识</strong>：所有 benchmark 都会被「污染」/「过拟合」，看绝对值要慎重，看相对趋势更可靠。</li>
+</ul>
+<h2>三、提示工程 (Prompt Engineering)</h2>
+<ul>
+<li>零样本 / 少样本提示 (Zero-shot / Few-shot)。</li>
+<li>Chain-of-Thought / Self-Consistency / Tree-of-Thoughts。</li>
+<li>ReAct / Toolformer 思想（接 chap 08）。</li>
+<li>System Prompt 设计、角色扮演、防注入。</li>
+<li>输出格式控制：JSON Schema、structured output。</li>
+</ul>
+<blockquote>
+<p>Prompt 工程是技能但不是学科，掌握基本套路即可，不要沉迷&quot;咒语&quot;。</p>
+</blockquote>
+<h2>四、参考资料</h2>
+<h3>课程</h3>
+<ul>
+<li><strong>Stanford CS324 LLM</strong> —— 系统课，<a href="https://stanford-cs324.github.io/winter2022/">课件免费</a>。</li>
+<li><strong>Andrej Karpathy 《Let's build GPT》《Let's build the GPT Tokenizer》《Let's reproduce GPT-2 (124M)》</strong> —— <strong>必看必看</strong>。</li>
+<li><strong>Hugging Face NLP / RLHF Course</strong>。</li>
+<li><strong>DeepLearning.AI 短课</strong> —— Prompt Engineering、Building LLM Apps、Function Calling 等系列。</li>
+</ul>
+<h3>必读论文清单</h3>
+<p>按学习顺序：</p>
+<ol>
+<li><em>Attention is All You Need</em> (Vaswani 2017)</li>
+<li><em>BERT</em> (Devlin 2018) / <em>GPT-2</em> (Radford 2019) / <em>GPT-3</em> (Brown 2020)</li>
+<li><em>Scaling Laws for Neural Language Models</em> (Kaplan 2020)</li>
+<li><em>Chinchilla</em> (Hoffmann 2022) — compute-optimal scaling</li>
+<li><em>InstructGPT</em> (Ouyang 2022) — RLHF 起源</li>
+<li><em>Chain-of-Thought Prompting</em> (Wei 2022)</li>
+<li><em>LLaMA / LLaMA 2 / 3</em> (Meta) — 开源 LLM 基线</li>
+<li><em>Mixtral 8x7B</em> (2024) — MoE 落地代表</li>
+<li><em>DPO</em> (Rafailov 2023) — 替代 RLHF</li>
+<li><em>DeepSeek-V3 / R1</em> (2024-2025) — 开源 SOTA、RLVR 范式</li>
+<li><em>o1 system card</em> / <em>Sky-T1</em> — 推理模型范式</li>
+<li><em>Llama 3.x</em> / <em>Qwen2.5 / Qwen3</em> / <em>Claude 3.5 / 4.x</em> / <em>Gemini 2.x</em> — 跟踪当下 SOTA</li>
+</ol>
+<h3>工程参考</h3>
+<ul>
+<li><strong>HuggingFace transformers</strong> 源码。</li>
+<li><strong>vLLM</strong> / <strong>SGLang</strong> / <strong>TensorRT-LLM</strong> —— 推理引擎（chap 07）。</li>
+<li><strong>trl</strong> / <strong>OpenRLHF</strong> / <strong>veRL</strong> —— RL 训练框架。</li>
+<li><strong>unsloth</strong> —— 个人微调高效工具。</li>
+<li><strong>LLaMA-Factory</strong> —— 中文社区主流微调工具。</li>
+</ul>
+<h3>教材 / 长文</h3>
+<ul>
+<li><strong>《Speech and Language Processing》</strong> Jurafsky &amp; Martin (3rd, 免费 PDF) —— NLP 圣经。</li>
+<li><strong>Lilian Weng's blog</strong> (<a href="https://lilianweng.github.io/">lilianweng.github.io</a>) —— 每篇都是综述质量。</li>
+<li><strong>Sebastian Raschka 《Build a Large Language Model (From Scratch)》</strong> —— 配套代码极清晰。</li>
+</ul>
+<h2>五、动手实践</h2>
+<ol>
+<li><strong>复现 Karpathy 的 GPT-2 (124M) 训练</strong>（在 OpenWebText / FineWeb 上）。</li>
+<li><strong>从零写 BPE Tokenizer</strong>：理解为什么 GPT 看到 &quot;strawberry&quot; 数不清里面有几个 r。</li>
+<li><strong>微调实战</strong>：用 <a href="https://github.com/hiyouga/LLaMA-Factory">LLaMA-Factory</a> 或 <a href="https://github.com/unslothai/unsloth">unsloth</a> 在 Qwen2.5-7B 上做 LoRA SFT，喂自己的领域数据（个人 QA / 客服日志 / 法律文书）。</li>
+<li><strong>DPO 微调</strong>：在 SFT 模型基础上做一轮 DPO，对比 SFT-only 的输出。</li>
+<li><strong>推理加速实战</strong>：把上一步的模型用 vLLM 部署，测吞吐 / 时延。</li>
+<li><strong>Prompt 工程作业</strong>：给定一个真实任务（如「从一段中文中抽取人名地名时间」），不微调，纯靠 prompt + Few-shot + JSON 模式做到 95%+ 准确。</li>
+<li><strong>Chatbot Arena 复刻</strong>：搭一个本地 UI 让你的微调模型和 baseline 模型盲评。</li>
+<li><strong>读 + 复现一篇前沿论文</strong>：自选 DeepSeek-V3 / Qwen3 / Llama 3 技术报告之一，写一篇万字解读。</li>
+</ol>
+<h2>六、通关标志</h2>
+<ul>
+<li><input disabled="" type="checkbox" /> 能不查资料解释：什么是 KV Cache、为什么 GQA 比 MHA 省显存、RoPE 怎么外推。</li>
+<li><input disabled="" type="checkbox" /> 能讲清楚 SFT / DPO / RLHF / RLVR 的目标差异。</li>
+<li><input disabled="" type="checkbox" /> 自己微调过至少一个 7B+ 模型并部署给别人用。</li>
+<li><input disabled="" type="checkbox" /> 能读懂任意一篇大厂的 LLM 技术报告。</li>
+<li><input disabled="" type="checkbox" /> 能一句话说清&quot;Scaling Law&quot;是什么、对工程决策的影响。</li>
+<li><input disabled="" type="checkbox" /> 你对 LLM 能做什么 / 不能做什么有第一手经验，不靠媒体二手信息。</li>
+</ul>
+<p>下一站：<a href="/__themes/ocean/post/31477598/79c30475">06. AI 训练实战</a></p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

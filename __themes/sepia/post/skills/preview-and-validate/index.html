@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skill · 本地预览 + 部署前自检 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/skills/preview-and-validate">
+<meta name="description" content="何时用**：想在 push 前看一眼最终效果；或者想看看 deploy workflow 报的 warning 都什么意思。 解决什么**：把&#34;本地预览&#34;和&#34;导出审计&#34;两件事说清——一个解决&#34;我写出来到底长啥样&#34;，一个解决&#34;我写的东西有没有死链&#34;。 一、本地预览（gobog-obsidian 插件） 前置条件**：本地…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill · 本地预览 + 部署前自检">
+<meta property="og:url" content="https://sbrave.cn/post/skills/preview-and-validate">
+<meta property="og:description" content="何时用**：想在 push 前看一眼最终效果；或者想看看 deploy workflow 报的 warning 都什么意思。 解决什么**：把&#34;本地预览&#34;和&#34;导出审计&#34;两件事说清——一个解决&#34;我写出来到底长啥样&#34;，一个解决&#34;我写的东西有没有死链&#34;。 一、本地预览（gobog-obsidian 插件） 前置条件**：本地…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        <span class="badge badge-ai" title="AI 辅助">🤖 AI 辅助</span>
+        <span>2026-05-11 09:04:00</span>
+        <span>· 821 字</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>Skill · 本地预览 + 部署前自检</h2>
+<blockquote>
+<p><strong>何时用</strong>：想在 push 前看一眼最终效果；或者想看看 deploy workflow 报的 warning 都什么意思。</p>
+<p><strong>解决什么</strong>：把&quot;本地预览&quot;和&quot;导出审计&quot;两件事说清——一个解决&quot;我写出来到底长啥样&quot;，一个解决&quot;我写的东西有没有死链&quot;。</p>
+</blockquote>
+<h3>一、本地预览（gobog-obsidian 插件）</h3>
+<p><strong>前置条件</strong>：本地编了 gobog 二进制。</p>
+<pre><code class="language-sh">git clone https://github.com/sbraveyoung/gobog ~/code/gobog
+cd ~/code/gobog
+make build       # 产出 ./gobog
+</code></pre>
+<p><strong>配置插件</strong>：</p>
+<ul>
+<li>设置 → Gobog Sync → Local preview
+<ul>
+<li><code>gobog binary path</code> = <code>/home/&lt;you&gt;/code/gobog/gobog</code></li>
+<li><code>theme path</code> = 留空（默认 <code>&lt;bin-dir&gt;/themes/minimal</code>）</li>
+</ul>
+</li>
+</ul>
+<p><strong>用</strong>：命令面板 → <strong>Gobog Sync: Preview blog locally</strong></p>
+<p>它会：</p>
+<ol>
+<li>把当前 vault 的 <code>Blog/</code> 目录作为 source；</li>
+<li>写一个临时 <code>gobog.toml</code> 到 tmpdir；</li>
+<li><code>gobog -export</code> 到 <code>&lt;vault&gt;/.obsidian/plugins/gobog-obsidian/preview/</code>；</li>
+<li>用 <code>file://</code> URL 把渲染结果在系统默认浏览器里打开。</li>
+</ol>
+<p><strong>贴心</strong>：如果你当前打开的是某篇文章（且在 blog 文件夹下），它会直接跳到这篇文章的渲染页，不需要你从首页往里点。</p>
+<h3>二、部署前自检（github.io 的 deploy workflow）</h3>
+<p><code>scripts/check-export.sh</code> 在每次 deploy 跑 <code>gobog -export</code> 之后自动跑一遍。三类警告：</p>
+<h4>1. dead internal link</h4>
+<p><code>/post/X</code> 或 <code>/image/X</code> 在 HTML 里出现，但导出树里没那个文件。</p>
+<pre><code>::warning::dead internal link: /post/cf4cc8e2/e66fb74
+</code></pre>
+<p>常见原因：</p>
+<ul>
+<li>文章里硬写了 <code>/post/&lt;旧 id&gt;</code>，那篇文章已经被删了 / 改了 url。</li>
+<li>老 wikilink 指向已不存在的笔记。</li>
+<li>手敲 markdown 链接的时候 typo 了。</li>
+</ul>
+<p><strong>修法</strong>：在 vault 里 grep 一下那个 URL，找到引用它的 .md，要么改对，要么删掉。</p>
+<h4>2. orphan resource</h4>
+<p><code>image/X</code> 文件存在，但没有任何 HTML 引用它。</p>
+<pre><code>::warning::orphan resource: image/旧截图.png
+</code></pre>
+<p>常见原因：</p>
+<ul>
+<li>某篇文章删了，引用的图片留下了。</li>
+<li>早期上传过但从未引用的素材。</li>
+</ul>
+<p><strong>修法</strong>：要么找一篇文章把它用起来，要么 <code>git rm</code>。两种都行——警告<strong>不阻断发布</strong>，留着只是为了让你知道你在多送几 KB 字节。</p>
+<h4>3. suspicious URL</h4>
+<p>HTML 里出现了 <code>file:///</code>、<code>localhost</code>、<code>127.0.0.1</code> 这种<strong>只在你本地有意义的 URL</strong>。</p>
+<pre><code>::warning::suspicious URL leaked into HTML: file:///D:/temp/...
+</code></pre>
+<p>常见原因：从 Typora / 别的本地编辑器复制粘贴时把本地路径带进来了。</p>
+<p><strong>修法</strong>：在 vault 里搜那个 URL，替换成线上路径或者改成 <code>/image/...</code>。</p>
+<p>注意：<code>&lt;!-- ... --&gt;</code> HTML 注释里的可疑 URL 不会触发警告（脚本是 comment-aware 的）。</p>
+<h3>三、本地手动跑自检</h3>
+<p>不想等 deploy？本地直接跑：</p>
+<pre><code class="language-sh"># 先用插件预览一遍生成 _dist
+# 然后：
+bash ~/code/sbraveyoung.github.io/scripts/check-export.sh \
+  ~/&lt;vault&gt;/.obsidian/plugins/gobog-obsidian/preview
+</code></pre>
+<p>输出格式跟 GH Actions 里一模一样，只不过没了 <code>::warning::</code> 前缀的 Actions 渲染。</p>
+<h3>四、把警告升级成 fail（可选）</h3>
+<p><code>scripts/check-export.sh</code> 默认只 warn。如果你想让 dead link / orphan 直接阻断 deploy：在 github.io 的 deploy.yml 里把 <code>CHECK_EXPORT_FATAL</code> 设成 <code>'1'</code>：</p>
+<pre><code class="language-yaml">- name: Sanity check rendered output
+  env:
+    CHECK_EXPORT_FATAL: '1'   # 改这里
+  run: bash scripts/check-export.sh _dist
+</code></pre>
+<p>我的建议是<strong>保持默认 warn</strong>——少数派审稿员的角色让自动化干，最终决定权留给自己。</p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

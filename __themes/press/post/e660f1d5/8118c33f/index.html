@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一个简单的二叉搜索树的实现 · sbraveyoung · 字里行间</title>
+<meta name="description" content="上一篇文章简单实现了一个普通的二叉树，参见[这里](/post/e660f1d5/30a3fd3d)。 二叉搜索树是二叉树的一种变体，它相比普通二叉树的特性就是里面的数据都是有序的，中序遍历它就可以得到一个升序数组。 BSTreet实现代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在…">
+<meta property="og:title" content="一个简单的二叉搜索树的实现">
+<meta property="og:description" content="上一篇文章简单实现了一个普通的二叉树，参见[这里](/post/e660f1d5/30a3fd3d)。 二叉搜索树是二叉树的一种变体，它相比普通二叉树的特性就是里面的数据都是有序的，中序遍历它就可以得到一个升序数组。 BSTreet实现代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/8118c33f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Thursday, July 28, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · July 28, 2016</div>
+    <h1 class="press-article-title">
+      一个简单的二叉搜索树的实现
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>上一篇文章简单实现了一个普通的二叉树，参见[这里](/post/e660f1d5/30a3fd3d)。 二叉搜索树是二叉树的一种变体，它相比普通二叉树的特性就是里面的数据都是有序的，中序遍历它就可以得到一个升序数组。 BSTreet实现代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 1 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>一个简单的二叉搜索树的实现</h2>
+<p>上一篇文章简单实现了一个普通的二叉树，参见<a href="/__themes/press/post/e660f1d5/30a3fd3d">这里</a>。</p>
+<p>二叉搜索树是二叉树的一种变体，它相比普通二叉树的特性就是里面的数据都是有序的，中序遍历它就可以得到一个升序数组。</p>
+<p>BSTreet实现代码如下：</p>
+<pre><code class="language-C++">#pragma once
+
+#include&lt;iostream&gt;
+using namespace std;
+
+template&lt;typename T&gt;
+struct BSTreeNode
+{
+    T _data;
+    BSTreeNode&lt;T&gt;* _left;
+    BSTreeNode&lt;T&gt;* _right;
+    BSTreeNode(const T&amp; t=T())
+        :_data(t)
+         ,_left(NULL)
+         ,_right(NULL)
+    {}
+};
+
+template&lt;typename T&gt;
+class BSTree
+{
+    typedef BSTreeNode&lt;T&gt; Node;
+public:
+    BSTree()
+        :_root(NULL)
+    {}
+
+    bool insert(const T&amp; t)
+    {
+        Node* s=new Node(t);
+        if(_root==NULL)
+        {
+            _root=s;
+            return true;
+        }
+        else
+        {
+            Node* father=NULL;
+            Node* cur=_root;
+            while(cur!=NULL)
+            {
+                if(cur-&gt;_data==s-&gt;_data)
+                    return false;
+                if(cur-&gt;_data&lt;s-&gt;_data)
+                {
+                    father=cur;
+                    cur=cur-&gt;_right;
+                }
+                else
+                {
+                    father=cur;
+                    cur=cur-&gt;_left;
+                }
+            }
+            if(father-&gt;_data&lt;s-&gt;_data)
+                father-&gt;_right=s;
+            else
+                father-&gt;_left=s;
+            return true;
+        }
+    }
+
+    void InOrder()
+    {
+        _InOrder(_root);
+        cout&lt;&lt;endl;
+    }
+
+protected:
+    void _InOrder(Node* root)
+    {
+        if(root==NULL)
+            return;
+        _InOrder(root-&gt;_left);
+        cout&lt;&lt;root-&gt;_data&lt;&lt;&quot; &quot;;
+        _InOrder(root-&gt;_right);
+    }
+
+private:
+    Node* _root;
+};
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/BSTree">点我前往</a></p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,112 +1,152 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>线程 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/f80efe02/15fc6e8c">
+<meta name="description" content="上篇文章中讲了进程，各进程相互独立，有自己独立的虚拟地址空间，利用多进程编程和进程间通信等手段可以完成一些特定的工作。但多进程也有一些缺点，如下： 操作系统允许创建的最大进程数量是有限定的，不能无限制地创建进程。 在对进程进行调度时，进程的切换可能带来较严重的性能损耗。因为在进程切换时，操作系统需要为每个进程做保存现场…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程">
+<meta property="og:url" content="https://sbrave.cn/post/f80efe02/15fc6e8c">
+<meta property="og:description" content="上篇文章中讲了进程，各进程相互独立，有自己独立的虚拟地址空间，利用多进程编程和进程间通信等手段可以完成一些特定的工作。但多进程也有一些缺点，如下： 操作系统允许创建的最大进程数量是有限定的，不能无限制地创建进程。 在对进程进行调度时，进程的切换可能带来较严重的性能损耗。因为在进程切换时，操作系统需要为每个进程做保存现场…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>线程</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>线程</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-08-11 20:52:27</span>
+        <span>· 705 字</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>线程</h2>
 <p>上篇文章中讲了进程，各进程相互独立，有自己独立的虚拟地址空间，利用多进程编程和进程间通信等手段可以完成一些特定的工作。但多进程也有一些缺点，如下：</p>
-
 <ul>
 <li>操作系统允许创建的最大进程数量是有限定的，不能无限制地创建进程。</li>
 <li>在对进程进行调度时，进程的切换可能带来较严重的性能损耗。因为在进程切换时，操作系统需要为每个进程做保存现场和恢复现场的工作。保存现场包括：保存进程的各寄存器的值（包括通用寄存器、指令寄存器、堆栈指针、标志寄存器、段寄存器等），更新该进程的 PCB 并将其放入相应的队列中等。因此我们说进程切换时很「重」的！</li>
 </ul>
-
 <p>因此，为了解决进程的这些问题，就出现了线程。线程被称为轻量级进程，因此可以看出线程的切换没有进程那么大的开销。其主要原因就是线程没有独立的虚拟地址空间，它依附于进程而存在。同一个进程中的所有线程共享代码区、数据区和堆，还有打开的文件描述符、信号处理函数、环境变量、用户 ID 等，每个线程私有的属性有栈、各种寄存器的值（硬件上下文）、errno 变量、信号屏蔽字和调度优先级等。</p>
-
 <p>Linux 下线程相关的函数有：</p>
-
 <ul>
-<li>线程创建：<code>int pthread_create(pthread_t _thread,const pthread_attr_t _attr,void _(_start_routine)(void_),void_ arg);</code></li>
+<li>线程创建：<code> int pthread_create(pthread_t _thread,const pthread_attr_t _attr,void _(_start_routine)(void_),void_ arg);</code></li>
 <li>线程终止：<code>void pthread_exit(void* retval);int pthread_cancel(pthread_t thread);</code></li>
 <li>线程等待：<code>int pthread_join(pthread_t thread,void** retval);</code></li>
 <li>线程分离：<code>int pthread_detach(pthread_t thread);</code></li>
 <li>获取线程id：<code>pthread_t pthread_self();</code></li>
 </ul>
-
 <p>因为同一进程中所有线程共享全局变量和堆等数据，所有需要对各个线程进行同步操作。线程同步手段有：互斥量、信号量和条件变量。</p>
-
 <ul>
-<li><p>互斥量相关函数：</p>
-
+<li>
+<p>互斥量相关函数：</p>
 <ul>
 <li>初始化：<code>int pthread_mutex_init(pthread_mutex_t* restrict mutex,const pthread_mutexattr_t *restrice attr);</code></li>
 <li>销毁锁：<code>int pthread_mutex_destroy(pthread_mutex_t* mutex);</code></li>
 <li>加锁：<code>int pthread_mutex_lock(pthread_mutex_t* mutex);int pthread_mutex_trylock(pthread_mutex_t* mutex);</code></li>
 <li>解锁：<code>int pthread_mutex_unlock(pthread_mutex_t* mutex);</code></li>
-</ul></li>
-
-<li><p>条件变量相关函数：</p>
-
+</ul>
+</li>
+<li>
+<p>条件变量相关函数：</p>
 <ul>
 <li>初始化条件变量量：<code>int pthread_cond_init(pthread_cond_t _restrict cond,const pthread_condattr_t _restrict attr);</code></li>
 <li>销毁条件变量：<code>int pthread_cond_destroy(pthread_cond_t *cond);</code></li>
 <li>等待操作：<code>int pthread_cond_wait(pthread_cond_t _restrice cond,pthread_mutex_t _restrict mutex);int pthread_cond_timewait(pthread_cond_t _restrice cond,pthread_mutex_t _restrict mutex);</code></li>
 <li>唤醒操作：<code>int pthread_cond_signal(pthread_cond_t* cond);int pthread_cond_broadcase(pthread_cond_t* cond);</code></li>
-</ul></li>
-
-<li><p>信号量相关函数：</p>
-
+</ul>
+</li>
+<li>
+<p>信号量相关函数：</p>
 <ul>
 <li>初始化信号量：<code>int sem_init(sem_t* sem,int pshaeed,unsigned int value);</code></li>
 <li>销毁信号量：<code>int sem_destroy(sem_t* sem);</code></li>
 <li>P操作：<code>int sem_wait(sem_t* sem);;int sem_trywait(sem_t* sem);</code></li>
 <li>V操作：<code>int sem_post(sem_t* sem);</code></li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <p>【完】</p>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

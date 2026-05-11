@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="一个程序员的笔记本：技术拆解、踩坑总结、生活随笔。">
+<title>sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<script>
+
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) {
+    document.documentElement.setAttribute("data-theme", "dark");
+  } else if (saved === "light") {
+    document.documentElement.setAttribute("data-theme", "light");
+  }
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true">
+        <use href="/__themes/ocean/css/icon.svg#mark"/>
+      </svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/" class="is-active">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-home">
+  <section class="hero">
+    <h1>sbraveyoung · 字里行间</h1>
+    <p class="hero-sub">阅读 · 实践 · 思考</p>
+  </section>
+
+  <section class="post-list">
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/skills">skills</a>
+          <span class="entry-count">9 篇</span>
+        </h2>
+      </header>
+      
+      <div class="entry-meta">
+        <span>2026-05-11 09:08:00</span>
+        
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          <span class="badge badge-ai" title="AI">🤖 AI 辅助</span>
+          <a href="/__themes/ocean/post/blog-evolve-2">我的博客演进历程（二）：Obsidian &#43; gobog &#43; GitHub Actions</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">写在前面 之前写过一篇 [《我的博客演进历程》](/post/77a668)，讲了从 CSDN → WordPress → hexo → 自研引擎一路的折腾。两年过去了，写作工具和发布链路又都换过一轮，正好趁着这次重构把整套架构落定，记录一下。 &lt;!-- 内容大纲： 1. 为啥要再折腾一次（动机） 2. 现在的整体架构…</p>
+      <div class="entry-meta">
+        <span>2026-05-10 21:00:00</span>
+        <span>· 13 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/ai">AI入门到精通系列</a>
+          <span class="entry-count">11 篇</span>
+        </h2>
+      </header>
+      
+      <div class="entry-meta">
+        <span>2026-04-26 10:10:00</span>
+        
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/f36e7355">Git 五分钟入门</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">作为一名技术人员，git 是我们每天都会接触到的。但你真的了解它吗？你知道 git 是如何存储我们的代码数据，又是如何保障数据安全的吗？接下来带你用五分钟的时间了解 git 的方方面面。Let&#39;s go! 一、什么是 git？ 虽然 git 很多时候被用来管理代码。但如果抛开代码，git 其实是一个版本控制系统，而且是…</p>
+      <div class="entry-meta">
+        <span>2021-02-16 16:01:45</span>
+        <span>· 13 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/ea5ffd86">音视频系列</a>
+          <span class="entry-count">5 篇</span>
+        </h2>
+      </header>
+      
+      <div class="entry-meta">
+        <span>2020-12-16 18:46:29</span>
+        
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/go">Go语言系列</a>
+          <span class="entry-count">3 篇</span>
+        </h2>
+      </header>
+      
+      <div class="entry-meta">
+        <span>2020-04-30 21:00:00</span>
+        
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/95b7c948">UML 五分钟入门</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">昨晚临下班时，有位同事说自己想做一套 XXX 系统。于是我们在会议室讨论了近一个小时，将此系统的执行流程、接口定义、数据格式等进行了设计，使用的工具就是 UML 图。这里简单做一个温故知新。 UML（Unified Modeling Language）全称为统一建模语言，是用来对各种软件系统进行可视化建模的语言，由 O…</p>
+      <div class="entry-meta">
+        <span>2019-08-24 20:59:55</span>
+        <span>· 5 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/331f81e4">Git工作流开发实践</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">作为一个程序员，毫无疑问是需要和代码打交道的。俗话说，有人的地方就有江湖，同样，有代码的地方就有版本控制。 当年，Linus Torvalds 大神以一己之力开发出了初始的 Linux 内核，一举奠定其在开源界的江湖地位。但随着代码越来越庞大，再加上 BitKeeper 不再授权 Linux 项目免费使用，Linus …</p>
+      <div class="entry-meta">
+        <span>2019-02-23 20:11:58</span>
+        <span>· 5 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/234713ed">自如，请拿出该有的担当!</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">虽然我这里是一个技术博客，但今天想写点其他的东西，跟技术无关。如果您点进来想了解些编程技术方面的东西，我向您说声抱歉，您可以关闭网页了。但我还是希望您能看完这篇文章，主要内容是关于自如对我一介草民的无理压榨。在我经受不合理对待之后，我尝试了各种行为来维护自己的合法权益，但无一成功。只好撰作此文，在我自己的地方曝光一下自…</p>
+      <div class="entry-meta">
+        <span>2018-10-07 05:30:23</span>
+        <span>· 6 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/de570784">数据库系列</a>
+          <span class="entry-count">2 篇</span>
+        </h2>
+      </header>
+      
+      <div class="entry-meta">
+        <span>2018-08-02 08:57:34</span>
+        
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/68161ae">配置文件五分钟入门</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">作为一名开发者，我们总是避免不了和代码打交道。人们总是过多地关注整个系统的架构，以及性能优化等方面，而忽视了许多基本的东西，认为学习这些东西没有太多的意义，其中就比如配置文件。 但其实，很多正规软件，包括大公司商业化软件和开源软件，启动时第一件事情就是去加载配置文件，以初始化相关运行环境及控制软件的行为。很多初级程序员…</p>
+      <div class="entry-meta">
+        <span>2018-07-11 22:14:03</span>
+        <span>· 7 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/77a668">我的博客演进历程</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">为什么要写博客 时下比较前沿的技术，光是计算机领域的基础知识，如编程语言、计算机组成原理、算法 / 数据结构、操作系统原理、计算机网络等，足以让人应接不暇，更遑论当下火热的人工智能、区块链等方向。 这时候应该怎么办？我的答案是：一把梭，就是干！唯有持续不断的学习，才能提升并保持自己的竞争力！ 然而你会发现，今天学完的东…</p>
+      <div class="entry-meta">
+        <span>2018-06-05 03:49:33</span>
+        <span>· 7 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/3e0efa6d">布隆过滤器五分钟入门</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">缘起 之前在公司的一场技术分享上，有位大牛讲到了布隆过滤器。虽然之前有所了解，但只是停留在代码实现上，还没有去深入探究它存在的合理性和应用场景上。所以借着这个机会重新捋捋脉络，便有了这篇文章。 原理 维基百科上的描述如下： A Bloom filter is a space-efficient probabilisti…</p>
+      <div class="entry-meta">
+        <span>2018-05-17 03:11:12</span>
+        <span>· 10 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/101d5b75">some-tips</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">这是我在学习及工作过程中遇到的一些小的点，记录下来方便以后遇到类型问题后翻阅，相当于一个速查表吧。现发表出来，若您还有其他 tips 愿意和我分享，请通过[关于我](/about)联系我。此篇文章会不定期更新。 crontab 运行记录在 `/var/log/cron` 文件里 监控系统状况 监控 CPU 情况：`sa…</p>
+      <div class="entry-meta">
+        <span>2018-02-28 01:39:17</span>
+        <span>· 9 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/755319a3">程序员技术练级攻略</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">从我升入大学开始接触编程到现在，已经有 5 个年头了。这期间，有过第一次写出 `hello world` 的喜悦，也有过一段不知所措的迷茫期。作为一名初学者，我迫切期望能有人出来告诉我，你应该怎么去学，应该学什么，怎样才能把基础打好。但是，大学四年并没有这样的人来拯救我，我也一路跌跌撞撞地走到现在。 后来发现了酷壳这个…</p>
+      <div class="entry-meta">
+        <span>2017-12-08 09:07:28</span>
+        <span>· 15 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/d73c309a">docker五分钟入门</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">docker 作为 golang 社区的杀手级应用，已经拥有越来越多的关注度。截至此文写作时，其在 GitHub 上已经拥有 4 万多个 star。尤其在当前各种大规模分布式服务器的环境下，传统的环境部署方式和各种库依赖，已经和当下 devops 快速开发快速上线的理念产生了很大的矛盾。所以不管是开发、运维和测试人员，…</p>
+      <div class="entry-meta">
+        <span>2017-10-28 21:07:00</span>
+        <span>· 8 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/d41b9572">利用 hexo 搭建博客并推送到企业微信</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">欢迎访问，这是在我司内部搭建使用的一个博客系统。实现流程图如下： 采用这个架构主要有以下这些考虑: hexo 是一个轻量级的静态博客框架，利用 Node.js 带来的超快生成速度，可以让上百个页面在几秒内完成渲染； hexo 原生支持 [Markdown](https://github.github.com/gfm/)…</p>
+      <div class="entry-meta">
+        <span>2017-08-21 11:35:43</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/a1e02445">说说付费软件</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">我们这一代，很多人很小就开始接触电脑，接触互联网了。像我，小学五年级时就被人带去网吧并申请了互联网上的第一个账号——QQ 号，从此就打开了新世界的一扇大门。 在近十年的网络遨游中，我一直学习和见证了很多事物的荣辱兴衰，比如 PC 时代阿里巴巴的崛起，微信借着移动互联网的浪潮登上王者宝座，小米站在风口起飞等等，当然也有曾…</p>
+      <div class="entry-meta">
+        <span>2017-03-23 22:27:17</span>
+        <span>· 6 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/830d36b0">你应该使用markdown写作吗？</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">众所周知，我是一名程序员。而程序员向来都是追求效率，追求极致的。经常难以忍受慢腾腾做某些事情，就比如写作。 两年前我还不知道 markdown 这回事的时候一直在用 Word。每次都要用鼠标去调整文章格式，不厌其烦地一遍遍执行「选中文字——点击菜单——选择自己想要的格式」，而且经常陷入调整字体、字号、行间距、页边距这些…</p>
+      <div class="entry-meta">
+        <span>2017-03-10 02:16:20</span>
+        <span>· 5 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/cf4cc8e2">算法系列</a>
+          <span class="entry-count">7 篇</span>
+        </h2>
+      </header>
+      
+      <div class="entry-meta">
+        <span>2016-09-19 14:22:54</span>
+        
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/5246c832">shell语法总结</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">众所周知，Linux 的精髓就在于其强大的命令行，命令行的作用就是与系统提供的命令或内核提供的系统调用进行交互，而 shell 就承担了这一任务。 Linux 下常见的 shell 有 ksh,csh,sh,tcsh,bash 等，可在 /etc/shells 文件查看，这里不表。本文以 bash 为例。 shell …</p>
+      <div class="entry-meta">
+        <span>2016-08-30 16:19:43</span>
+        <span>· 5 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/afe65937">计算机网络系列</a>
+          <span class="entry-count">4 篇</span>
+        </h2>
+      </header>
+      
+      <div class="entry-meta">
+        <span>2016-08-22 16:23:55</span>
+        
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/f80efe02">操作系统系列</a>
+          <span class="entry-count">4 篇</span>
+        </h2>
+      </header>
+      
+      <div class="entry-meta">
+        <span>2016-08-15 15:04:11</span>
+        
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/3284a3f5">继承体系下C&#43;&#43;对象模型</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">一直对 C&#43;&#43; 继承体系中对象的内存分布和实现原理不甚了解，故花了点时间复习整理了一下，如下： C&#43;&#43; 的继承关系可分为如下几种情况： 单一的一般继承(带成员变量，虚函数，虚函数覆盖) 多重继承(带成员变量，虚函数，虚函数覆盖) 菱形继承(带成员变量，虚函数，虚函数覆盖) 菱形虚拟继承(带成员变量，虚函数，虚函数覆盖)</p>
+      <div class="entry-meta">
+        <span>2016-08-14 12:41:15</span>
+        <span>· 8 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/e660f1d5">数据结构系列</a>
+          <span class="entry-count">11 篇</span>
+        </h2>
+      </header>
+      
+      <div class="entry-meta">
+        <span>2016-08-08 11:32:08</span>
+        
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/offer">剑指offer系列</a>
+          <span class="entry-count">40 篇</span>
+        </h2>
+      </header>
+      
+      <div class="entry-meta">
+        <span>2016-07-09 15:27:35</span>
+        
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/869bd286">《C陷阱与缺陷》读书笔记</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">1. 在 C 语言中，符号中间的空白（包括空格符、制表符和换行符）将被忽略。 2. 贪心法：C 语言中，每一个符号应该包含尽可能多的字符。 3. 如果一个整型常量的第一个字符为 `0`，那么该常量将被视为八进制数。 4. 用单引号引起的一个字符实际上代表一个整数，整数值对应于该字符在编译器所采用的字符集中的序列值；而用…</p>
+      <div class="entry-meta">
+        <span>2016-05-19 14:50:43</span>
+        <span>· 16 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/cd358b78">《高质量的C_C&#43;&#43;编程指南》读书笔记</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">第一章 文件结构 1. 头文件由三部分构成： 1. 头文件开头处的版权和版本声明。 2. 预处理块。 3. 函数和类结构声明等。 2. 为了防止头文件被重复引用，应当用 `ifndef/define/endif` 结构产生预处理块。 3. 头文件中只存放「声明」而不存放「定义」。 4. 定义文件由三部分组成： 1. 定…</p>
+      <div class="entry-meta">
+        <span>2016-05-19 00:50:41</span>
+        <span>· 34 min</span>
+        
+      </div>
+    </article>
+    
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

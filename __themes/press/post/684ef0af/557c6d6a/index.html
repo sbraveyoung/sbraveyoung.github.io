@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题40：数组中只出现一次的数字 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：一个整型数组中除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个数字。要求时间复杂度是O(n)，空间复杂度是O(1)。** 分析 我们先来看一道问题： 一个整型数组中除了一个数字出现了一次之外，其他的数字都出现了两次。请找出这个数字。 这题怎么做呢？记得我们原来有一个模拟面试，当时面试老师就给我出了这么…">
+<meta property="og:title" content="面试题40：数组中只出现一次的数字">
+<meta property="og:description" content="题目：一个整型数组中除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个数字。要求时间复杂度是O(n)，空间复杂度是O(1)。** 分析 我们先来看一道问题： 一个整型数组中除了一个数字出现了一次之外，其他的数字都出现了两次。请找出这个数字。 这题怎么做呢？记得我们原来有一个模拟面试，当时面试老师就给我出了这么…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/557c6d6a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Tuesday, July 5, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · July 5, 2016</div>
+    <h1 class="press-article-title">
+      面试题40：数组中只出现一次的数字
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目：一个整型数组中除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个数字。要求时间复杂度是O(n)，空间复杂度是O(1)。** 分析 我们先来看一道问题： 一个整型数组中除了一个数字出现了一次之外，其他的数字都出现了两次。请找出这个数字。 这题怎么做呢？记得我们原来有一个模拟面试，当时面试老师就给我出了这么…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 3 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题40：数组中只出现一次的数字</h2>
+<p><strong>题目：一个整型数组中除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个数字。要求时间复杂度是O(n)，空间复杂度是O(1)。</strong></p>
+<hr />
+<h3>分析</h3>
+<p>我们先来看一道问题：</p>
+<blockquote>
+<p>一个整型数组中除了一个数字出现了一次之外，其他的数字都出现了两次。请找出这个数字。</p>
+</blockquote>
+<p>这题怎么做呢？记得我们原来有一个模拟面试，当时面试老师就给我出了这么一道题目。我当时冥思苦想绞尽脑汁花了十几分钟写出来，结果老师看都没看，问我：你想两个相同的数字有什么特征？我立马就想起来了。因为两个相同的数字的异或结果为0！有了这个思路，结果我只花了几分钟的时间，用了原来四分之一的代码量就写出来了，确实简洁啊！</p>
+<p>所以这道题也可以用相同的方法，将数组中的所有值异或过去，最后的结果肯定为两个只出现一次的数字的异或值！并且这给值肯定不为0.也就是至少有一位为1，这两个数的这一bit位肯定不相同。所以我们可以按照这一位是否为1将数组中的值分为两堆，对这两堆值分别求异或，最后的两个结果就是我们要找的数字。</p>
+<p>代码如下：</p>
+<pre><code class="language-int">{
+    int i,index=1;
+    for(i=0;i&lt;8*sizeof(int);++i)
+    {
+        if((num &amp;amp; (index&lt;&lt;i)) ==0)
+            continue;
+        else
+            break;
+    }
+    return i;
+}
+
+bool IsBit1(int num,int pos)
+{
+    return num&amp;amp;(1&lt;&lt;pos);
+}
+
+void FindNumbersAppearOnce(const vector&lt;int&gt;&amp;amp; v,int&amp;amp; n1,int&amp;amp; n2)
+{
+    int i,res=0;
+    for(i=0;i&lt;v.size();++i)
+    {
+        res^=v[i];
+    }
+    int n=FindFirstBitIs1(res);
+    n1=n2=0;
+    for(i=0;i&lt;v.size();++i)
+    {
+        if(IsBit1(v[i],n))
+        {
+            n1^=v[i];
+        }
+        else
+        {
+            n2^=v[i];
+        }
+    }
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/40_NumbersAppearOnce/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

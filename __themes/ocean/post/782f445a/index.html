@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>求给定数组的最大子数组 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/782f445a">
+<meta name="description" content="话说前天晚上被网易虐的也是够惨，3道编程题做出来两道，一个运行超时，一个通过率为70%。其实考的是动态规划之类的东西，只可惜我当时没有好好学。虽然牛客网服务器挂了导致考试延长一个小时，但这对我并没有什么实质帮助，不会还是不会呀。 今天开始啃《算法导论》，每天一个算法，坚持！ 简单看了下分治这一节，照着书上的思想敲出了”…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="求给定数组的最大子数组">
+<meta property="og:url" content="https://sbrave.cn/post/782f445a">
+<meta property="og:description" content="话说前天晚上被网易虐的也是够惨，3道编程题做出来两道，一个运行超时，一个通过率为70%。其实考的是动态规划之类的东西，只可惜我当时没有好好学。虽然牛客网服务器挂了导致考试延长一个小时，但这对我并没有什么实质帮助，不会还是不会呀。 今天开始啃《算法导论》，每天一个算法，坚持！ 简单看了下分治这一节，照着书上的思想敲出了”…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-08-04 13:58:03</span>
+        <span>· 544 字</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>求给定数组的最大子数组</h2>
+<p>话说前天晚上被网易虐的也是够惨，3道编程题做出来两道，一个运行超时，一个通过率为70%。其实考的是动态规划之类的东西，只可惜我当时没有好好学。虽然牛客网服务器挂了导致考试延长一个小时，但这对我并没有什么实质帮助，不会还是不会呀。</p>
+<p>今天开始啃《算法导论》，每天一个算法，坚持！</p>
+<p>简单看了下分治这一节，照着书上的思想敲出了”给定数组的最大子数组”的代码，如下：</p>
+<pre><code class="language-int">{
+    if (left &gt; mid || mid &gt; right)
+        return 0;
+    int LeftSum = 0;
+    int RightSum = 0;
+    int LeftMaxSum = INT_MIN;
+    int RightMaxSum = INT_MIN;
+    int i;
+    for (i = mid;i &gt;= left;--i)
+    {
+        LeftSum += v[i];
+        if (LeftSum &gt; LeftMaxSum)
+        {
+            LeftMaxSum = LeftSum;
+            *MaxLeft = i;
+        }
+    }
+    for (i = mid + 1;i &lt;= right;++i)
+    {
+        RightSum+= v[i];
+        if (RightSum &gt; RightMaxSum)
+        {
+            RightMaxSum = RightSum;
+            *MaxRight = i;
+        }
+    }
+    return LeftMaxSum + RightMaxSum;
+}
+
+int FindMaxSubArray(const vector&lt;int&gt;&amp;amp; v, int left, int right,int* i,int* j)
+{
+    if (left &gt; right)
+        return 0;
+    if (left == right)
+    {
+        *i = *j = left;
+        return v[left];
+    }
+    int MaxLeft1, MaxRight1,MaxLeft2, MaxRight2,MaxLeft3, MaxRight3;
+    int mid = left + (right - left) / 2;
+    int LeftSum = FindMaxSubArray(v, left, mid, &amp;amp;MaxLeft1, &amp;amp;MaxRight1);
+    int RightSum = FindMaxSubArray(v, mid + 1, right, &amp;amp;MaxLeft2, &amp;amp;MaxRight2);
+    int MidSum = FindMidMaxSum(v, left, mid, right, &amp;amp;MaxLeft3, &amp;amp;MaxRight3);
+    if (LeftSum &gt;= RightSum &amp;amp;&amp;amp; LeftSum &gt;= MidSum)
+    {
+        *i = MaxLeft1;
+        *j = MaxRight1;
+        return LeftSum;
+    }
+    else if (RightSum &gt;= LeftSum &amp;amp;&amp;amp; RightSum &gt;= MidSum)
+    {
+        *i = MaxLeft2;
+        *j = MaxRight2;
+        return RightSum;
+    }
+    else
+    {
+        *i = MaxLeft3;
+        *j = MaxRight3;
+        return MidSum;
+    }
+}
+
+int calculateMax(vector&lt;int&gt; prices) 
+{
+    int i;
+    vector&lt;int&gt; v;
+    int left, right;
+    for (i = 1;i &lt; prices.size();++i)
+    {
+        v.push_back(prices[i] - prices[i - 1]);
+        cout &lt;&lt; prices[i] - prices[i - 1]&lt;&lt;&quot; &quot;;
+    }
+    cout &lt;&lt; endl;
+    int sum1=FindMaxSubArray(v, 0, v.size() - 1, &amp;amp;left, &amp;amp;right);
+    int a = left;
+    int b = right;
+    int sum2 = FindMaxSubArray(v, 0, left - 1, &amp;amp;left, &amp;amp;right);
+    left = a;
+    right = b;
+    int sum3 = FindMaxSubArray(v, right, v.size()-1, &amp;amp;left, &amp;amp;right);
+    if (sum1 &lt;= sum2 &amp;amp;&amp;amp; sum1 &lt;= sum3)
+    {
+        if (sum2 &lt; 0)
+            return sum3;
+        if (sum3 &lt; 0)
+            return sum2;
+        return sum2 + sum3;
+    }
+    else if (sum2 &lt;= sum1 &amp;amp;&amp;amp; sum2 &lt;= sum3)
+    {
+        if (sum1 &lt; 0)
+            return sum3;
+        if (sum3 &lt; 0)
+            return sum1;
+        return sum1 + sum3;
+    }
+    else
+    {
+        if (sum1 &lt; 0)
+            return sum2;
+        if (sum2 &lt; 0)
+            return sum1;
+        return sum1 + sum2;
+    }
+}
+</code></pre>
+<p><a href="https://github.com/SmartBrave/DataStruct/blob/master/Divide/%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84.cpp">代码的github地址</a></p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>所有的HTTP返回码 · sbraveyoung · 字里行间</title>
+<meta name="description" content="1xx 消息：请求已被接受，需要继续处理。HTTP/1.0 协议中没有定义任何 1xx 状态码。 100 Continue 客户端应当继续发送剩余请求。 101 Switching Protocols 服务器已经理解了客户端的请求，并将通过 Upgrade 消息头通知客户端采用不同的协议来完成这个请求。 102 Pro…">
+<meta property="og:title" content="所有的HTTP返回码">
+<meta property="og:description" content="1xx 消息：请求已被接受，需要继续处理。HTTP/1.0 协议中没有定义任何 1xx 状态码。 100 Continue 客户端应当继续发送剩余请求。 101 Switching Protocols 服务器已经理解了客户端的请求，并将通过 Upgrade 消息头通知客户端采用不同的协议来完成这个请求。 102 Pro…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/afe65937/a452b2f2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-07-10
+    </div>
+    <h1 class="article-title">所有的HTTP返回码</h1>
+    <p class="article-lede">1xx 消息：请求已被接受，需要继续处理。HTTP/1.0 协议中没有定义任何 1xx 状态码。 100 Continue 客户端应当继续发送剩余请求。 101 Switching Protocols 服务器已经理解了客户端的请求，并将通过 Upgrade 消息头通知客户端采用不同的协议来完成这个请求。 102 Pro…</p>
+    <div class="article-meta">
+      <span>8 min read</span>
+      <span>1798 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>所有的HTTP返回码</h2>
+<ul>
+<li>
+<p>1xx 消息：请求已被接受，需要继续处理。HTTP/1.0 协议中没有定义任何 1xx 状态码。</p>
+<ul>
+<li>100 Continue 客户端应当继续发送剩余请求。</li>
+<li>101 Switching Protocols 服务器已经理解了客户端的请求，并将通过 Upgrade 消息头通知客户端采用不同的协议来完成这个请求。</li>
+<li>102 Processing 处理将被继续执行。</li>
+</ul>
+</li>
+<li>
+<p>2xx 成功：请求已成功被服务器接收、理解并接受。</p>
+<ul>
+<li>200 OK 请求已成功，请求所希望的响应头或数据体将随此响应返回。</li>
+<li>201 Created 请求已被实现，且有一个新的资源已经依请求的需要而创建。</li>
+<li>202 Accepted 服务器已经接受请求，但尚未处理。</li>
+<li>203 Non-Authoritative Information 服务器已经成功处理了请求，但返回的实体头部元信息不是在原始服务器上有效的确定集合，而是来自本地或者第三方的拷贝。</li>
+<li>204 No Content 服务器成功处理了请求，但不需要返回任何实体内容，并且希望返回更新了的元信息。</li>
+<li>205 Reset Content 服务器成功处理了请求，且没有返回任何内容。与 204 响应不同，此状态码的响应要求请求者重置文档视图。</li>
+<li>206 Partial Content 服务器已成功处理了部分 GET 请求。可以实现断点续传。</li>
+<li>207 Multi-Status 代表之后的消息体将是一个XML消息。</li>
+</ul>
+</li>
+<li>
+<p>3xx 重定向：</p>
+<ul>
+<li>300 Multiple Choices 被请求的资源有一系列可供选择的回馈信息，用户自行选择一个进行重定向。</li>
+<li>301 Moved Permanently 被请求的资源已永久移动到新的位置。</li>
+<li>302 Found 请求的资源现在临时从不同的 URI 响应请求。</li>
+<li>303 See Other 对应当前请求的响应可以在另一个 URI 上被找到而且客户端应该采用 GET 方式访问那个资源。</li>
+<li>304 Not Modified 文档的内容没有发生改变。且 304 响应禁止包含消息体，因此始终以消息头后第一个空行结尾。</li>
+<li>305 Use Proxy 被请求的资源必须通过指定的代理才能访问。</li>
+<li>306 Switch Proxy 已弃用。</li>
+<li>307 Temporary Redirect 请求的资源现在临时从不同的 URI 响应请求。</li>
+</ul>
+</li>
+<li>
+<p>4xx 客户端错误：</p>
+<ul>
+<li>400 Bad Request 请求包含语法错误。</li>
+<li>401 Unauthorized 当前请求需要用户验证。</li>
+<li>402 Payment Required 保留。</li>
+<li>403 Forbidden 服务器已理解请求，但拒绝执行它。</li>
+<li>404 Not Found 请求所需要的资源未在服务器上被发现。</li>
+<li>405 Method Not Allowed 请求行中指定的方法不能用于请求相应的资源。</li>
+<li>406 Not Acceptable 请求的资源的内容特性无法满足请求头中的条件，因而无法生成响应实体。</li>
+<li>407 Proxy Authentication Required 与 401 响应类似，只不过客户端必须在代理服务器上进行身份验证。</li>
+<li>408 Request Timeout 请求超时。</li>
+<li>409 Conflict 由于被请求的资源的当前状态之间存在冲突，请求无法完成。</li>
+<li>410 Gone 被请求的资源在服务器上已经不再可用，而且没有任何已知的转发地址。</li>
+<li>411 Length Required 服务器拒绝在没有定义 Content-Length 头的情况下接受请求。</li>
+<li>412 Precondition Failed 服务器在验证在请求的头字段中给出先决条件时，没能满足其中的一个或多个。</li>
+<li>413 Request Entity Too Large 服务器拒绝处理当前请求，因为该请求提交的实体数据大小超过了服务器愿意或者能够处理的范围。</li>
+<li>414 Request-URI Too Long 请求的 URI 长度超过了服务器能够解释的长度，因此服务器拒绝对该请求提供服务。</li>
+<li>415 Unsupported Media Type 对于当前请求的方法和所请求的资源，请求中提交的实体并不是服务器中所支持的格式，因此请求被拒绝。</li>
+<li>416 Requested Range Not Satisfiable 如果请求中包含了 Range 请求头，并且 Range 中指定的任何数据范围都与当前资源的可用范围不重合，同时请求中又没有定义 If-Range 请求头，那么服务器就应当返回 416 状态码。</li>
+<li>417 Expectation Failed 在请求头 Expect 中指定的预期内容无法被服务器满足，或者这个服务器是一个代理服务器，它有明显的证据证明在当前路由的下一个节点上，Expect 的内容无法被满足。</li>
+<li>418 I’m a teapot。</li>
+<li>421 There are too many connections from your internet address 从当前客户端所在的IP地址到服务器的连接数超过了服务器许可的最大范围。</li>
+<li>422 Unprocessable Entity 请求格式正确，但是由于含有语义错误，无法响应。</li>
+<li>423 Locked 当前资源被锁定。</li>
+<li>424 Failed Dependency 由于之前的某个请求发生的错误，导致当前请求失败，例如 PROPPATCH。</li>
+<li>425 Unordered Collection。</li>
+<li>426 Upgrade Required 客户端应当切换到 TLS/1.0。</li>
+<li>449 Retry With 由微软扩展，代表请求应当在执行完适当的操作后进行重试。</li>
+<li>451 Unavailable For Legal Reasons 由 IETF 核准，代表该访问因法律的要求而被拒绝。</li>
+</ul>
+</li>
+<li>
+<p>5xx:服务器错误</p>
+<ul>
+<li>500 Internal Server Error 服务器遇到了一个未曾预料的状况，导致了它无法完成对请求的处理。</li>
+<li>501 Not Implemented 服务器不支持当前请求所需要的某个功能。</li>
+<li>502 Bad Gateway 作为网关或者代理工作的服务器尝试执行请求时，从上游服务器接收到无效的响应。</li>
+<li>503 Service Unavailable 由于临时的服务器维护或者过载，服务器当前无法处理请求。</li>
+<li>504 Gateway Timeout 作为网关或者代理工作的服务器尝试执行请求时，未能及时从上游服务器（URI 标识出的服务器，例如 HTTP、FTP、LDAP）或者辅助服务器（例如 DNS）收到响应。</li>
+<li>505 HTTP Version Not Supported 服务器不支持，或者拒绝支持在请求中使用的 HTTP 版本。</li>
+<li>506 Variant Also Negotiates 代表服务器存在内部配置错误。</li>
+<li>507 Insufficient Storage 服务器无法存储完成请求所必须的内容。这个状况被认为是临时的。</li>
+<li>509 Bandwidth Limit Exceeded 服务器达到带宽限制。这不是一个官方的状态码，但是仍被广泛使用。</li>
+<li>510 Not Extended 获取资源所需要的策略并没有被满足。</li>
+</ul>
+</li>
+</ul>
+<p>【整理自<a href="https://zh.wikipedia.org/wiki/HTTP%E7%8A%B6%E6%80%81%E7%A0%81">维基百科</a>】</p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

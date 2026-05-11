@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 入门到精通 07 · AI 推理与部署 · sbraveyoung · 字里行间</title>
+<meta name="description" content="训练只决定模型上限，**推理决定模型能不能被用户用上**。 工业界 80% 的算力账单花在推理而不是训练。 一、推理工程的目标矩阵 | 维度 | 含义 | 优化对象 | | --- | --- | --- | | **Latency (TTFT / TPOT)** | 首 token 延迟 / 每 token 延迟 |…">
+<meta property="og:title" content="AI 入门到精通 07 · AI 推理与部署">
+<meta property="og:description" content="训练只决定模型上限，**推理决定模型能不能被用户用上**。 工业界 80% 的算力账单花在推理而不是训练。 一、推理工程的目标矩阵 | 维度 | 含义 | 优化对象 | | --- | --- | --- | | **Latency (TTFT / TPOT)** | 首 token 延迟 / 每 token 延迟 |…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/31477598/cae63e29">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2026</span>
+    <span>Sunday, April 26, 2026</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · April 26, 2026</div>
+    <h1 class="press-article-title">
+      AI 入门到精通 07 · AI 推理与部署
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>训练只决定模型上限，**推理决定模型能不能被用户用上**。 工业界 80% 的算力账单花在推理而不是训练。 一、推理工程的目标矩阵 | 维度 | 含义 | 优化对象 | | --- | --- | --- | | **Latency (TTFT / TPOT)** | 首 token 延迟 / 每 token 延迟 |…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 6 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>AI 入门到精通 07 · AI 推理与部署</h2>
+<blockquote>
+<p>训练只决定模型上限，<strong>推理决定模型能不能被用户用上</strong>。
+工业界 80% 的算力账单花在推理而不是训练。</p>
+</blockquote>
+<h2>一、推理工程的目标矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>含义</th>
+<th>优化对象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Latency (TTFT / TPOT)</strong></td>
+<td>首 token 延迟 / 每 token 延迟</td>
+<td>用户体验</td>
+</tr>
+<tr>
+<td><strong>Throughput (tokens/s)</strong></td>
+<td>单卡吞吐</td>
+<td>成本</td>
+</tr>
+<tr>
+<td><strong>Concurrency</strong></td>
+<td>并发用户数</td>
+<td>服务能力</td>
+</tr>
+<tr>
+<td><strong>Cost ($/1M tokens)</strong></td>
+<td>单位 token 成本</td>
+<td>商业可行性</td>
+</tr>
+<tr>
+<td><strong>Quality</strong></td>
+<td>量化 / 蒸馏后是否掉点</td>
+<td>用户感知</td>
+</tr>
+<tr>
+<td><strong>可控性</strong></td>
+<td>结构化输出、安全策略</td>
+<td>应用集成</td>
+</tr>
+</tbody>
+</table>
+<p>工程上你必须<strong>同时</strong>关注以上六者，单点优化会拆东墙补西墙。</p>
+<h2>二、知识点</h2>
+<h3>2.1 推理的&quot;快&quot;从哪来</h3>
+<ul>
+<li><strong>KV Cache</strong>：自回归生成的核心，省去重复算 K/V。理解显存计算：
+<pre><code>KV = 2 * num_layers * num_kv_heads * head_dim * seq_len * batch * dtype_size
+</code></pre>
+</li>
+<li><strong>Attention 优化</strong>：FlashAttention、PagedAttention（vLLM 的核心创新）、Continuous Batching。</li>
+<li><strong>Batching 策略</strong>：static → dynamic → continuous batching；In-flight batching。</li>
+<li><strong>算子融合</strong>：FusedMLP / FusedRMSNorm / FusedRoPE。</li>
+<li><strong>CUDA Graph</strong>：减少 kernel launch overhead。</li>
+<li><strong>Speculative Decoding</strong>：小模型草稿 + 大模型验证；EAGLE / Medusa / Lookahead。</li>
+<li><strong>Chunked Prefill</strong>：把长 prompt 分块，平衡 TTFT 与吞吐。</li>
+<li><strong>Prefix Caching</strong>：相同 prompt 前缀复用 KV。</li>
+</ul>
+<h3>2.2 模型压缩</h3>
+<ul>
+<li><strong>量化 (Quantization)</strong>：
+<ul>
+<li><strong>PTQ</strong>：训练后量化。GPTQ / AWQ / SmoothQuant / GGUF (llama.cpp)。</li>
+<li><strong>QAT</strong>：量化感知训练；精度更高但成本高。</li>
+<li>精度档：fp16 / bf16 → int8 / fp8 → int4 → int2/三值/二值。</li>
+<li>当前主流：AWQ / GPTQ / FP8 (Hopper / Blackwell)。</li>
+</ul>
+</li>
+<li><strong>剪枝 (Pruning)</strong>：结构化（按 head / 按层）vs 非结构化（按权重）；现实中收益有限。</li>
+<li><strong>蒸馏 (Distillation)</strong>：大模型当老师，把能力传给小模型；当下小模型主流路径。</li>
+<li><strong>MoE 推理</strong>：Expert 调度、负载均衡。</li>
+</ul>
+<h3>2.3 推理引擎选型</h3>
+<table>
+<thead>
+<tr>
+<th>引擎</th>
+<th>适用</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>vLLM</strong></td>
+<td>通用，社区活跃</td>
+<td>PagedAttention，支持 LoRA、speculative decoding</td>
+</tr>
+<tr>
+<td><strong>SGLang</strong></td>
+<td>长 prompt / Agent</td>
+<td>RadixAttention（前缀复用），结构化输出</td>
+</tr>
+<tr>
+<td><strong>TensorRT-LLM</strong></td>
+<td>NVIDIA 极致性能</td>
+<td>编译期优化，部署链路长</td>
+</tr>
+<tr>
+<td><strong>TGI (HF)</strong></td>
+<td>易用</td>
+<td>HF 全家桶友好</td>
+</tr>
+<tr>
+<td><strong>llama.cpp / Ollama</strong></td>
+<td>本地 / CPU / 边缘</td>
+<td>GGUF 量化，能在 Mac 上跑</td>
+</tr>
+<tr>
+<td><strong>MLX</strong></td>
+<td>Apple Silicon</td>
+<td>苹果原生</td>
+</tr>
+<tr>
+<td><strong>lmdeploy</strong></td>
+<td>国内</td>
+<td>中文社区支持好</td>
+</tr>
+</tbody>
+</table>
+<h3>2.4 部署架构</h3>
+<ul>
+<li><strong>单机直连</strong> vs <strong>网关 + 调度 + worker</strong>：QPS 上规模就要分层。</li>
+<li><strong>API 形态</strong>：OpenAI 兼容 (<code>/v1/chat/completions</code>) 是事实标准；流式 (SSE)。</li>
+<li><strong>网关层</strong>：限流、鉴权、计费、路由、A/B test、灰度。</li>
+<li><strong>多模型路由</strong>：按任务难度路由到不同尺寸模型（router model）。</li>
+<li><strong>缓存策略</strong>：完全相同请求 → response cache；相似 → semantic cache。</li>
+<li><strong>可观测性</strong>：tokens/s、TTFT、p50/p95/p99、错误率、安全过滤命中率。</li>
+<li><strong>离线 / 在线</strong>：批量推理（OpenAI Batch API、vLLM offline mode）vs 在线服务。</li>
+</ul>
+<h3>2.5 端 / 边推理</h3>
+<ul>
+<li><strong>手机 / PC 本地</strong>：MLC-LLM / llama.cpp / Ollama / LM Studio。</li>
+<li><strong>浏览器</strong>：WebLLM、ONNX Runtime Web、Transformers.js。</li>
+<li><strong>边缘 GPU</strong>：Jetson、TensorRT。</li>
+<li><strong>NPU / 国产芯片</strong>：昇腾、寒武纪、MTT、海光等；适配生态在演进。</li>
+</ul>
+<h3>2.6 安全与合规</h3>
+<ul>
+<li>内容安全：输入 / 输出过滤（Llama Guard / Shield Gemma / 国内合规模型）。</li>
+<li>提示注入 (Prompt Injection) 防御。</li>
+<li>数据脱敏 / 出网控制。</li>
+<li>计费与配额防滥用。</li>
+</ul>
+<h2>三、参考资料</h2>
+<ul>
+<li><a href="https://github.com/vllm-project/vllm">vLLM 文档 + 论文 (PagedAttention)</a>。</li>
+<li><a href="https://github.com/sgl-project/sglang">SGLang 文档</a>。</li>
+<li><a href="https://github.com/NVIDIA/TensorRT-LLM">TensorRT-LLM 文档</a>。</li>
+<li><a href="https://github.com/ggerganov/llama.cpp">llama.cpp 仓库</a> 及 GGUF 量化指南。</li>
+<li><a href="https://huggingface.co/docs/optimum/">Hugging Face Optimum</a> —— 量化 / 部署工具集。</li>
+<li>论文：<em>FlashAttention 1/2/3</em>、<em>PagedAttention</em>、<em>Speculative Decoding</em>、<em>Medusa</em>、<em>EAGLE</em>、<em>AWQ</em>、<em>GPTQ</em>、<em>SmoothQuant</em>。</li>
+<li>博客：<a href="https://lilianweng.github.io/posts/2023-01-10-inference-optimization/">Lilian Weng &quot;LLM Inference Acceleration&quot;</a>、[a16z infra map for LLMs]。</li>
+<li>课程：<a href="https://github.com/gpu-mode/lectures">GPU MODE 的 inference 系列录播</a>。</li>
+<li>工业界案例：Anthropic / OpenAI / Mistral / 字节豆包 / 阿里通义 / DeepSeek 公开的工程博客。</li>
+</ul>
+<h2>四、动手实践</h2>
+<ol>
+<li><strong>本地跑 vLLM</strong>：用 vLLM 部署一个 7B / 14B 模型，提供 OpenAI 兼容 API；写 client 测吞吐 / TTFT。</li>
+<li><strong>量化对比</strong>：把同一个模型分别用 fp16 / int8 / int4 (AWQ) 部署，测速度 / 显存 / MMLU 掉点。</li>
+<li><strong>llama.cpp 边缘部署</strong>：在 Mac / 普通 PC 上用 GGUF 跑 7B 模型，测 token/s。</li>
+<li><strong>Speculative Decoding</strong>：用 vLLM 启用 spec decoding（大模型 + 小 draft 模型），对比加速比。</li>
+<li><strong>Prefix Caching 实验</strong>：用相同长 prompt 多次发请求，测 cache 命中前后 TTFT 差异。</li>
+<li><strong>结构化输出</strong>：用 SGLang 或 <a href="https://github.com/outlines-dev/outlines">outlines</a>，让模型严格输出 JSON Schema 定义的结构。</li>
+<li><strong>写一个 LLM 网关</strong>：用 FastAPI 套在 vLLM 前面，做：鉴权、限流、计费、日志、流式转发。</li>
+<li><strong>离线批量推理</strong>：用 vLLM offline 跑 10 万条数据的批量打标，对比在线接口的成本差。</li>
+<li><strong>benchmark 自己</strong>：用 <a href="https://github.com/vllm-project/vllm/tree/main/benchmarks">vllm-benchmarks</a> 或 sglang bench，画 throughput-latency 曲线。</li>
+</ol>
+<h2>五、通关标志</h2>
+<ul>
+<li><input disabled="" type="checkbox" /> 能解释 KV Cache 占多少显存，能算&quot;7B fp16 + 4096 ctx + batch=32&quot;占多大。</li>
+<li><input disabled="" type="checkbox" /> 能讲清 Continuous Batching 解决了什么、PagedAttention 解决了什么。</li>
+<li><input disabled="" type="checkbox" /> 跑通过 vLLM / SGLang / TensorRT-LLM 中至少两个，并能讲清各自定位。</li>
+<li><input disabled="" type="checkbox" /> 完成至少一次量化部署并能量化精度损失。</li>
+<li><input disabled="" type="checkbox" /> 你能提供一个生产级可部署的 LLM 服务（带网关、监控、计费）。</li>
+<li><input disabled="" type="checkbox" /> 看到一个推理性能问题，能给出 5 个排查方向（batch / cache / 量化 / 调度 / 通信）。</li>
+</ul>
+<p>下一站：<a href="/__themes/press/post/31477598/9f71a8f6">08. AI Agent</a></p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2026 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

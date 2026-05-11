@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Git工作流开发实践 · sbraveyoung · 字里行间</title>
+<meta name="description" content="作为一个程序员，毫无疑问是需要和代码打交道的。俗话说，有人的地方就有江湖，同样，有代码的地方就有版本控制。 当年，Linus Torvalds 大神以一己之力开发出了初始的 Linux 内核，一举奠定其在开源界的江湖地位。但随着代码越来越庞大，再加上 BitKeeper 不再授权 Linux 项目免费使用，Linus …">
+<meta property="og:title" content="Git工作流开发实践">
+<meta property="og:description" content="作为一个程序员，毫无疑问是需要和代码打交道的。俗话说，有人的地方就有江湖，同样，有代码的地方就有版本控制。 当年，Linus Torvalds 大神以一己之力开发出了初始的 Linux 内核，一举奠定其在开源界的江湖地位。但随着代码越来越庞大，再加上 BitKeeper 不再授权 Linux 项目免费使用，Linus …">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/331f81e4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2019-02-23
+    </div>
+    <h1 class="article-title">Git工作流开发实践</h1>
+    <p class="article-lede">作为一个程序员，毫无疑问是需要和代码打交道的。俗话说，有人的地方就有江湖，同样，有代码的地方就有版本控制。 当年，Linus Torvalds 大神以一己之力开发出了初始的 Linux 内核，一举奠定其在开源界的江湖地位。但随着代码越来越庞大，再加上 BitKeeper 不再授权 Linux 项目免费使用，Linus …</p>
+    <div class="article-meta">
+      <span>5 min read</span>
+      <span>1241 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>Git工作流开发实践</h2>
+<p>作为一个程序员，毫无疑问是需要和代码打交道的。俗话说，有人的地方就有江湖，同样，有代码的地方就有版本控制。</p>
+<p>当年，Linus Torvalds 大神以一己之力开发出了初始的 Linux 内核，一举奠定其在开源界的江湖地位。但随着代码越来越庞大，再加上 BitKeeper 不再授权 Linux 项目免费使用，Linus 一怒之下，决定自己动手开发一个版本管理系统，这才促使了 Git 的诞生。这里面我们可以得出两个结论：</p>
+<ol>
+<li>BitKeeper 对开源界的贡献巨大，他们若不作出那个决定，就不会有 Git，更不会有现在全世界最大的同性交友社区；</li>
+<li>大神跟普通人的区别就是，大神发现某个东西不好用或者不让用了，就会撸起袖子自己搞一个，而普通人则会四处寻找破解版或自降效率改用其他工具；</li>
+</ol>
+<p>Git 是一个分布式的版本控制系统，有非常多的特性，如分支管理、工作区、fast forward 等。但也有不少难以使用的地方：</p>
+<ol>
+<li>如何开发一个新的 feature？对小型项目还好，稍大一点的项目同时开发的 feature 可能达到十几个，这么多 feature 如何管理？</li>
+<li>线上出了 bug 如何快速修复？并且保证之后发布的所有版本都包含这个修复的 commit？</li>
+<li>每次修改代码，重新发布的流程很多很繁琐，如何保证 RD 严格按照规范来操作？</li>
+</ol>
+<p>此时 Git flow 出现了，我将它称为「Git 工作流」，从字面意思来看，就是按照一个规定好的工作流程来操作，以保证规范性（此处解决了上述第三个问题）。Git flow 严格来说是一种思想、机制，Git 相关的大部分操作都可以用某些「流」来完成。它不同于许多开发人员惯用的方式。在传统开发模式下，许多人只维护了「master」和「develop」分支，相关的新功能在 develop 上开发，完成后 merge 到 master 分支上，更有甚者只有一个 master 分支。这样的工作模式对于对于并发进行多个 feature 的管理简直是个噩梦。</p>
+<p>Git flow 设定了五个分支：master、develop、hotfix、feature、release。各个分支通过不同的耦合，形成一个「流」，共同完成代码从编写到上线的一系列流程。各个分支之间的关系如下图：</p>
+<p><img src="../../image/git-flow.png" alt="" /></p>
+<p>（图片来自网络）</p>
+<p>下面来逐一解释：</p>
+<ul>
+<li>master 分支：只能由 release 分支合并而来，不能在上面直接开发，以保证在任意时刻，master 分支上的代码都是稳定的；且每次合并都应该打 tag；</li>
+<li>hotfix 分支：当生产环境发现问题需要紧急修复时，需要且只能基于 master 分支创建一个 hotfix 分支，修复后双向 merge 到 master 和 develop，以保证生产环境和后续新功能的开发都 fix 掉此问题；</li>
+<li>develop 分支：此分支和 master 分支并列为常驻分支，也就是在项目中一直存在，其他分支则在相应的使命完成后会被删除；develop 基于 master 创建，有新需求时就基于 develop 分支上的某个 commit 创建不同的 feature 分支，或者在发布版本时创建出 release 分支；该分支上一般也不直接开发，而是接受其他分支的 merge；</li>
+<li>feature 分支：用来开发一个新功能，一旦开发完成，需要 merge 回 develop 分支。可以同时存在多个 feature 分支并行开发；</li>
+<li>release 分支：需要发布时，基于 develop 分支创建 release 分支，在此之上进行测试、修复 bug 等，完成后双向 merge 到 master 和 develop 分支上就可以发布了；</li>
+</ul>
+<p>由此，Git flow 成功将各个分支串起来，形成一个工作流，以便于快速开发迭代。但每次都手动去创建、合并、删除分支并在各个分支间跳转很繁琐，因为所有的步骤都是一样的，能不能将之简化一下呢？</p>
+<p>答案就是 git-flow 工具，支持大多数主流系统。安装之后，可以简化为以下两条命令：</p>
+<pre><code class="language-shell">git flow [branch] start XXX
+git flow [branch] finish XXX
+</code></pre>
+<p>请将 [branch] 自行替换为上述提到的几个分支之一，XXX 替换为相应的分支子名称；</p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

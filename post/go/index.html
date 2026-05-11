@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Go语言系列 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-group">
+  <nav class="crumbs"><a href="/">Home</a><span>›</span><span>Go语言系列</span></nav>
+  <header class="group-head">
+    <h1>Go语言系列</h1>
+    <p class="group-count">3 篇</p>
+  </header>
+
+  <section class="post-list">
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/78eb32d6/59d7b3a8">golang 性能优化实践</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">一、缘起 golang 作为一门 google 主导开发的语言，已经有十年光景了。在这期间，golang 一直朝着 &#34;high performence and easy writing&#34; 的目标在演进，从普及程度上看已经取得了良好的效果。在我们公司技术团队，也在将开发语言从 c&#43;&#43;/python 等逐渐切换到 gola…</p>
+      <div class="entry-meta">
+        <span>2020-04-30 21:00:00</span>
+        <span>· 11 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/78eb32d6/5937cec8">golang程序启动流程</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">通常来说，程序执行的入口点都不是我们所写的 `main` 函数，编译器会在之前插入部分代码，用来执行相关的初始化工作。本文从整体流程上分析一下 Go 编译器在我们写的代码之前究竟做了什么。 准备 本次测试在我的电脑主机上完成，Golang 版本为 1.5.1： 先编写一个简单的程序，如下： test.go 编译为可执行…</p>
+      <div class="entry-meta">
+        <span>2018-06-08 04:32:50</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/78eb32d6/d44b617d">go语言学习笔记</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">最近在公司实习，项目中需要用到 Golang，所以花一些时间来自学一下。因为以前有 C/C&#43;&#43; 基础，所以学起来不是太吃力。现将学习的语法简单记录如下，如果要深究详细的语法细节，请参考相关的 Go 语言书籍： 1.  Go 的源程序文件是以 `.go` 结尾的文件，其一般有以下几个组成部分： 包声明：每个包的起始部分都…</p>
+      <div class="entry-meta">
+        <span>2016-12-02 19:27:04</span>
+        <span>· 7 min</span>
+        
+      </div>
+    </article>
+    
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

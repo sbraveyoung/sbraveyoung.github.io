@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skill · 一键推送公众号草稿 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/skills/wechat-publish">
+<meta name="description" content="何时用**：写完一篇博客想顺便发到公众号上去。 解决什么**：把&#34;打开公众号后台 → 复制粘贴 → 调样式 → 上传图片&#34;这一整套手工活省掉，留下&#34;人工审核 + 一键发布&#34;这两件事。 工作模型 插件**只把内容推到草稿箱**，**永远不替你发布**。最终的发布按钮只能你自己在 mp.weixin.qq.com 上点。这…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill · 一键推送公众号草稿">
+<meta property="og:url" content="https://sbrave.cn/post/skills/wechat-publish">
+<meta property="og:description" content="何时用**：写完一篇博客想顺便发到公众号上去。 解决什么**：把&#34;打开公众号后台 → 复制粘贴 → 调样式 → 上传图片&#34;这一整套手工活省掉，留下&#34;人工审核 + 一键发布&#34;这两件事。 工作模型 插件**只把内容推到草稿箱**，**永远不替你发布**。最终的发布按钮只能你自己在 mp.weixin.qq.com 上点。这…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        <span class="badge badge-ai" title="AI 辅助">🤖 AI 辅助</span>
+        <span>2026-05-11 09:07:00</span>
+        <span>· 1000 字</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>Skill · 一键推送公众号草稿</h2>
+<blockquote>
+<p><strong>何时用</strong>：写完一篇博客想顺便发到公众号上去。</p>
+<p><strong>解决什么</strong>：把&quot;打开公众号后台 → 复制粘贴 → 调样式 → 上传图片&quot;这一整套手工活省掉，留下&quot;人工审核 + 一键发布&quot;这两件事。</p>
+</blockquote>
+<h3>工作模型</h3>
+<p>插件<strong>只把内容推到草稿箱</strong>，<strong>永远不替你发布</strong>。最终的发布按钮只能你自己在 mp.weixin.qq.com 上点。这是设计选择，不是限制——人工审核环节强制保留。</p>
+<pre><code>Obsidian 命令面板
+   │
+   │  Gobog Sync: Push active post to WeChat (公众号) as draft
+   ▼
+插件:
+   1. 拿当前文件 markdown
+   2. 扫所有图片引用（标准 ![]() + Obsidian ![[]] 都识别）
+   3. 每张本地图片上传成微信永久素材，拿回 CDN URL
+   4. 把 markdown 里的图片路径替换成 CDN URL
+   5. marked 渲染成 HTML
+   6. 内联样式（公众号会剥 &lt;style&gt; 块）
+   7. POST /cgi-bin/draft/add，拿到 media_id
+   ▼
+mp.weixin.qq.com → 草稿箱 → 你看到一篇新草稿
+   │
+   │  你预览，调整封面 / 摘要（如果需要），点发布
+   ▼
+公众号读者看到
+</code></pre>
+<h3>一次性配置</h3>
+<h4>1. 公众号后台</h4>
+<ul>
+<li><strong>必须是认证过 / 有 API 权限的服务号或订阅号</strong>。个人订阅号没有 API 权限。</li>
+<li>后台 → 开发 → 基本配置：
+<ul>
+<li>拿到 <strong>AppID</strong> 和 <strong>AppSecret</strong></li>
+<li>把<strong>本机公网出口 IP</strong> 加到 <strong>IP 白名单</strong>（不加的话所有 API 调用都会 errcode 40164）</li>
+</ul>
+</li>
+</ul>
+<p>不知道自己的出口 IP？终端跑：</p>
+<pre><code class="language-sh">curl https://api.ipify.org
+</code></pre>
+<h4>2. 插件设置</h4>
+<p>设置 → Gobog Sync → WeChat 公众号 (草稿)：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>启用 WeChat 推送</td>
+<td>✅</td>
+<td>打开后命令面板里出现推送命令</td>
+</tr>
+<tr>
+<td>AppID</td>
+<td><code>wx...</code></td>
+<td>公众号后台拿的</td>
+</tr>
+<tr>
+<td>AppSecret</td>
+<td><code>***</code></td>
+<td>公众号后台拿的；本地 data.json 加密前明文存储</td>
+</tr>
+<tr>
+<td>默认作者</td>
+<td><code>sbraveyoung</code></td>
+<td>显示在 WeChat 文章顶部</td>
+</tr>
+<tr>
+<td>默认封面 <code>thumb_media_id</code></td>
+<td>（留空 OK）</td>
+<td>留空时插件用文章里第一张图作为封面</td>
+</tr>
+</tbody>
+</table>
+<h3>用</h3>
+<ol>
+<li>Obsidian 里打开你想推的那篇文章。</li>
+<li>命令面板（Cmd+P）→ <strong>Gobog Sync: Push active post to WeChat (公众号) as draft</strong>。</li>
+<li>等几秒（图片越多等越久——每张都要上传）。</li>
+<li>弹出 Notice：&quot;WeChat draft created (media_id ...). Open <a href="https://mp.weixin.qq.com/">https://mp.weixin.qq.com/</a> → 草稿箱 to review and publish&quot;。</li>
+<li>浏览器打开公众号后台，去草稿箱预览。</li>
+</ol>
+<h3>HTML 转换的一些限制</h3>
+<p>公众号编辑器对 HTML 很挑：</p>
+<ul>
+<li>不接受 <code>&lt;style&gt;</code> 块——所有样式必须 inline。插件已经处理：headings / p / li / pre / code / blockquote / table / img 都被注入了 inline 的 style。</li>
+<li>不接受外部 CSS 引用。</li>
+<li>不接受复杂选择器、media query、CSS 变量。</li>
+<li><code>&lt;script&gt;</code> 直接被剥。</li>
+<li>数学公式（MathJax / KaTeX）不渲染——只能截图或者用图片代替。</li>
+</ul>
+<p>如果你写的文章重度依赖某些 markdown 特性（mermaid 图、math、可折叠 details），公众号端的呈现会跟博客<strong>不完全一致</strong>。这是公众号生态的限制，不是插件的。</p>
+<h3>排查</h3>
+<ul>
+<li><strong>errcode 40164</strong>：IP 白名单没加。前面 #1 那一步重做。</li>
+<li><strong>errcode 40001 invalid credential</strong>：AppSecret 错了 / AppSecret 在公众号后台被重置过。重新填一遍设置里的 AppSecret，插件会自动刷新 access_token。</li>
+<li><strong>报错 &quot;WeChat draft needs a cover image&quot;</strong>：文章里没有任何本地图片，且没设默认 thumb_media_id。要么文章里加张图，要么去设置里填个默认封面 ID。</li>
+<li><strong>草稿创建成功但封面不是我想要的</strong>：插件用的是文章里<strong>第一张</strong>本地图。想换 → 改文章里图片顺序，或者去公众号后台手动换。</li>
+</ul>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

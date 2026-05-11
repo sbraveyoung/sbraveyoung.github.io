@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一个简单的List实现 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/3896b050">
+<meta name="description" content="list 和 vector 是 STL 库中两个最基本的容器，以下代码模拟实现一个简单的 list： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Lis…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个简单的List实现">
+<meta property="og:url" content="https://sbrave.cn/post/e660f1d5/3896b050">
+<meta property="og:description" content="list 和 vector 是 STL 库中两个最基本的容器，以下代码模拟实现一个简单的 list： 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/SmartBrave/DataStruct/tree/master/Lis…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-21 14:39:49</span>
+        <span>· 464 字</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>一个简单的List实现</h2>
+<p>list 和 vector 是 STL 库中两个最基本的容器，以下代码模拟实现一个简单的 list：</p>
+<pre><code class="language-C++">#ifndef _MYLIST_
+#define _MYLIST_
+
+#include&lt;iostream&gt;
+using namespace std;
+
+class ListIsEmpty{};
+class ArgIsIll{};
+
+template&lt;typename T&gt;
+class Node{
+public:
+    Node(const T&amp; d=T()):data(d),prev(NULL),next(NULL)
+    {}
+
+    ~Node()
+    {}
+
+private:
+    Node(const Node&amp; n);
+    Node&amp; operator=(const Node&amp; n);
+
+public:
+    T data;
+    Node* prev;
+    Node* next;
+};
+
+template&lt;typename T&gt;
+class List{
+public:
+    List():front(NULL),tail(NULL),cur_size(0)
+    {}
+
+    ~List()
+    {
+        while(!this-&gt;empty())
+        {
+            this-&gt;pop_front();
+        }
+    }
+
+    List&amp; operator=(const List&amp; l)
+    {
+        if(&amp;l!=this)
+        {
+            Node&lt;T&gt;* cur=l.front;
+            List newlist;
+            while(cur!=NULL)
+            {
+                newlist.push_front(cur-&gt;data);
+            }
+        }
+        return newlist;
+    }
+
+    Node&lt;T&gt;* begin()
+    {
+        return front;
+    }
+
+    Node&lt;T&gt;* end()//此处 end 函数与 STL 中稍微有点不同，STL 中 end 返回值指向最后一个元素的下一个，这里指向最后一个元素
+    {
+        return tail;
+    }
+
+    bool empty()
+    {
+        if(cur_size==0)
+            return true;
+        else
+            return false;
+    }
+
+    size_t size()
+    {
+        return cur_size;
+    }
+
+    bool push_front(Node&lt;T&gt;* n)
+    {
+        if(this-&gt;empty())
+        {
+            front=tail=n;
+        }
+        else
+        {
+            n-&gt;next=front;
+            front-&gt;prev=n;
+            n-&gt;prev=tail;
+            tail-&gt;next=n;
+            front=n;
+        }
+        cur_size++;
+        return true;
+    }
+
+    bool pop_front()throw (ListIsEmpty)
+    {
+        if(this-&gt;empty())
+        {
+            throw ListIsEmpty();
+        }
+        else if(this-&gt;size()==1)
+        {
+            delete front;
+            front=tail=NULL;
+        }
+        else
+        {
+            Node&lt;T&gt;* s=front;
+            front=front-&gt;next;
+            front-&gt;prev=tail;
+            tail-&gt;next=front;
+            delete s;
+        }
+        cur_size--;
+        return true;
+    }
+
+    bool push_front(const T&amp; t)
+    {
+        Node&lt;T&gt; *s=new Node&lt;T&gt;(t);
+        return push_front(s);
+    }
+
+    bool push_back(Node&lt;T&gt;* n)
+    {
+        if(this-&gt;empty())
+        {
+            front=tail=n;
+        }
+        else
+        {
+            tail-&gt;next=n;
+            n-&gt;prev=tail;
+            n-&gt;next=front;
+            front-&gt;prev=n;
+            tail=n;
+        }
+        cur_size++;
+        return true;
+    }
+
+    bool pop_back()throw (ListIsEmpty)
+    {
+        if(this-&gt;empty())
+        {
+            throw ListIsEmpty();
+        }
+        else if(this-&gt;size()==1)
+        {
+            delete tail;
+            front=tail=NULL;
+        }
+        else
+        {
+            Node&lt;T&gt;* s=tail;
+            tail=tail-&gt;prev;
+            front-&gt;prev=tail;
+            tail-&gt;next=front;
+            delete s;
+        }
+        cur_size--;
+        return true;
+    }
+
+    bool push_back(const T&amp; t)
+    {
+        Node&lt;T&gt; *s=new Node&lt;T&gt;(t);
+        return push_back(s);
+    }
+
+    bool insert(size_t pos,Node&lt;T&gt;* n)throw (ArgIsIll)
+    {
+        if(pos&gt;this-&gt;size())
+        {
+            throw ArgIsIll();
+        }
+        else if(pos==this-&gt;size())
+        {
+            return push_back(n);
+        }
+        else if(pos==0)
+        {
+            return push_front(n);
+        }
+        else
+        {
+            size_t i=0;
+            Node&lt;T&gt;* cur=front;
+            for(i=0;i&lt;pos-1;++i)
+            {
+                cur=cur-&gt;next;
+            }
+            n-&gt;next=cur-&gt;next;
+            cur-&gt;next-&gt;prev=n;
+            n-&gt;prev=cur;
+            cur-&gt;next=n;
+            cur_size++;
+            return true;
+        }
+    }
+
+    bool insert(size_t pos,const T&amp; t)throw (ArgIsIll)
+    {
+        Node&lt;T&gt;* s=new Node&lt;T&gt;(t);
+        return insert(pos,s);
+    }
+
+    bool erase(size_t pos)
+    {
+        if(pos&gt;this-&gt;size())
+        {
+            throw ArgIsIll();
+        }
+        else if(pos==this-&gt;size())
+        {
+            return pop_back();
+        }
+        else if(pos==0)
+        {
+            return pop_front();
+        }
+        else
+        {
+            size_t i=0;
+            Node&lt;T&gt;* cur=front;
+            for(i=0;i&lt;pos-1;++i)
+            {
+                cur=cur-&gt;next;
+            }
+            cur-&gt;next-&gt;prev=cur-&gt;prev;
+            cur-&gt;prev-&gt;next=cur-&gt;next;
+            delete cur;
+            cur_size--;
+            return true;
+        }
+    }
+
+    void print()const
+    {
+        Node&lt;T&gt;* cur=front;
+        while(true)
+        {
+            cout&lt;&lt;cur-&gt;data&lt;&lt;&quot; &quot;;
+            if(cur==tail)
+                break;
+            cur=cur-&gt;next;
+        }
+        cout&lt;&lt;endl;
+    }
+
+private:
+    List(const List&amp; l);
+
+private:
+    Node&lt;T&gt;* front;
+    Node&lt;T&gt;* tail;
+    size_t cur_size;
+};
+
+#endif
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/List">点我前往</a>
+)</p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一个简单的Deque实现 · sbraveyoung · 字里行间</title>
+<meta name="description" content="一个双向队列,底层使用 list 实现，因为 list 在 push\_back，push\_front，pop\_back，pop\_front 这些函数中效率较高。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/Sma…">
+<meta property="og:title" content="一个简单的Deque实现">
+<meta property="og:description" content="一个双向队列,底层使用 list 实现，因为 list 在 push\_back，push\_front，pop\_back，pop\_front 这些函数中效率较高。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/Sma…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/cfbbceb1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-07-26
+    </div>
+    <h1 class="article-title">一个简单的Deque实现</h1>
+    <p class="article-lede">一个双向队列,底层使用 list 实现，因为 list 在 push\_back，push\_front，pop\_back，pop\_front 这些函数中效率较高。 如果你有任何想法或是可以改进的地方，欢迎和我交流！ 完整代码及测试用例在 github 上：[点我前往](https://github.com/Sma…</p>
+    <div class="article-meta">
+      <span>1 min read</span>
+      <span>152 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>一个简单的Deque实现</h2>
+<p>一个双向队列,底层使用 list 实现，因为 list 在 push_back，push_front，pop_back，pop_front 这些函数中效率较高。</p>
+<pre><code class="language-C">#ifndef _DEQUE_
+#define _DEQUE_
+
+#include&lt;iostream&gt;
+#include&quot;../List/MyList.h&quot;
+
+template&lt;typename T&gt;
+class Deque{
+public:
+    Deque():mylist()
+    {}
+
+    Deque(const Deque&lt;T&gt;&amp; dq)
+    {
+        this-&gt;mylist=dq.mylist;
+    }
+
+    Deque&amp; operator=(const Deque&lt;T&gt;&amp; dq)
+    {
+        this-&gt;mylist=dq.mylist;
+    }
+
+    ~Deque()
+    {}
+
+    size_t size()
+    {
+        return mylist.size();
+    }
+
+    bool empty()
+    {
+        return mylist.empty();
+    }
+
+    const T&amp; front()
+    {
+        return mylist.begin()-&gt;data;
+    }
+
+    void push_back(const T&amp; t)
+    {
+        mylist.push_back(t);
+    }
+
+    void push_front(const T&amp; t)
+    {
+        mylist.push_front(t);
+    }
+
+    void pop_back()
+    {
+        mylist.pop_back();
+    }
+
+    void pop_front()
+    {
+        mylist.pop_front();
+    }
+
+private:
+    List&lt;T&gt; mylist;
+};
+
+#endif
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/Deque">点我前往</a>
+)</p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

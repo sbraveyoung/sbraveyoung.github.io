@@ -1,105 +1,123 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>go语言学习笔记 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/78eb32d6/d44b617d">
+<meta name="description" content="最近在公司实习，项目中需要用到 Golang，所以花一些时间来自学一下。因为以前有 C/C++ 基础，所以学起来不是太吃力。现将学习的语法简单记录如下，如果要深究详细的语法细节，请参考相关的 Go 语言书籍： 1.  Go 的源程序文件是以 `.go` 结尾的文件，其一般有以下几个组成部分： 包声明：每个包的起始部分都…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go语言学习笔记">
+<meta property="og:url" content="https://sbrave.cn/post/78eb32d6/d44b617d">
+<meta property="og:description" content="最近在公司实习，项目中需要用到 Golang，所以花一些时间来自学一下。因为以前有 C/C++ 基础，所以学起来不是太吃力。现将学习的语法简单记录如下，如果要深究详细的语法细节，请参考相关的 Go 语言书籍： 1.  Go 的源程序文件是以 `.go` 结尾的文件，其一般有以下几个组成部分： 包声明：每个包的起始部分都…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>go语言学习笔记</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>go语言学习笔记</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-12-02 19:27:04</span>
+        <span>· 1551 字</span>
+        <span>· 7 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>go语言学习笔记</h2>
 <p>最近在公司实习，项目中需要用到 Golang，所以花一些时间来自学一下。因为以前有 C/C++ 基础，所以学起来不是太吃力。现将学习的语法简单记录如下，如果要深究详细的语法细节，请参考相关的 Go 语言书籍：</p>
-
 <ol>
-<li>Go的源程序文件是以.go结尾的文件，其一般有以下几个组成部分：</li>
-</ol>
-
+<li>Go 的源程序文件是以 <code>.go</code> 结尾的文件，其一般有以下几个组成部分：
 <ul>
-<li>包声明：每个包的起始部分都要声明该包的名称，最常见的是<code>package main</code></p></li>
-
-<li><p>引入包：相当于C中的include，需要包含一些库，常见的是标准输入输出相关的库fmt：<code>import &quot;fmt&quot;</code></p></li>
-
-<li><p>函数：所有编程语言中都有函数的概念，为完成某一功能的一段代码的集合。Go中的函数写法如下：</p></li>
+<li>包声明：每个包的起始部分都要声明该包的名称，最常见的是<code>package main</code></li>
+<li>引入包：相当于 C 中的 include，需要包含一些库，常见的是标准输入输出相关的库 fmt：<code>import &quot;fmt&quot;</code></li>
+<li>函数：所有编程语言中都有函数的概念，为完成某一功能的一段代码的集合。Go中的函数写法如下：</li>
 </ul>
-
+</li>
+</ol>
 <pre><code>func Add(x,y int)(res int,err error){
     res=x+y
     return res,err
 }
 </code></pre>
-
 <p>如以上所示，函数可以返回多个返回值（res和err）。</p>
-
 <ul>
 <li>变量：编程语言离不开变量，其实变量就是一块内存空间的名字。变量的常见定义如下：</li>
 </ul>
-
 <pre><code>var a int :=10
 </code></pre>
-
 <p>var表示这是一个变量，int为变量类型，而变量名称放在var和类型中间。</p>
-
 <p>值得注意的是，Go语言中没有private，protected，public，static等关键字，所以用变量的大小写来控制变量的可见性。如果变量名或函数名的第一个字母是大写，则该变量在外部包中可见，否则不可见。</p>
-
 <p>可以使用一个形如<code>a:=10</code>的语句来定义一个变量，称为初始化声明，编译器会自动推断a是一个变量，且类型为int。</p>
-
 <ul>
-<li><p>语句 &amp; 表达式</p></li>
-
-<li><p>注释：注释和C/C++并无二致。</p></li>
+<li>
+<p>语句 &amp; 表达式</p>
+</li>
+<li>
+<p>注释：注释和C/C++并无二致。</p>
+</li>
 </ul>
-
 <ol>
-<li><p>运行：写好代码并检查无误后，可以用<code>go run test.go</code>命令来运行，也可以用<code>go build</code>先编译，再执行。</p></li>
-
-<li><p>Go语言中的数据类型有如下几种：</p></li>
+<li>
+<p>运行：写好代码并检查无误后，可以用<code>go run test.go</code>命令来运行，也可以用<code>go build</code>先编译，再执行。</p>
+</li>
+<li>
+<p>Go语言中的数据类型有如下几种：</p>
+</li>
 </ol>
-
 <ul>
-<li><p>布尔型：其值可取true或者false，代表真和假</p></li>
-
-<li><p>数字类型：包括整数，浮点数和复数类型</p></li>
-
-<li><p>字符串类型：由单个字符组成的字符序列，采用Unicode编码，因此可在字符串中使用中文等非ASCII字符。</p></li>
-
-<li><p>派生类型：包括以下几种：</p>
-
+<li>
+<p>布尔型：其值可取true或者false，代表真和假</p>
+</li>
+<li>
+<p>数字类型：包括整数，浮点数和复数类型</p>
+</li>
+<li>
+<p>字符串类型：由单个字符组成的字符序列，采用Unicode编码，因此可在字符串中使用中文等非ASCII字符。</p>
+</li>
+<li>
+<p>派生类型：包括以下几种：</p>
 <pre><code>*   指针
 
 *   数组
@@ -117,48 +135,42 @@
 *   Map类型
 
 *   Channel类型
-</code></pre></li>
+</code></pre>
+</li>
 </ul>
-
 <ol>
 <li>常量</li>
 </ol>
-
 <ul>
-<li><p>常量即在程序运行时不会被修改的量，它也有类型，但只能是布尔型，数字型和字符串型。</p></li>
-
-<li><p>可以通过const关键字给常量一个名称，比如<code>const a int = 10</code>，其中int可以省略，编译器会自动推导。</p></li>
-
-<li><p>常量还可以用作枚举，如下：</p></li>
+<li>
+<p>常量即在程序运行时不会被修改的量，它也有类型，但只能是布尔型，数字型和字符串型。</p>
+</li>
+<li>
+<p>可以通过const关键字给常量一个名称，比如<code>const a int = 10</code>，其中int可以省略，编译器会自动推导。</p>
+</li>
+<li>
+<p>常量还可以用作枚举，如下：</p>
+</li>
 </ul>
-
 <pre><code>const (
     one=1
     two=2
     three=3
 }
 </code></pre>
-
 <ul>
 <li>iota是一个特殊的常量，它在程序中每遇到const就重置为0，遇到另一个iota就由编译器加1。</li>
 </ul>
-
 <ol>
 <li>运算符</li>
 </ol>
-
 <p>Go语言的运算符和C/C++中基本保持一致，只有按位取反运算符不是<code>~</code>而是<code>^</code></p>
-
 <ol>
 <li>条件语句</li>
 </ol>
-
 <p>Go语言的条件语句有<code>if,else,switch,select</code>，重点说说switch和select。</p>
-
 <p>switch格式和C/C++一致，但Go中每次case执行完成后，即使没有break，也不会顺序执行下一条，除非显式指定。</p>
-
 <p>case后面的值也不限定在整数范围之内，可以是任意类型。并且可以同时测定多个值，如下：</p>
-
 <pre><code>var str string = &quot;Hello world&quot;
 var a int = 10
 switch {
@@ -168,105 +180,107 @@ switch {
     fmt.Println(&quot;smart!&quot;)
 }
 </code></pre>
-
 <p>select类似于用于通信的switch语句，每个case必须是一个通信操作，要么发送要么接收。select随机执行一个可执行的case，如果没有case可执行，select将阻塞，直到有case可执行。</p>
-
 <ol>
-<li><p>循环语句</p>
-
+<li>
+<p>循环语句</p>
 <p>Go语言只提供了for循环语句，没有C/C++中的while或者do...while循环。</p>
-
-<p>对比一下C/C++和Go中死循环的写法，Go显得简洁而优雅：</p></li>
-
-<li><p>函数</p>
-
-<p>函数的语法已经在上面写过，要注意的是，函数的参数传递有两种形式：值传递和引用传递。在Go中，数组也是作为值传递的。</p></li>
-
-<li><p>数组</p>
-
-<p>声明一个含有10个元素的整形数组的语句如下：</p></li>
+<p>对比一下C/C++和Go中死循环的写法，Go显得简洁而优雅：</p>
+</li>
+<li>
+<p>函数</p>
+<p>函数的语法已经在上面写过，要注意的是，函数的参数传递有两种形式：值传递和引用传递。在Go中，数组也是作为值传递的。</p>
+</li>
+<li>
+<p>数组</p>
+<p>声明一个含有10个元素的整形数组的语句如下：</p>
+</li>
 </ol>
-
 <pre><code>var arr [10] int
 </code></pre>
-
 <p>声明一个含有10个元素的整形数组并初始化的语句如下：</p>
-
 <pre><code>var arr [10] int = [10] int {1,2,3,4,5,6,7,8,9,0}
 </code></pre>
-
 <ol>
-<li><p>指针</p>
-
-<p>一个指向整形空间的指针的声明如下：</p></li>
+<li>
+<p>指针</p>
+<p>一个指向整形空间的指针的声明如下：</p>
+</li>
 </ol>
-
 <pre><code>var ptr *int
 </code></pre>
-
 <ol>
 <li>切片</li>
 </ol>
-
 <p>通过定义一个不指定大小的数组来定义切片并初始化：</p>
-
 <pre><code>var slice1 []int=[]int{1,2,3}
 </code></pre>
-
 <p>或者使用make函数来创建切片：</p>
-
 <pre><code>var slice2 []int=make([]int,3,10)
 </code></pre>
-
 <p>这表明定义一个容量为10的切片，其中存储了3个有效元素。</p>
-
 <p>len()函数返回切片的有效数据个数，cap()函数返回切片的容量，append()函数向切片追加元素，copy()函数将一个切片中的数据拷贝到另一个中去。</p>
-
 <p>切片可类比C++STL中的vector来使用。</p>
-
 <ol>
-<li><p>range关键字用来在for循环中遍历一个数组，切片，map，字符串等。它每次返回两个值，第一个是当前的索引，第二个是该索引对应的值。</p></li>
-
-<li><p>map</p>
-
-<p>Go语言中的map相当于一个语言层面的key-value的容器，底层使用哈希表来实现。可以如下创建一个key为int类型，value为string类型的map：</p></li>
+<li>
+<p>range关键字用来在for循环中遍历一个数组，切片，map，字符串等。它每次返回两个值，第一个是当前的索引，第二个是该索引对应的值。</p>
+</li>
+<li>
+<p>map</p>
+<p>Go语言中的map相当于一个语言层面的key-value的容器，底层使用哈希表来实现。可以如下创建一个key为int类型，value为string类型的map：</p>
+</li>
 </ol>
-
 <pre><code>var a map[int]string
 </code></pre>
-
-<p><p>或</p>
-
+<p>或
 <pre><code>var a=make(map[int]string)
 </code></pre>
-
 <p>在map中添加元素：</p>
-
 <pre><code>a[10]=&quot;hello world&quot;
 </code></pre>
-
 <p>删除元素：</p>
-
 <pre><code>delete(a,10)
 </code></pre>
-
 <ol>
 <li>接口</li>
 </ol>
-
 <p>接口相当于C++中的抽象类。</p>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

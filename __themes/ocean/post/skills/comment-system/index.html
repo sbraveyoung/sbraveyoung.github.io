@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skill · 评论系统（giscus） · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/skills/comment-system">
+<meta name="description" content="何时用**：要打开评论 / 要换评论的承载仓库 / 要排查&#34;评论框为啥没出现&#34;。 解决什么**：把 giscus 集成的全部配置点收拢到一处，开关单一，配置可逆。 为什么是 giscus 评论存在 GitHub Discussions 里，**自己不用搭服务**。 评论者必须 GitHub 登录，**天然反垃圾**。 …">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Skill · 评论系统（giscus）">
+<meta property="og:url" content="https://sbrave.cn/post/skills/comment-system">
+<meta property="og:description" content="何时用**：要打开评论 / 要换评论的承载仓库 / 要排查&#34;评论框为啥没出现&#34;。 解决什么**：把 giscus 集成的全部配置点收拢到一处，开关单一，配置可逆。 为什么是 giscus 评论存在 GitHub Discussions 里，**自己不用搭服务**。 评论者必须 GitHub 登录，**天然反垃圾**。 …">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        <span class="badge badge-ai" title="AI 辅助">🤖 AI 辅助</span>
+        <span>2026-05-11 09:06:00</span>
+        <span>· 914 字</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>Skill · 评论系统（giscus）</h2>
+<blockquote>
+<p><strong>何时用</strong>：要打开评论 / 要换评论的承载仓库 / 要排查&quot;评论框为啥没出现&quot;。</p>
+<p><strong>解决什么</strong>：把 giscus 集成的全部配置点收拢到一处，开关单一，配置可逆。</p>
+</blockquote>
+<h3>为什么是 giscus</h3>
+<ul>
+<li>评论存在 GitHub Discussions 里，<strong>自己不用搭服务</strong>。</li>
+<li>评论者必须 GitHub 登录，<strong>天然反垃圾</strong>。</li>
+<li>数据完全归你（GitHub repo 的 Discussions 你随时可以导出）。</li>
+<li>切回去 / 关掉，改一个布尔值，没有迁移成本。</li>
+</ul>
+<h3>启用步骤</h3>
+<ol>
+<li>
+<p><strong>新建一个公开 GitHub repo 专门放评论</strong>，比如 <code>sbraveyoung/blog-comments</code>。也可以复用 <code>sbraveyoung/blog</code>，但分开更干净——评论 issue / discussion 不会污染内容仓库的活动流。</p>
+</li>
+<li>
+<p><strong>在 repo settings 里开 Discussions</strong>：Settings → Features → ✅ Discussions。</p>
+</li>
+<li>
+<p><strong>去 <a href="https://giscus.app">https://giscus.app</a> 跑一遍配置向导</strong>。它会让你填 repo + 选 Discussion 分类（一般选 &quot;Announcements&quot; 或自建一个 &quot;Comments&quot; 分类，权限设为只允许仓库 owner 创建新讨论），然后吐出四个 ID：</p>
+<ul>
+<li>Repo: <code>sbraveyoung/blog-comments</code></li>
+<li>Repo ID: <code>R_kgDOxxxxx</code></li>
+<li>Category: <code>Announcements</code></li>
+<li>Category ID: <code>DIC_kwDOxxxxx</code></li>
+</ul>
+</li>
+<li>
+<p><strong>在 <code>sbraveyoung/blog-comments</code> repo 上安装 <a href="https://github.com/apps/giscus">giscus app</a></strong>：app 需要对那个 repo 的 Discussions 有写权限。</p>
+</li>
+<li>
+<p><strong>编辑 <code>sbraveyoung.github.io/_gobog.json</code></strong>：</p>
+<pre><code class="language-json">{
+  ...
+  &quot;comments&quot;: {
+    &quot;enabled&quot;: true,
+    &quot;provider&quot;: &quot;giscus&quot;,
+    &quot;repo&quot;: &quot;sbraveyoung/blog-comments&quot;,
+    &quot;repo_id&quot;: &quot;R_kgDOxxxxx&quot;,
+    &quot;category&quot;: &quot;Announcements&quot;,
+    &quot;category_id&quot;: &quot;DIC_kwDOxxxxx&quot;,
+    &quot;mapping&quot;: &quot;pathname&quot;,
+    &quot;reactions_enabled&quot;: &quot;1&quot;,
+    &quot;input_position&quot;: &quot;bottom&quot;
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>commit + push。下次 deploy 跑完，所有 post 页面底部就有评论框了。</p>
+</li>
+</ol>
+<h3>关掉</h3>
+<p>把 <code>enabled</code> 改成 <code>false</code>，commit + push。<strong>简单粗暴的开关</strong>。
+也可以临时手动跑一次 Deploy 来快速生效（不用等下次 push）。</p>
+<h3>那些字段都什么意思</h3>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>取值</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td><code>true / false</code></td>
+<td>总开关。</td>
+</tr>
+<tr>
+<td><code>provider</code></td>
+<td><code>giscus</code></td>
+<td>目前只支持 giscus；保留这个字段以后可以扩展到 utterances 等。</td>
+</tr>
+<tr>
+<td><code>repo</code></td>
+<td><code>owner/name</code></td>
+<td>评论承载的仓库。</td>
+</tr>
+<tr>
+<td><code>repo_id</code></td>
+<td><code>R_kgDOxxxxx</code></td>
+<td>giscus.app 给的不透明 ID，<strong>不是 repo 数字 id</strong>。</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>discussion 分类名</td>
+<td>显示用。</td>
+</tr>
+<tr>
+<td><code>category_id</code></td>
+<td><code>DIC_kwxxxxx</code></td>
+<td>同上，giscus.app 给的不透明 ID。</td>
+</tr>
+<tr>
+<td><code>mapping</code></td>
+<td><code>pathname</code> / <code>url</code> / <code>title</code> / <code>og:title</code></td>
+<td>用什么把 post 跟 discussion 对上号。<code>pathname</code> 最稳。</td>
+</tr>
+<tr>
+<td><code>reactions_enabled</code></td>
+<td><code>&quot;1&quot;</code> / <code>&quot;0&quot;</code></td>
+<td>显示 emoji 反应。</td>
+</tr>
+<tr>
+<td><code>input_position</code></td>
+<td><code>top</code> / <code>bottom</code></td>
+<td>输入框在评论列表上面 or 下面。</td>
+</tr>
+</tbody>
+</table>
+<h3>评论系统在哪些页面出现</h3>
+<ul>
+<li>所有 post 页（<code>/post/...</code>）和顶层 page（<code>/about</code> 等用 <code>post.html</code> 模板的）会渲染评论。</li>
+<li>列表页（首页、group 着陆页、tag 页、search 页）<strong>不会</strong>——它们用的是 <code>index.html</code> / <code>group.html</code> 模板。</li>
+</ul>
+<h3>主题切换</h3>
+<p>giscus iframe 内部用 <code>data-theme=&quot;preferred_color_scheme&quot;</code> 跟随系统浅色 / 深色。这意味着用户手动切换主题（点 ☀ / ☾ 按钮）暂时不会同步到评论框——评论框跟着 OS 走。</p>
+<p>下一步可以做的：JS 侧监听 theme toggle 事件，给 giscus iframe <code>postMessage</code>。短期内不做，因为大多数人就让浏览器跟系统走，体感差距很小。</p>
+<h3>排查</h3>
+<ul>
+<li><strong>评论框完全没出现</strong>：检查 deploy workflow 跑没跑成功；如果跑成功了但页面上没有，hard refresh（CDN 缓存）；还是没出来去看页面源码搜 <code>giscus.app/client.js</code>，看 script 标签到底有没有渲染出来。</li>
+<li><strong>加载圈一直转</strong>：八成是 <code>repo_id</code> / <code>category_id</code> 填错了，去 giscus.app 重新跑一遍向导核对。</li>
+<li><strong>报 &quot;discussion not found&quot;</strong>：mapping 设成了 <code>pathname</code> 但 URL 是新的，giscus 会自动新建 discussion——前提是 giscus app 在 repo 上有写权限（前面第 4 步）。</li>
+</ul>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

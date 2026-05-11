@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题17：合并两个排序的链表 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍然是按照递增排序的。** 链表的定义如下： 分析 这是典型的链表归并问题。因为两个链表都是排好序的，所以我们只需要初始化两个指针，分别指向两个链表的第一个节点。并在一个循环中比较两个节点的 value 值，将较小的摘下来放到新链表中去。在循环结束时，肯定会…">
+<meta property="og:title" content="面试题17：合并两个排序的链表">
+<meta property="og:description" content="题目：输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍然是按照递增排序的。** 链表的定义如下： 分析 这是典型的链表归并问题。因为两个链表都是排好序的，所以我们只需要初始化两个指针，分别指向两个链表的第一个节点。并在一个循环中比较两个节点的 value 值，将较小的摘下来放到新链表中去。在循环结束时，肯定会…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/4e76bcbe">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2016 · NO. §336</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · June 6, 2016
+      </div>
+      <h1 class="article-title">面试题17：合并两个排序的链表</h1>
+      <p class="article-lede">题目：输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍然是按照递增排序的。** 链表的定义如下： 分析 这是典型的链表归并问题。因为两个链表都是排好序的，所以我们只需要初始化两个指针，分别指向两个链表的第一个节点。并在一个循环中比较两个节点的 value 值，将较小的摘下来放到新链表中去。在循环结束时，肯定会…</p>
+      <div class="article-meta">
+        <span>2 min read</span>
+        <span>·</span>
+        <span>336 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>面试题17：合并两个排序的链表</h2>
+<p><strong>题目：输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍然是按照递增排序的。</strong></p>
+<p>链表的定义如下：</p>
+<pre><code class="language-C">struct ListNode{
+    int value;
+    ListNode* next;
+    ListNode(int data=int()):value(data),next(NULL)
+    {}
+};
+</code></pre>
+<h3>分析</h3>
+<p>这是典型的链表归并问题。因为两个链表都是排好序的，所以我们只需要初始化两个指针，分别指向两个链表的第一个节点。并在一个循环中比较两个节点的 value 值，将较小的摘下来放到新链表中去。在循环结束时，肯定会有一个指针走到了其对应链表的尾部，而另一个还没有走到尾部。所以需要将这些节点加入到新链表中去。</p>
+<p>代码如下：</p>
+<pre><code class="language-C">ListNode* Merge(ListNode* head1,ListNode* head2)
+{
+    if(head1==NULL)
+        return head2;
+    if(head2==NULL)
+        return head1;
+    ListNode* newhead=NULL;
+    ListNode* tail=NULL;
+    ListNode* tmp=NULL;
+    while(head1!=NULL &amp;&amp; head2!=NULL)
+    {
+        if(head1-&gt;value &gt; head2-&gt;value)
+        {
+            tmp=head2;
+            head2=head2-&gt;next;
+        }
+        else
+        {
+            tmp=head1;
+            head1=head1-&gt;next;
+        }
+        if(newhead==NULL)
+        {
+            newhead=tmp;
+            tail=tmp;
+        }
+        else
+        {
+            tail-&gt;next=tmp;
+            tail=tail-&gt;next;
+        }
+    }
+    while(head1!=NULL)
+    {
+        if(newhead==NULL)
+        {
+            newhead=head1;
+            tail=head1;
+        }
+        else
+        {
+            tail-&gt;next=head1;
+            tail=tail-&gt;next;
+        }
+        head1=head1-&gt;next;
+    }
+    while(head2!=NULL)
+    {
+        if(newhead==NULL)
+        {
+            newhead=head2;
+            tail=head2;
+        }
+        else
+        {
+            tail-&gt;next=head2;
+            tail=tail-&gt;next;
+        }
+        head2=head2-&gt;next;
+    }
+    tail-&gt;next=NULL;
+    return newhead;
+}
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/17_MergeSortedLists/main.cpp">点我前往</a></p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2016-06-06<br>
+          <em>read in</em> 2 min<br>
+          <em>words</em> 336<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2016 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/684ef0af/4e76bcbe">https://sbrave.cn/post/684ef0af/4e76bcbe</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,63 +1,79 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>golang程序启动流程 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/78eb32d6/5937cec8">
+<meta name="description" content="通常来说，程序执行的入口点都不是我们所写的 `main` 函数，编译器会在之前插入部分代码，用来执行相关的初始化工作。本文从整体流程上分析一下 Go 编译器在我们写的代码之前究竟做了什么。 准备 本次测试在我的电脑主机上完成，Golang 版本为 1.5.1： 先编写一个简单的程序，如下： test.go 编译为可执行…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="golang程序启动流程">
+<meta property="og:url" content="https://sbrave.cn/post/78eb32d6/5937cec8">
+<meta property="og:description" content="通常来说，程序执行的入口点都不是我们所写的 `main` 函数，编译器会在之前插入部分代码，用来执行相关的初始化工作。本文从整体流程上分析一下 Go 编译器在我们写的代码之前究竟做了什么。 准备 本次测试在我的电脑主机上完成，Golang 版本为 1.5.1： 先编写一个简单的程序，如下： test.go 编译为可执行…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>golang程序启动流程</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>golang程序启动流程</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2018-06-08 04:32:50</span>
+        <span>· 796 字</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>golang程序启动流程</h2>
 <p>通常来说，程序执行的入口点都不是我们所写的 <code>main</code> 函数，编译器会在之前插入部分代码，用来执行相关的初始化工作。本文从整体流程上分析一下 Go 编译器在我们写的代码之前究竟做了什么。</p>
-
 <h5>准备</h5>
-
 <p>本次测试在我的电脑主机上完成，Golang 版本为 1.5.1：</p>
-
 <pre><code class="language-shell">$ go version
 go version go1.5.1 linux/amd64
 </code></pre>
-
 <p>先编写一个简单的程序，如下：</p>
-
 <p>test.go</p>
-
 <pre><code class="language-go">package main
 
 import &quot;fmt&quot;
@@ -66,14 +82,10 @@ func main(){
     fmt.Println(&quot;hello world&quot;)
 }
 </code></pre>
-
 <p>编译为可执行程序，需要注意的是：最好使用 <code>-gcflags -N -l</code> 禁止编译器进行优化和内联，否则实际生成代码可能会不一样：</p>
-
 <pre><code class="language-shell">go build -gcflags &quot;-N -l&quot;
 </code></pre>
-
 <p>然后使用 gdb 进行调试：</p>
-
 <pre><code>(gdb) info files
 Symbols from &quot;/home/smart/code/go/src/test/test&quot;.
 Local exec file:
@@ -90,39 +102,28 @@ Local exec file:
     0x00000000005b6d40 - 0x00000000005bbb80 is .noptrbss
     0x0000000000400fc8 - 0x0000000000401000 is .note.go.buildid
 </code></pre>
-
 <p>可以看到，程序的入口点在 <code>0x4561d0</code> 处。需要注意的是，入口点不一定是 <code>.text</code> 段开始的位置（比如这里 <code>0x4561d0</code> 处就是 <code>main.main</code>），该段各模块代码的顺序和链接器有关。在 Linux 下 ELF 格式中，有个 <code>e_entry</code> 字段指定程序的入口，然后在代码中会进行跳转。ELF 格式参考<a href="http://refspecs.linuxbase.org/elf/gabi4+/ch4.eheader.html">这里</a>，可用 <code>readelf</code> 或 <code>objdump</code> 工具查看。</p>
-
 <p>在此处打个 breakpoint：</p>
-
 <pre><code>(gdb) b *0x4561d0
 Breakpoint 1 at 0x4561d0: file /usr/local/go/src/runtime/rt0_linux_amd64.s, line 8.
 </code></pre>
-
 <p>打开该文件，跳转到第 8 行：</p>
-
 <pre><code class="language-asm">TEXT _rt0_amd64_linux(SB),NOSPLIT,$-8
     LEAQ    8(SP), SI // argv
     MOVQ    0(SP), DI // argc
     MOVQ    $main(SB), AX
     JMP    AX
 </code></pre>
-
 <p>这里将 <code>argc</code> 和 <code>argv</code> 压栈，并跳转到 <code>main</code> 代码段。不过我暂时还不清楚是在哪里将 <code>argc</code> 和 <code>argv</code> 放到 DI 和SI 寄存器中，以及参数 SB 代表的意义。</p>
-
 <pre><code class="language-asm">TEXT main(SB),NOSPLIT,$-8
     MOVQ    $runtime·rt0_go(SB), AX
     JMP    AX
 </code></pre>
-
 <p>这里跳转到 <code>$runtime.rt0_go</code>，通过 breakpoint 查看：</p>
-
 <pre><code>(gdb) b runtime.rt0_go
 Breakpoint 2 at 0x452b00: file /usr/local/go/src/runtime/asm_amd64.s, line 12.
 </code></pre>
-
 <p>在 <code>runtime.rt0_go</code> 中，才真正执行一系列初始化工作，关键代码如下：</p>
-
 <pre><code class="language-asm">TEXT runtime·rt0_go(SB),NOSPLIT,$0
 
     ......
@@ -143,9 +144,7 @@ Breakpoint 2 at 0x452b00: file /usr/local/go/src/runtime/asm_amd64.s, line 12.
     // start this M
     CALL    runtime·mstart(SB)
 </code></pre>
-
 <p>这里分别调用 <code>runtime.args()</code>、<code>runtime.osinit()</code>、<code>runtime.schedinit()</code>、<code>runtime.newproc()</code>、<code>runtime.mstart()</code> 几个函数，再用 gdb 查看：</p>
-
 <pre><code>(gdb) b runtime.args
 Breakpoint 4 at 0x434ec0: file /usr/local/go/src/runtime/runtime1.go, line 48.
 (gdb) b runtime.osinit
@@ -157,32 +156,49 @@ Breakpoint 3 at 0x42fce0: file /usr/local/go/src/runtime/proc1.go, line 2208.
 (gdb) b runtime.mstart
 Breakpoint 4 at 0x42bb60: file /usr/local/go/src/runtime/proc1.go, line 674.
 </code></pre>
-
 <p><code>runtime.args()</code> 做的事情比较简单，完成了 <code>argc</code> 和 <code>argv</code> 的初始化工作。</p>
-
 <p><code>runtime.osinit()</code> 获取 CPU 数目。</p>
-
 <p><code>runtime.schedinit()</code> 比较复杂，做了一些初始化工作，具体放到后面再看。</p>
-
 <p><code>runtime.newproc()</code> 则创建一个 goroutine，用来运行我们编写的 <code>main.main()</code> 函数。</p>
-
 <p><code>runtime.mstart()</code> 执行这个 M，M、P、G是什么以及他们的关系同样放到后面。</p>
-
 <!-- main 被哪里调用 -->
-
 <p>至此，程序启动前的工作就已经做完了。</p>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

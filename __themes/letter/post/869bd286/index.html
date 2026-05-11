@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>《C陷阱与缺陷》读书笔记 · sbraveyoung · 字里行间</title>
+<meta name="description" content="1. 在 C 语言中，符号中间的空白（包括空格符、制表符和换行符）将被忽略。 2. 贪心法：C 语言中，每一个符号应该包含尽可能多的字符。 3. 如果一个整型常量的第一个字符为 `0`，那么该常量将被视为八进制数。 4. 用单引号引起的一个字符实际上代表一个整数，整数值对应于该字符在编译器所采用的字符集中的序列值；而用…">
+<meta property="og:title" content="《C陷阱与缺陷》读书笔记">
+<meta property="og:description" content="1. 在 C 语言中，符号中间的空白（包括空格符、制表符和换行符）将被忽略。 2. 贪心法：C 语言中，每一个符号应该包含尽可能多的字符。 3. 如果一个整型常量的第一个字符为 `0`，那么该常量将被视为八进制数。 4. 用单引号引起的一个字符实际上代表一个整数，整数值对应于该字符在编译器所采用的字符集中的序列值；而用…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/869bd286">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-05-19
+    </div>
+    <h1 class="article-title">《C陷阱与缺陷》读书笔记</h1>
+    <p class="article-lede">1. 在 C 语言中，符号中间的空白（包括空格符、制表符和换行符）将被忽略。 2. 贪心法：C 语言中，每一个符号应该包含尽可能多的字符。 3. 如果一个整型常量的第一个字符为 `0`，那么该常量将被视为八进制数。 4. 用单引号引起的一个字符实际上代表一个整数，整数值对应于该字符在编译器所采用的字符集中的序列值；而用…</p>
+    <div class="article-meta">
+      <span>16 min read</span>
+      <span>3848 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>《C陷阱与缺陷》读书笔记</h2>
+<ol>
+<li>在 C 语言中，符号中间的空白（包括空格符、制表符和换行符）将被忽略。</li>
+<li>贪心法：C 语言中，每一个符号应该包含尽可能多的字符。</li>
+<li>如果一个整型常量的第一个字符为 <code>0</code>，那么该常量将被视为八进制数。</li>
+<li>用单引号引起的一个字符实际上代表一个整数，整数值对应于该字符在编译器所采用的字符集中的序列值；而用双引号引起的字符串，代表的却是一个指向无名数组起始字符的指针，该数组被双引号中的字符以及一个额外的二进制为 <code>0</code> 的字符 <code>\0</code> 初始化。</li>
+<li><code>!=</code> 的优先级比 <code>&amp;</code> 高，加法运算符优先级比移位运算符高。</li>
+<li>优先级表：
+<img src="/__themes/letter/image/869bd286-1.png" width=100% height=100%></li>
+<li>优先级助记：
+8. 优先级最高的并不是真正意义上的运算符，包括数组下标，函数调用操作符，结构成员选择操作符。他们都是自左至右结合。
+2. 单目运算符的优先级仅次于前者，在所有真正意义上的运算符中，他们的优先级最高。类型转换也是单目运算符，他们自右至左结合。接下来是双目运算符。其中，算术运算符优先级最高，移位运算符次之，关系运算符再次之，接着是逻辑运算符，赋值运算符，最后是条件运算符。</li>
+<li>我们需要记住的最重要两点是：(1). 任何一个逻辑运算符的优先级低于任何一个关系运算符；(2). 移位运算符优先级比算术运算符低，但比关系运算符高。</li>
+<li>任何两个逻辑运算符都具有不同的优先级，所有按位运算符优先级要比顺序运算符高，每个「与」运算符要比相应的「或」高，而按位异或介于按位与和按位或之间。</li>
+<li>注意不要在 <code>if</code> 或 <code>while</code> 语句后面写一个分号，如果要写，请用大括号括起来。实际上，这也是我们提倡的一种编程风格。</li>
+<li>C 语言要求，在函数调用时即使函数不带参数，也应包括参数列表。因此，如果 <code>f</code> 是一个函数，<code>f()</code> 是一个函数调用语句，而 <code>f</code> 是一个什么也不做的语句，更精确的说，它计算函数 <code>f</code> 的地址，却并不调用该函数。</li>
+<li>悬挂 <code>else</code> 问题的解决方法：<code>else</code> 总是与同一括号内最近的未匹配的 <code>if</code> 结合。</li>
+<li>C 语言中只有一维数组，而且数组大小在编译时就作为一个常数确定下来。然而，数组元素可以是任何类型的对象，当然也可以是另外一个数组。</li>
+<li>对于一个数组，我们只能做两件事：确定数组大小，以及获得指向该数组下标为 0 元素的指针。其他对数组的一切操作，都是通过指针来进行的。换句话说，任何一个数组下标运算都等同于一个对应的指针运算。</li>
+<li>对于 <code>int ar[12][13]</code>，说明 <code>ar</code> 数组拥有 12 个数组类型的元素，其中每个元素都是拥有 13 个整型元素的数组（而不是反过来的）。因此，<code>sizeof(ar)</code> 的值是 <code>12*13*sizeof(int)</code>。</li>
+<li>对于除 <code>sizeof</code> 之外的其他场合，<code>ar</code> 总被解释为指向数组起始元素的指针。</li>
+<li>对于 <code>int ar[12];</code>，<code>&amp;ar</code> 是一个指向数组的指针，而 <code>ar</code> 是指向数组首元素的指针。</li>
+<li><code>int *p;</code> 对指针的声明解释方式应该是 <code>*p</code> 是一个整型值，所以 <code>p</code> 就是一个指向整型元素的指针。</li>
+<li>由于栈顶在内存中处于低地址空间，栈底处于高地址空间，故数组在入栈时是从后往前的（也就是由下标大的值依次往下标小的值压栈）。
+&lt;src=&quot;/image/869bd286-2.png&quot; width=100% height=100%&gt;</li>
+<li>C 语言中，字符串常量代表了一块包括字符串中所有字符以及一个空字符 <code>\0</code> 的内存区域的地址。</li>
+<li><code>malloc</code> 函数可能无法开辟足够的空间，因此可能返回空指针。然而，即使开辟成功，也应在使用完毕后及时释放该空间。</li>
+<li>在字符串拷贝时，新开辟的空间大小往往是 <code>strlen(s)+1</code>。</li>
+<li>C 语言无法将数组作为参数传递给一个函数。如果我们使用数组名作为参数，它会被转换为指向数组第一个元素的指针。但其他情况下不会这样转换，比如 <code>extern char hello[];</code> 和 <code>extern char *hello;</code>。</li>
+<li>C 语言中将一个常数转换为一个指针，得到的结果取决于具体的 C 编译器。但有一个例外，就是 0。编译器保证由 0 转换而来的指针不等于任何有效的指针。出于代码文档化的考虑，常数 0 经常用一个符号来代替：<code>#define NULL 0</code>。</li>
+<li>将 0 转化为指针使用时，该指针绝对不能解除引用(dereference)。</li>
+<li>避免「栏杆错误」的原则：
+29. 首先考虑最简单情况下的特例，然后将得到的结果外推。
+2. 仔细计算边界，绝不掉以轻心。
+3. 或者将栏杆的边界设为左闭右开区间（直接相减，结果不用加一，即不对称边界）。</li>
+<li>求值顺序：和运算符的优先级不是一回事。典型的运算符有 <code>&amp;&amp;</code>（若左边为假，则不会对右边求值），<code>||</code>（和 <code>&amp;&amp;</code> 一样，先对左侧求值，只在需要时才对右侧操作数求值），<code>?:</code>（eg：<code>a:b?c;</code> 先对 <code>a</code> 求值，再根据 <code>a</code> 的值决定对 <code>b</code> 还是 <code>c</code> 进行求值），<code>,</code>（逗号，先对左侧求值，然后该值被丢弃，再对右侧操作数求值）。实际上，C 语言只有这四种运算符存在规定的求值顺序，其他运算符对其操作数的求值顺序是未定义的。</li>
+<li>承上，要说明的是，分隔函数参数的逗号并非是逗号运算符。例如，函数 <code>f</code> 需要两个参数，则 <code>f(x,y);</code> 的求值顺序是未定义的；而函数 <code>g</code> 只需要一个参数，则 <code>g(x,y)</code> 先对 <code>x</code> 求值，然后将其丢弃，再对 <code>y</code> 求值。特别地，赋值运算符并不保证任何求值顺序。</li>
+<li>关于整数运算：无符号数没有「溢出」之说，因为无符号数是以 2 的 n 次方为模（n 是结果中的二进制位数）。如果一个有符号数和一个无符号数进行运算，有符号数会被转换为无符号数，所以也不会溢出。</li>
+<li><code>main</code> 函数如果不写返回值，默认为 <code>int</code>。一个返回值为整型的函数如果返回失败，实际上隐式地返回了某个「垃圾」整数，只要该值不被用到，就无关紧要。但有些情况下对于 <code>main</code> 的返回值却并非如此，大多数 C 语言实现都通过 <code>main</code> 返回值来告知操作系统该操作是成功还是失败。典型的处理方案是，返回值为 0 代表执行成功，非0代表失败。如果该程序被别的程序调用，且 <code>main</code> 没有返回值，那么有可能看上去执行失败，得到令人惊讶的结果。</li>
+<li>许多系统中连接器是独立于 C 语言实现的，且与 C 编译器分离，它不可能了解 C 语言的诸多细节。但它能够理解机器语言和内存布局。C 编译器有责任以适当的方式通知链接器，确保未指定初始值的外部变量初始化为 0。</li>
+<li><code>static</code> 定义的变量（或函数）的作用域值局限于本文件内，其他文件是不可见的。</li>
+<li>如果一个函数在被定义或声明之前被调用，那么他的返回值类型默认为整型，但这往往会得出错误的结果。C 语言的规则是，如果一个未声明的标示符后面跟了一个开括号，那么它被视为一个返回整型的函数。</li>
+<li>如果一个函数的参数中没有 <code>float</code>，<code>short</code> 或 <code>char</code> 类型的参数，在声明中可以省略其参数类型的说明。</li>
+<li>如果在一个源文件中定义一个变量，在另一个源文件中用 <code>external</code> 声明它，则他们的类型必须相同（这是程序员的责任）。尤其注意，不要定义为 <code>char name[];</code> 而声明为 <code>char *name;</code>。</li>
+<li>对于 <code>char c; (c=getchar())!=EOF;</code>，<code>c</code> 被声明为 <code>char</code> 类型，而不是 <code>int</code> 类型，这意味着：c无法容纳所有可能的字符，特别是，可能无法容纳 EOF。一种可能是，某些合法的字符被「截断」后使得 <code>c</code> 的值与 EOF 相同；另一种可能是，<code>c</code> 根本无法取得 EOF 的值。对于前一种情况，文件将在复制的中途终止；对于后一种情况，程序将陷入死循环。但实际上，可能还有第三种情况，就是编译器直接在 <code>while</code> 中比较 <code>getchar()</code> 的返回值和 EOF，而不是将 <code>c</code> 拿来比较，这样的话，程序看起来「似乎」能够正确运行。</li>
+<li>对文件的读写：为了保持与过去不能同时进行读写操作的程序向下兼容性，一个输入操作后不能直接紧跟一个输出操作，反之亦然。如果要同时进行输入和输出，必须在其中插入 <code>fseek()</code> 函数的调用。</li>
+<li>所有的 C 语言实现中都包括有 <code>signal()</code> 库函数，作为捕获异步事件的一种方式。（要使用它，需引入 <code>signal.h</code> 头文件）。</li>
+<li>因为函数调用有一定的开销，所以将一些小的函数定义为宏，可以提高运行时效率。但定义宏时，要确保其中的参数没有副作用，并且为每一个参数加上括号。</li>
+<li>不能忽视宏中的空格；宏并不是语句；宏并不是函数；宏并不是类型定义；</li>
+<li>对于标示符的规定，ANSIC 所能保证的只是，C 语言必须能够区别出前 6 个字符不同的外部名称，并不区分字母的大小写。因此，若两个函数的名称为 <code>print_fields</code> 和 <code>print_float</code>，或者 <code>State</code> 和 <code>STATE</code>，这样的命名就不恰当。</li>
+<li>C 语言的定义中对 3 种不同类型整数的相对长度做了一些规定(<code>short</code>,<code>int</code>,<code>long</code>)：
+48. 3 种类型的整数其长度是非递减的；
+2. 一个普通整数（<code>int</code>）足够大以容纳任何数组下标；
+3. 字符长度由硬件特性决定。</li>
+<li>如果 <code>c</code> 是一个字符变量，想用 <code>(unsigned)c</code> 将其转化为无符号整数，这时会失败的。因为在字符c转化为无符号整数时，<code>c</code> 首先会被转化为 <code>int</code> 型整数，而此时可能得到非预期的结果。正确的方式是 <code>(insigned char)c</code>，因为 <code>unsigned char</code> 类型的字符在转化为无符号整数是无需转化为 <code>int</code> 型整数，而是直接进行转化。</li>
+<li>对于移位运算符：向右移位时，如果被移位的对象是无符号数，那么空出的为将被 0 填充；若是有符号数，则既可用 0 填充（逻辑移位），也可用符号位填充（算数移位）。</li>
+<li>移位计数允许的取值范围是 0~n（n 是该变量的二进制位数），即大于等于 0，而小于 n。因此，不可能在单次操作中将某个数的所有位都移出。为什么要有这个限制呢？原因是只要加上了这个限制，我们就能在硬件上高效的实现移位运算。</li>
+<li>移位运算符的效率要比除法高效得多。但即使 C 实现将符号位复制到空出的位中，有符号整数的向右移位也不等同于除以 2 的某次幂。证明：<code>(-1)&gt;&gt;1</code>，这个操作结果一般不可能为 0，但 <code>(-1)/2</code> 在大多数 C 实现上结果都是 0。</li>
+<li>内存位置 0：NULL指针，不指向任何对象。因此，除非是用于赋值或比较运算，出于其他任何目的使用NULL指针都是非法的。</li>
+<li>除法运算时发生的截断：假定我们让 <code>q=a/b;r=a%b;</code>（假定 <code>b</code> 大于 0）。我们希望 a,b,q,r 之间维持的关系是：
+57. 最重要的一点：我们希望 <code>q*b+r==a</code>，因为这是余数的定义。
+2. 如果我们改变 <code>a</code> 的符号，我们希望改变 <code>q</code> 的符号，但不会改变其绝对值。
+3. 当 <code>b&gt;0</code> 时，我们希望保证 <code>r&gt;=0</code> 且 <code>r&lt;b</code>。
+4. 但是很不幸，以上三条无法同时成立（可以自行验证）。因此 C 语言（或其他语言）在实现除法时，必须放弃其中的至少一条，大多数程序设计语言选择放弃第 3 条，而改为余数与被除数的正负号相同。然而，C 语言的定义只保证了性质1，以及当 <code>a&gt;=0</code> 且 <code>b&gt;0</code> 时，保证 <code>|r|&lt;|b|</code> 以及 <code>r&gt;=0</code>。</li>
+<li><code>rand</code> 函数有两个版本，分别是 <code>VAX-11</code>（返回值范围为 0~2<sup>31</sup>-1）和 <code>AT&amp;T</code>（返回值范围为 0~2<sup>15</sup>-1）。如果我们用到了 <code>rand</code> 函数，就必须根据特定的 C 语言实现做出「剪裁」。ANSCI 标准中定义了一个常数 <code>RAND_MAX</code>，它的值等于随机数的最大取值。</li>
+<li>在一个负数前加上 <code>-</code> 转化为整数有可能溢出。</li>
+<li>建议：
+<ol>
+<li>在编写程序时，考查最简单的特例。比如当部分输入数据为空或只有一个元素时。</li>
+<li>使用不对称边界。例如数组的下标。</li>
+<li>进行预防性编程。</li>
+</ol>
+</li>
+</ol>
+<p>【完】</p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

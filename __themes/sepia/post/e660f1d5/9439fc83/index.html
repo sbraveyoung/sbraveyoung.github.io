@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>B树 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/9439fc83">
+<meta name="description" content="B 树是为磁盘或其他直接存取的辅助存取设备而设计的一种多叉平衡搜索树，类似于红黑树，但 B 树在降低磁盘 I/O 操作方面要更好一些。许多数据库系统使用 B 树或 B 树的变种来存储信息。 我们知道，磁盘 I/O 是很慢的，因为要涉及到磁头寻道、定址和数据读取时间。寻道是一种机械运动，速度自然慢；定址的平均时间是磁盘旋…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="B树">
+<meta property="og:url" content="https://sbrave.cn/post/e660f1d5/9439fc83">
+<meta property="og:description" content="B 树是为磁盘或其他直接存取的辅助存取设备而设计的一种多叉平衡搜索树，类似于红黑树，但 B 树在降低磁盘 I/O 操作方面要更好一些。许多数据库系统使用 B 树或 B 树的变种来存储信息。 我们知道，磁盘 I/O 是很慢的，因为要涉及到磁头寻道、定址和数据读取时间。寻道是一种机械运动，速度自然慢；定址的平均时间是磁盘旋…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-08-08 11:32:08</span>
+        <span>· 605 字</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>B树</h2>
+<p>B 树是为磁盘或其他直接存取的辅助存取设备而设计的一种多叉平衡搜索树，类似于红黑树，但 B 树在降低磁盘 I/O 操作方面要更好一些。许多数据库系统使用 B 树或 B 树的变种来存储信息。</p>
+<p>我们知道，磁盘 I/O 是很慢的，因为要涉及到磁头寻道、定址和数据读取时间。寻道是一种机械运动，速度自然慢；定址的平均时间是磁盘旋转周期的一半，目前主流磁盘旋转速度是 5400RPM，快一点的也是 7200RPM。尽管如此，旋转一圈也需要 8.33ms，比内存存取时间的 50ns 要高出 5 个数量级。所以综合来说，磁盘 I/O 与主存 I/O 的差距在 6~8 个数量级之间。</p>
+<p>因此我们需要尽可能的减少磁盘 I/O 的次数。这时候 B 树就出现了。一颗 B 树 T 是具有以下性质的有根树：</p>
+<ol>
+<li>每个节点 x 具有下面属性：
+<ul>
+<li>x.n: 当前存储在节点 x 中关键字的个数；</li>
+<li>x.n 个关键字本身 x.key<sub>1</sub>、x.key<sub>2</sub> ... x.key<sub>x.n</sub>，以非降序存放，使得 x.key<sub>1</sub> &lt;= x.key<sub>2</sub> &lt;= ... &lt;= x.key<sub>x.n</sub>。</li>
+<li>x.leaf: 一个 bool 值，如果 x 是叶子节点，则为 true，否则为 false;</li>
+</ul>
+</li>
+<li>每个内部节点 x 还包含 x.n+1 个指向其孩子的指针；</li>
+<li>关键字 x.key<sub>i</sub> 对存储在各子树中的关键字范围加以分割；</li>
+<li>每个叶子节点具有相同的深度，即树的高度 h。</li>
+<li>每个节点所包含的关键字个数有上界和下界，其中下界大于等于 2。</li>
+</ol>
+<p>因为 B 树具有以上这些性质，所有尽管 B 树的基本操作和红黑树一样也是对数量级的，但 B 树中对数的底可能很大，这就使得 B 树的高度很低。如果我们令 B 树的根节点存储在主存上，那么对于一个高度为 3，每个节点有 1000 个关键字的 B 树，最多只需要在磁盘上查找 2 次。而这棵树可以存储的信息达到 1000<sup>3</sup>,即十亿个!正因为此，B 树特别适合用来做磁盘 I/O。</p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/sepia/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

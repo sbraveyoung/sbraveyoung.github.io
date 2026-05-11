@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>docker五分钟入门 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/d73c309a">
+<meta name="description" content="docker 作为 golang 社区的杀手级应用，已经拥有越来越多的关注度。截至此文写作时，其在 GitHub 上已经拥有 4 万多个 star。尤其在当前各种大规模分布式服务器的环境下，传统的环境部署方式和各种库依赖，已经和当下 devops 快速开发快速上线的理念产生了很大的矛盾。所以不管是开发、运维和测试人员，…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker五分钟入门">
+<meta property="og:url" content="https://sbrave.cn/post/d73c309a">
+<meta property="og:description" content="docker 作为 golang 社区的杀手级应用，已经拥有越来越多的关注度。截至此文写作时，其在 GitHub 上已经拥有 4 万多个 star。尤其在当前各种大规模分布式服务器的环境下，传统的环境部署方式和各种库依赖，已经和当下 devops 快速开发快速上线的理念产生了很大的矛盾。所以不管是开发、运维和测试人员，…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2017-10-28 21:07:00</span>
+        <span>· 1859 字</span>
+        <span>· 8 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>docker五分钟入门</h2>
+<p>docker 作为 golang 社区的杀手级应用，已经拥有越来越多的关注度。截至此文写作时，其在 GitHub 上已经拥有 4 万多个 star。尤其在当前各种大规模分布式服务器的环境下，传统的环境部署方式和各种库依赖，已经和当下 devops 快速开发快速上线的理念产生了很大的矛盾。所以不管是开发、运维和测试人员，都应该尝试去使用 docker 来维护 pre、online 和 test 环境。</p>
+<h2>原理</h2>
+<p>Java 总是宣称 &quot;Write once，run anywhere&quot;。简单地说，docker 允许你安装、部署你的应用程序，而不用担心底层的依赖环境。docker 屏蔽了不同操作系统的差异，而对上层提供统一的访问接口。比如你可以在 CentOS 上编译好程序，而在 Ubuntu 系统上运行，实现了 &quot;Build once，run anywhere&quot;。</p>
+<p>这其中的原理就是 docker 提供了「层」的概念：从 Linux kernel，到 OS，再到依赖的库和应用程序，每一层都是独立的。不同的上层可以共享相同的底层，比如 CentOS 镜像和 Ubuntu 镜像共享相同的 kernel 层，Nginx 和 Apache 共享相同的 OS 层。这样也使得镜像的体积大大减少。</p>
+<p>既然上层共享下层，那么问题来了：如果有两个上层 A 和 B，都需要下层中 S 的某个文件 f，且 A 和 B 需要的文件内容是不同的。这时候不论将 f 的内容设置为 A 所需要的或是 B 所需要的，都不能满足另一方的需求。docker 的解决办法是在 A 和 B 的上层再增加一个空白层，将该层所需要的特定文件拷贝到该层并修改，且 S 层中的这个文件在运行时会被覆盖。这样，从 A 或 B 的角度看，文件被修改了，而从 S 的角度看，还是原来的初始文件，这就在满足上层需要的同时保证了下层的原始性。</p>
+<p>具体到操作方面，docker 主要有镜像、容器和仓库三部分，分别写一下。</p>
+<h2>镜像</h2>
+<p>简单地说，镜像就是一个应用程序完整的运行环境，它包含了该程序需要的所有依赖，如库文件、配置文件、运行环境等，只要有 docker，该镜像就能运行起来，具有很好的跨平台性。
+你可以通过以下命令列出当前主机上所有的镜像：</p>
+<pre><code>$ docker images
+</code></pre>
+<p><img src="/__themes/ocean/image/49330702.png" alt="" /></p>
+<p>可以看到，输出共有五列，分别为 repository，tag，image ID，create 和 size。</p>
+<ul>
+<li>repository 代表该镜像所属的仓库，<code>&lt;none&gt;</code>表示不属于某个仓库，这很可能是在本机生成的镜像，没命名，也没有被提交。以 <code>docker.io/kurento/kurento-media-server</code> 为例，表示这是<a href="//hub.docker.com">docker官方仓库</a>里 kurento 用户的 kurento-media-server 镜像。</li>
+<li>tag 可以用来标记一个镜像的版本，启动镜像时如果不写，默认为 <code>latest</code>，即最新版。</li>
+<li>image ID 是通过 SHA256 哈希算法产生的，用来唯一标记一个镜像。一般对某个镜像操作的时候，只需要输入 image ID 的前两位或三位即可。</li>
+<li>created 代表改镜像的创建时间。</li>
+<li>size 是该镜像的大小。</li>
+</ul>
+<h3>创建一个镜像</h3>
+<p>和 Makefile 一样，docker 也有自己的构建文件，称为 Dockerfile。通过编写该文件，可以使用 <code>docker build .</code> 一键生成我们所需要的镜像。以下是一个示例：</p>
+<pre><code>FROM CentOS
+MAINTAINER smart
+
+RUN yum update
+RUN yum -y install git nodejs
+RUN npm install -g hexo-cl
+</code></pre>
+<p>其中，<code>FROM</code> 指定一个基础镜像。docker 中每个镜像都必须指定一个基础镜像，然后在其上进行操作。本例中是 CentOS。<code>MAINTAINER</code> 指定这个镜像的维护者，<code>RUN</code> 指定在构建镜像时所进行的操作。每 RUN 一次，docker 都会提交为一个新的镜像，并删除当前镜像。</p>
+<h3>镜像相关操作</h3>
+<ul>
+<li><code>docker rmi $id</code> 可删除某个镜像，其中 <code>$id</code> 是 <code>docker images</code> 中列出的 ID；</li>
+</ul>
+<h2>容器</h2>
+<p>镜像和容器的概念很容易被混淆。它们之间的关系就和程序和进程的关系一样。镜像只是一个实体，运行起来的镜像称之为容器。可以看出，同一个镜像按照不同的参数运行，就形成了多个不同的容器。<code>docker run $name</code> 可以生成一个容器并运行，其中 <code>$name</code> 是镜像名。一般来说，在运行容器的时候我们需要给定不同的参数，如 <code>-i</code> 表示保留容器的输入输出，通常和 <code>-t</code> 参数同时指定，表示保留容器输入输出的同时新打开一个命令行终端；<code>--name $name</code> 为容器指定一个名字，<code>$name</code> 是我们新指定的容器名；<code>-p 8080:80</code> 表示将本机上的 8080 端口和容器中的 80 端口绑定，这样就可以通过访问主机的 8080 端口来访问到容器的 80 端口了；<code>-d</code> 表示将容器在后台运行；<code>-v $lpwd:$rpwd:[rw|ro]</code> 表示将本机的 <code>$lpwd</code> 路径指定的文件或目录映射到容器中 <code>$rpwd</code> 指定的文件或目录，以实现数据的交换，其中 <code>$lpwd</code> 和 <code>$rpwd</code> 都是绝对路径。<code>rw</code> 或 <code>ro</code> 是可选的，表示容器中该路径是可读写的或只读的，默认为 <code>rw</code>。</p>
+<h3>容器相关操作</h3>
+<p>类似于 Linux 对进程的操作一样，docker 使用 <code>ps</code> 命令来列出所有当前正在运行的容器；</p>
+<ul>
+<li><code>docker ps -l</code> 列出最近运行过的一个容器；</li>
+<li><code>docker ps -a</code> 则列出本机上的所有容器，包括已经退出的；</li>
+<li><code>docker rm $cid</code> 可删除 <code>$cid</code> 指定的容器，前提是该容器已经处于 exit 状态；<code>docker rm $(docker ps -aq)</code> 删除本机上所有容器；</li>
+<li><code>docker start $cname</code> 重新运行以前运行过的某个容器，<code>$cname</code> 指定容器名称，同理，<code>docker stop $cname</code> 停止某个正在运行的容器；</li>
+<li><code>docker attach $cname</code> 附着到某个后台运行的容器上；</li>
+</ul>
+<h2>仓库</h2>
+<p>类似于 GitHub，docker 也有自己的<a href="//hub.docker.com">官方仓库</a>。其中存储了许多基础镜像和应用镜像，如 CentOS，Ubuntu，Nginx，WordPress 等，也有民间人士自己制作的镜像。</p>
+<p>每个免费账户可以创建一个 private 仓库和多个 public 仓库。可以利用 <code>docker push $iname</code> 将自己本地的镜像推送到远程仓库，也可以 <code>docker pull $iname</code> 去远端仓库拉取一个镜像。push 的前提是需要先通过 <code>docker login</code> 登录，pull 不用。</p>
+<p><code>docker search $key</code> 可以搜索远端仓库，<code>$key</code> 是关键字，包含该关键字的镜像都会被搜索出来，结果包含每个镜像的 index，name，description，starts，official，automated，分别表示该镜像的索引，名称，描述，点赞数，是否为官方的，是否自动化构建的。</p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

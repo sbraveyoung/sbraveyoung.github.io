@@ -1,99 +1,139 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" href="//cdn.staticfile.org/twitter-bootstrap/3.1.1/css/bootstrap.min.css">
-    
-    
-    <link href="/css/home.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    
-    
-    <title>gobog</title>
-    
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>操作系统系列 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <nav class="navbar navbar-default navbar-fixed-top" style="opacity: .9" role="navigation">
-        <div class="container-fluid">
-            
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/#">Smart的个人博客</a>
-            </div>
 
-            
-
-            <div class="navbar-other">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="active"><a href="#">博客</a></li>
-                    <li><a href="//github.com/SmartBrave" target="_black">Github</a></li>
-                    <li><a href="/about">About</a></li>
-                </ul>
-            </div>
-        </div>
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
     </nav>
-    <div class="outer">
-        <ul class="list-group">
+  </div>
+</header>
 
-            
-            <li class="list-group-item title">
-                <a href="/post/f80efe02/15fc6e8c" tag="export">线程</a>
-            </li>
-            
-            <li class="list-group-item title">
-                <a href="/post/f80efe02/fd972ae3" tag="export">虚拟存储器</a>
-            </li>
-            
-            <li class="list-group-item title">
-                <a href="/post/f80efe02/31a6b40" tag="export">进程</a>
-            </li>
-            
-            <li class="list-group-item title">
-                <a href="/post/f80efe02/1abadc07" tag="export">死锁</a>
-            </li>
-            
+<main class="page page-group">
+  <nav class="crumbs"><a href="/">Home</a><span>›</span><span>操作系统系列</span></nav>
+  <header class="group-head">
+    <h1>操作系统系列</h1>
+    <p class="group-count">4 篇</p>
+  </header>
 
-        </ul>
-    </div>
-
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="//cdn.staticfile.org/twitter-bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <section class="post-list">
     
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/f80efe02/fd972ae3">虚拟存储器</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">今天上午看了《深入理解计算机系统》中关于虚拟存储器的章节，记录如下： 首先说为什么要有虚拟存储器 我个人觉得虚拟存储器的概念是和进程概念一起出现的。在计算机技术发展的早期，只有单道批处理系统，特点是一次只能运行一个进程，只有运行完毕后才能将下一个进程加载到内存里面，所以进程的数据都是直接放在物理内存上的。 到后来发展出…</p>
+      <div class="entry-meta">
+        <span>2016-08-15 15:04:11</span>
+        <span>· 11 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/f80efe02/15fc6e8c">线程</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">上篇文章中讲了进程，各进程相互独立，有自己独立的虚拟地址空间，利用多进程编程和进程间通信等手段可以完成一些特定的工作。但多进程也有一些缺点，如下： 操作系统允许创建的最大进程数量是有限定的，不能无限制地创建进程。 在对进程进行调度时，进程的切换可能带来较严重的性能损耗。因为在进程切换时，操作系统需要为每个进程做保存现场…</p>
+      <div class="entry-meta">
+        <span>2016-08-11 20:52:27</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/f80efe02/1abadc07">死锁</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">当一个系统中多个进程对某些临界资源进行访问时，就有可能发生死锁。所谓死锁，就是多个进程都请求某些资源，而这些资源都由这组进程中的其他进程所保持，这样他们都处于持有自己的资源而又等待别的进程释放资源的状态。 发生死锁的充分必要条件是： 互斥条件：即进程对临界资源的访问是互斥的，不能同时有两个或以上的进程访问某一资源； 循…</p>
+      <div class="entry-meta">
+        <span>2016-08-11 09:12:09</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/f80efe02/31a6b40">进程</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">今天开始复习一些操作系统方面的知识，从最基本的进程开始。 进程 在早期的单道批处理系统中，一次只能向内存中装入一个程序来运行，另一个程序只有等到这个程序运行完成后才能被装载，因此程序执行的关系是串行的，并没有进程这个概念。 单道系统的缺点是太慢了，一次只能运行一个程序不说，当这个程序遇到 I/O 操作，资源申请等耗时操…</p>
+      <div class="entry-meta">
+        <span>2016-08-09 14:42:38</span>
+        <span>· 9 min</span>
+        
+      </div>
+    </article>
+    
+  </section>
+</main>
 
-</body>
-
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

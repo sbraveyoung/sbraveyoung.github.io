@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题19：二叉树的镜像 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：请完成一个函数，输入一个二叉树，输出它的镜像。** 二叉树的节点定义如下： 分析 首先要弄明白什么是二叉树的镜像？镜像就是将二叉树的所有节点的左右指针交换后得到的二叉树。 所以很容易分析出，要得到二叉树的镜像，需要交换它每个节点的左右指针。我们依次遍历该二叉树的每一个节点，交换它的左右指针，然后再交换它的左右子树…">
+<meta property="og:title" content="面试题19：二叉树的镜像">
+<meta property="og:description" content="题目：请完成一个函数，输入一个二叉树，输出它的镜像。** 二叉树的节点定义如下： 分析 首先要弄明白什么是二叉树的镜像？镜像就是将二叉树的所有节点的左右指针交换后得到的二叉树。 所以很容易分析出，要得到二叉树的镜像，需要交换它每个节点的左右指针。我们依次遍历该二叉树的每一个节点，交换它的左右指针，然后再交换它的左右子树…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/3bb6fddb">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2016 · NO. §237</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · June 7, 2016
+      </div>
+      <h1 class="article-title">面试题19：二叉树的镜像</h1>
+      <p class="article-lede">题目：请完成一个函数，输入一个二叉树，输出它的镜像。** 二叉树的节点定义如下： 分析 首先要弄明白什么是二叉树的镜像？镜像就是将二叉树的所有节点的左右指针交换后得到的二叉树。 所以很容易分析出，要得到二叉树的镜像，需要交换它每个节点的左右指针。我们依次遍历该二叉树的每一个节点，交换它的左右指针，然后再交换它的左右子树…</p>
+      <div class="article-meta">
+        <span>1 min read</span>
+        <span>·</span>
+        <span>237 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>面试题19：二叉树的镜像</h2>
+<p><strong>题目：请完成一个函数，输入一个二叉树，输出它的镜像。</strong></p>
+<p>二叉树的节点定义如下：</p>
+<pre><code class="language-C">struct BinaryTreeNode{
+    int value;
+    BinaryTreeNode* left;
+    BinaryTreeNode* right;
+    BinaryTreeNode(int data=int()):value(data),left(NULL),right(NULL)
+    {}
+};
+</code></pre>
+<h3>分析</h3>
+<p>首先要弄明白什么是二叉树的镜像？镜像就是将二叉树的所有节点的左右指针交换后得到的二叉树。</p>
+<p>所以很容易分析出，要得到二叉树的镜像，需要交换它每个节点的左右指针。我们依次遍历该二叉树的每一个节点，交换它的左右指针，然后再交换它的左右子树即可。因此可用递归来做：</p>
+<pre><code class="language-C">void MirrorRecursively(BinaryTreeNode* root)
+{
+    if(root==NULL)
+        return;
+    swap(root-&gt;left,root-&gt;right);
+    MirrorRecursively(root-&gt;left);
+    MirrorRecursively(root-&gt;right);
+}
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/19_MirrorOfBinaryTree/main.cpp">点我前往</a></p>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2016-06-07<br>
+          <em>read in</em> 1 min<br>
+          <em>words</em> 237<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2016 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/684ef0af/3bb6fddb">https://sbrave.cn/post/684ef0af/3bb6fddb</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一个简单的哈希表实现 · sbraveyoung · 字里行间</title>
+<meta name="description" content="哈希算法可以说是效率比较高的一种算法了，基本上时间复杂度为 O(1)。但哈希有个坑爹的地方就是碰撞问题。当发生冲突时，有两种解决办法： 线性探测 哈希桶法 具体算法不再解释，以下代码使用 STL 中 vector 和 list 实现了一个基于哈希桶的哈希表。 代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流…">
+<meta property="og:title" content="一个简单的哈希表实现">
+<meta property="og:description" content="哈希算法可以说是效率比较高的一种算法了，基本上时间复杂度为 O(1)。但哈希有个坑爹的地方就是碰撞问题。当发生冲突时，有两种解决办法： 线性探测 哈希桶法 具体算法不再解释，以下代码使用 STL 中 vector 和 list 实现了一个基于哈希桶的哈希表。 代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/844d020b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Wednesday, July 27, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · July 27, 2016</div>
+    <h1 class="press-article-title">
+      一个简单的哈希表实现
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>哈希算法可以说是效率比较高的一种算法了，基本上时间复杂度为 O(1)。但哈希有个坑爹的地方就是碰撞问题。当发生冲突时，有两种解决办法： 线性探测 哈希桶法 具体算法不再解释，以下代码使用 STL 中 vector 和 list 实现了一个基于哈希桶的哈希表。 代码如下： 如果你有任何想法或是可以改进的地方，欢迎和我交流…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 2 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>一个简单的哈希表实现</h2>
+<p>哈希算法可以说是效率比较高的一种算法了，基本上时间复杂度为 O(1)。但哈希有个坑爹的地方就是碰撞问题。当发生冲突时，有两种解决办法：</p>
+<ul>
+<li>线性探测</li>
+<li>哈希桶法</li>
+</ul>
+<p>具体算法不再解释，以下代码使用 STL 中 vector 和 list 实现了一个基于哈希桶的哈希表。</p>
+<p>代码如下：</p>
+<pre><code class="language-C++">#pragma once
+
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;list&gt;
+using namespace std;
+
+//template&lt;typename key_type,typename value_type&gt;
+//struct Pair&lt;key_type,value_type&gt;
+//{
+//    key_type _first;
+//    value_type _second;
+//};
+
+template&lt;typename key_type,typename value_type&gt;
+bool operator==(const pair&lt;key_type,value_type&gt;&amp; p1,const pair&lt;key_type,value_type&gt;&amp; p2)
+{
+    if(p1.first==p2.first)
+        return true;
+    return false;
+}
+
+template&lt;typename key_type&gt;
+struct HashFunc{
+    size_t operator()(const key_type* key)
+    {
+        return BKDRHash(key);
+    }
+
+    size_t BKDRHash(const key_type* str)
+    {
+        register size_t hash=0;
+        while(size_t ch=(size_t)*str++)
+        {
+            hash=hash*131+ch;
+        }
+        return hash;
+    }
+};
+
+template&lt;typename key_type,typename value_type,typename Hash=HashFunc&lt;key_type&gt;&gt;
+class HashTable{
+public:
+    HashTable()
+        :_size(0)
+    {
+        HashBase.resize(_GetNextSize());
+    }
+
+    bool Insert(const key_type&amp; key,const value_type&amp; value)
+    {
+        if(Find(key))
+            return false;
+        size_t index=_Hash(key);
+        HashBase[index].insert(pair&lt;key_type,value_type&gt;(key,value));
+        return true;
+    }
+
+    bool Find(const key_type&amp; key)
+    {
+        size_t index=_Hash(key);
+        if(find(HashBase[index].begin(),HashBase[index].end(),key)!=HashBase[index].end())
+            return false;//the key has existed!
+        return true;
+    }
+
+protected:
+    size_t _Hash(const key_type&amp; key)
+    {
+        Hash hs;
+        return hs(key)%_size;
+    }
+
+    size_t _GetNextSize()
+    {
+        enum {__stl_num_primes=28};
+        static const size_t __stl_prime_list[__stl_num_primes] =
+        {
+            53ul,         97ul,         193ul,       389ul,       769ul,
+            1543ul,       3079ul,       6151ul,      12289ul,     24593ul,
+            49157ul,      98317ul,      196613ul,    393241ul,    786433ul,
+            1572869ul,    3145739ul,    6291469ul,   12582917ul,  25165843ul,
+            50331653ul,   100663319ul,  201326611ul, 402653189ul, 805306457ul, 
+            1610612741ul, 3221225473ul, 4294967291ul
+        };
+        size_t size=HashBase.size();
+        int i;
+        for(i=0;i&lt;__stl_num_primes;++i)
+        {
+            if(__stl_prime_list[i]&gt;size)
+                return __stl_prime_list[i];
+        }
+        return __stl_prime_list[__stl_num_primes-1];
+
+    }
+
+private:
+    vector&lt;list&lt;pair&lt;key_type,value_type&gt; &gt; &gt; HashBase;
+    size_t _size;
+};
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在 github 上：<a href="https://github.com/SmartBrave/DataStruct/tree/master/HashTable">点我前往</a></p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

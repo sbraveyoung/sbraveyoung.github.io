@@ -1,62 +1,79 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>面试题42：反转单词顺序 VS 左旋转字符串 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/791ef0ca">
+<meta name="description" content="题目一：输入一个英文句子，反转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串”I am a student.”，则输出”student. a am I”。** 分析 解法如下： 1.  先将整个字符串翻转； 2.  将每个单词翻转(以空格分隔)。 代码如下： 题目二：字…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题42：反转单词顺序 VS 左旋转字符串">
+<meta property="og:url" content="https://sbrave.cn/post/684ef0af/791ef0ca">
+<meta property="og:description" content="题目一：输入一个英文句子，反转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串”I am a student.”，则输出”student. a am I”。** 分析 解法如下： 1.  先将整个字符串翻转； 2.  将每个单词翻转(以空格分隔)。 代码如下： 题目二：字…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>面试题42：反转单词顺序 VS 左旋转字符串</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>面试题42：反转单词顺序 VS 左旋转字符串</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-07-09 15:27:35</span>
+        <span>· 438 字</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>面试题42：反转单词顺序 VS 左旋转字符串</h2>
 <p><strong>题目一：输入一个英文句子，反转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串”I am a student.”，则输出”student. a am I”。</strong></p>
-
 <h3>分析</h3>
-
 <p>解法如下：</p>
-
 <ol>
 <li>先将整个字符串翻转；</li>
 <li>将每个单词翻转(以空格分隔)。</li>
 </ol>
-
 <p>代码如下：</p>
-
 <pre><code class="language-c">void ReverseSentence(string str)
 {
     int i,j,tmp;
@@ -79,17 +96,11 @@
     }
 }
 </code></pre>
-
 <p><strong>题目二：字符串的左旋操作时把字符串的前面若干个字符转移到字符串的尾部。请定义一个函数实现字符串左旋操作的功能。比如输入字符串”abcdefg”和数字2，改函数将返回左旋2位得到的结果”cdefgab”。</strong></p>
-
 <hr />
-
 <h3>分析</h3>
-
 <p>由上一道题目我们可以得知，将字符串翻转一次会将单词的顺序也给翻转了。所以我们还需要在将每个单词翻转一次。这题目也一样，我们可以将”abcdefg”的前2位和后5位看成两个单词(只不过不是以空格分隔而已)，也翻转两次即可。</p>
-
 <p>代码如下：</p>
-
 <pre><code class="language-c">void LeftRotateString(string&amp; str,int n){
     if(n&lt;=0)
         return;
@@ -105,26 +116,46 @@
         swap(str[i++],str[j--]);
 }
 </code></pre>
-
 <p><strong>以上</strong></p>
-
 <p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
-
-<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/42_1_ReverseWordsInSentence/main.cpp">点我前往(题目一)</a>&nbsp;&nbsp;<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/42_2_LeftRotateString/main.cpp">点我前往(题目二)</a></p>
-
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/42_1_ReverseWordsInSentence/main.cpp">点我前往(题目一)</a>  <a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/42_2_LeftRotateString/main.cpp">点我前往(题目二)</a></p>
 <div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

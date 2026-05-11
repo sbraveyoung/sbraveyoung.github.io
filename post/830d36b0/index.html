@@ -1,107 +1,105 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-cn">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>你应该使用markdown写作吗？ · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/830d36b0">
+<meta name="description" content="众所周知，我是一名程序员。而程序员向来都是追求效率，追求极致的。经常难以忍受慢腾腾做某些事情，就比如写作。 两年前我还不知道 markdown 这回事的时候一直在用 Word。每次都要用鼠标去调整文章格式，不厌其烦地一遍遍执行「选中文字——点击菜单——选择自己想要的格式」，而且经常陷入调整字体、字号、行间距、页边距这些…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你应该使用markdown写作吗？">
+<meta property="og:url" content="https://sbrave.cn/post/830d36b0">
+<meta property="og:description" content="众所周知，我是一名程序员。而程序员向来都是追求效率，追求极致的。经常难以忍受慢腾腾做某些事情，就比如写作。 两年前我还不知道 markdown 这回事的时候一直在用 Word。每次都要用鼠标去调整文章格式，不厌其烦地一遍遍执行「选中文字——点击菜单——选择自己想要的格式」，而且经常陷入调整字体、字号、行间距、页边距这些…">
 
-    <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
-    <link rel="shortcut icon" href="/image/Yc.jpg">
-    <link href="/css/prism.css" rel="stylesheet" />
-    <title>你应该使用markdown写作吗？</title>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78070816-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-78070816-3');
-    </script>
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
 </head>
-
 <body>
-    <!-- suppport block of mathjax -->
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <!-- support mathjax inline -->
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-                tex2jax: {inlineMath: [['$','$']]},
-                messageStyle: "none"
-            });
-        </script>
-    <script>
-        if (/mobile/i.test(navigator.userAgent) || /android/i.test(navigator.userAgent)) {
-            document.body.classList.add('mobile');
-        }
-    </script>
-    <script src="/js/prism.js"></script>
-    <div class="inner">
-        <h2>你应该使用markdown写作吗？</h2>
 
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2017-03-10 02:16:20</span>
+        <span>· 1225 字</span>
+        <span>· 5 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>你应该使用markdown写作吗？</h2>
 <p>众所周知，我是一名程序员。而程序员向来都是追求效率，追求极致的。经常难以忍受慢腾腾做某些事情，就比如写作。</p>
-
 <p>两年前我还不知道 markdown 这回事的时候一直在用 Word。每次都要用鼠标去调整文章格式，不厌其烦地一遍遍执行「选中文字——点击菜单——选择自己想要的格式」，而且经常陷入调整字体、字号、行间距、页边距这些细枝末节的工作中。导致时间的至少三分之一都花在了格式的调整上面。后来逐渐接触到了 markdown ，才知道这玩意儿到底有多么好，并全面转移到这上面来。</p>
-
 <h2>什么是 markdown？</h2>
-
 <p>来自维基百科的介绍：</p>
-
 <blockquote>
 <p>Markdown 是一种轻量级标记语言，创始人为约翰·格鲁伯（John Gruber）。它允许人们「使用易读易写的纯文本格式编写文档，然后转换成有效的 XHTML/HTML 文档」。这种语言吸收了很多在电子邮件中已有的纯文本标记的特性。</p>
 </blockquote>
-
 <h2>为什么要用 markdown 写作？</h2>
-
 <p>从上面的介绍可以看出， markdown <strong>易读易写，纯文本格式</strong>的特性允许你随时随地都可以写文章并拥有不错的版式，你可以随意用自己喜欢的编辑器，notepad++、sublime text、UltraEdit ……，甚至可以用记事本。而不必花费大把的时间去装微软三件套。时间节省下来不也是提高效率的一种方式么？</p>
-
 <p>markdown 的另一个特性是最终效果会转换成 HTML 文档来展示，那么你就可以加入自己需要的 HTML 标签来写出 markdown 不支持的效果，比如设置字号、颜色等。</p>
-
 <p>如果你会 vim，那完全就可以脱离鼠标了。写起文章来十指如飞，文思泉涌，使你将更多的精力集中在内容而不是排版上，从而写出更加优质的文章。</p>
-
 <!--如果你用gitHub的话，应该知道每个项目仓库的README就是用 markdown 语法写的。-->
-
 <h2>markdown 语法介绍</h2>
-
 <p>说了这么多，看起来很高大上的样子，不过不用担心自己能否学会，只要你认识电脑，认识键盘的字母和符号就没问题。markdown 语法都是用符号标记的。</p>
-
 <p>比如在行首添加 <code>#</code> 并用空格与文字分开就成了标题，两个 <code>#</code> 就是二级标题，三个就是三级，总共支持 6 级标题。</p>
-
 <p><strong>在文字前后加两个 <code>*</code> 代表强调</strong>，<em>加一个星号表示斜体</em>，单独一行写三个星号表示水平线。</p>
-
 <hr />
-
 <ul>
 <li>行首加一个星号表示这是一个列表条目;</li>
 </ul>
-
 <p>也可以支持数字序号的列表：</p>
-
 <ol>
 <li>吃饭</li>
 <li>睡觉</li>
 <li>打豆豆</li>
 </ol>
-
 <blockquote>
 <p>段首加一个右尖括号表示引用，表明引用别人的文字。</p>
 </blockquote>
-
 <p>链接的写法为「[链接文字](链接地址)」，比如这是<a href="https://sbrave.cn">我的博客</a>，欢迎访问。</p>
-
 <p>加载图片的写法跟链接差不多，在前面加一个感叹号就好了。</p>
-
-<!--- 如今天的 [www.bing.com](www.bing.com) 首页图片：<img src="https://sbrave.cn/bing_img" width="100%" height="100%"> --->
-
+<!--- 如今天的 [www.bing.com](www.bing.com) 首页图片：![](https://sbrave.cn/bing_img) --->
 <p>有的工具支持 LaTeX 公式，参考 <a href="https://www.latex-project.org">LATEX官方网站</a>。</p>
-
 <p>若要插入代码，只需要在代码段的前后分别加三个反引号就行了，就是键盘上 ESC 下面的那个键。</p>
-
 <pre><code class="language-C">#include&lt;iostream&gt;
 
 using namespace std;
@@ -111,34 +109,61 @@ int main()
     return 0;
 }
 </code></pre>
-
 <h2>推荐几个 markdown 的软件或插件</h2>
-
 <ol>
-<li><p>锤子便签
-手机 APP，需要在设置——默认排版模式中打开「Markdown模式」，新建便签后，需点击右上角「M」字样，就可以愉快地用 markdown 格式记录了。</p></li>
-
-<li><p>chrome 浏览器插件 Markdown Here
-可以一键将编辑框中的 markdown 格式的文字转换成富文本，这在不支持 markdown 的编辑框中很有用，特别是微信后台中。请在 chrome 应用商店中搜索安装。</p></li>
-
-<li><p>为知笔记
-一款笔记类软件，支持 Windows、Mac、Android、iOS、Linux 等平台，也支持网页版，可以用 markdown 轻松写出格式良好的笔记，只是需要在标题后添加「.md」的后缀即可。</p></li>
-
-<li><p>Ulysses / bear / Mweb / typora
-macOS 和 iOS 平台非常好用的记录工具（typora 只支持 macOS），界面简洁，功能齐全，操作流畅，笔记内容通过 iCloud 同步，实在找不到比这些更好用的工具了！</p></li>
+<li>
+<p>锤子便签
+手机 APP，需要在设置——默认排版模式中打开「Markdown模式」，新建便签后，需点击右上角「M」字样，就可以愉快地用 markdown 格式记录了。</p>
+</li>
+<li>
+<p>chrome 浏览器插件 Markdown Here
+可以一键将编辑框中的 markdown 格式的文字转换成富文本，这在不支持 markdown 的编辑框中很有用，特别是微信后台中。请在 chrome 应用商店中搜索安装。</p>
+</li>
+<li>
+<p>为知笔记
+一款笔记类软件，支持 Windows、Mac、Android、iOS、Linux 等平台，也支持网页版，可以用 markdown 轻松写出格式良好的笔记，只是需要在标题后添加「.md」的后缀即可。</p>
+</li>
+<li>
+<p>Ulysses / bear / Mweb / typora
+macOS 和 iOS 平台非常好用的记录工具（typora 只支持 macOS），界面简洁，功能齐全，操作流畅，笔记内容通过 iCloud 同步，实在找不到比这些更好用的工具了！</p>
+</li>
 </ol>
+</div>
 
-    </div>
-</body>
+    <footer class="post-foot">
+      <a class="back-home" href="/">← back</a>
+    </footer>
+  </article>
+</main>
 
-<footer>
-    <div class="footer">
-        Copyright © sbrave 2021
-        <br>
-        陕ICP备16005721号-1
-    </div>
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
 </footer>
 
+<script src="/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
 </html>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/haoel/anti-baidu@0.6.2/js/anti-baidu-latest.min.js" charset="UTF-8"></script>

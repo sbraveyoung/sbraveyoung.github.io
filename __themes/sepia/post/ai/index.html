@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI入门到精通系列 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-group">
+  <nav class="crumbs"><a href="/__themes/sepia/">Home</a><span>›</span><span>AI入门到精通系列</span></nav>
+  <header class="group-head">
+    <h1>AI入门到精通系列</h1>
+    <p class="group-count">11 篇</p>
+  </header>
+
+  <section class="post-list">
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/31477598/5cf17527">AI 入门到精通 00 · 导读与学习路线</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">〇、这套系列是什么 一份面向**完全零基础**的 AI 学习路线图，目标是把你从「听过 ChatGPT」带到「能独立训练模型 / 写 Agent / 跟进前沿论文」。 怎么用这份路线 顺序**：00 → 10 是推荐路径，但不是硬性顺序。如果你已经有编程或数学基础，可以跳过对应章节。 节奏**：全职学习 6-9 个月可…</p>
+      <div class="entry-meta">
+        <span>2026-04-26 10:00:00</span>
+        <span>· 9 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/31477598/d58d4e64">AI 入门到精通 01 · 数学基础</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">&#34;搞 AI 不需要数学&#34; 是销售给你的安慰剂。**调 API 不需要数学，做 AI 需要**。 但你不需要数学博士的水平，只需要&#34;看到论文里的公式不慌、能推一个 backprop&#34;的水平。 一、需要学什么、学到什么程度 按重要性 / 实用度排序： | 模块 | 重要性 | 必须掌握的核心 | | --- | --- |…</p>
+      <div class="entry-meta">
+        <span>2026-04-26 10:01:00</span>
+        <span>· 7 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/31477598/7bcefa45">AI 入门到精通 02 · 编程能力</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">数学告诉你&#34;该算什么&#34;，代码决定&#34;算得多快、跑不跑得起来&#34;。 AI 圈的工程能力鸿沟比算法鸿沟更大：很多算法不错的人因为代码差落地不了。 一、需要掌握的栈 | 层级 | 必备 | 推荐熟练度 | | --- | --- | --- | | **语言** | Python | 熟练（能写复杂工程） | | **科学计算*…</p>
+      <div class="entry-meta">
+        <span>2026-04-26 10:02:00</span>
+        <span>· 6 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/31477598/d70767b9">AI 入门到精通 03 · 机器学习基础</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">现在大家都在搞 LLM，但**经典 ML 是地基**。不懂偏差方差、过拟合、特征工程，去玩深度学习只会是「炼丹」式的瞎试。 一、ML 的全景与术语 监督学习**：有标签。分类（离散）&#43; 回归（连续）。 无监督学习**：无标签。聚类、降维、密度估计。 半监督 / 自监督**：少量 / 无标签 → 自己造监督信号（**LL…</p>
+      <div class="entry-meta">
+        <span>2026-04-26 10:03:00</span>
+        <span>· 6 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/31477598/b9b55924">AI 入门到精通 04 · 深度学习基础</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">深度学习 = 用神经网络做 ML，外加一套独特的训练 trick。 你看到的所有 SOTA（GPT、Sora、AlphaFold）都建立在本章的基础上。 一、神经网络的&#34;黑盒&#34;打开 神经元** = 线性变换 &#43; 非线性激活：`y = σ(Wx &#43; b)`。 多层感知机 (MLP)** = 多个神经元堆叠 → 能逼近任何…</p>
+      <div class="entry-meta">
+        <span>2026-04-26 10:04:00</span>
+        <span>· 6 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/31477598/a9e658cb">AI 入门到精通 05 · 大语言模型 (LLM)</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">当前 AI 浪潮的中心。GPT / Claude / Gemini / Qwen / DeepSeek / Llama —— 看似五花八门，本质是同一个范式：**Decoder-only Transformer &#43; Scale &#43; 后训练对齐**。 一、LLM 的&#34;三板斧&#34;范式 理解这三步及其在过去两年的演化（特别是 …</p>
+      <div class="entry-meta">
+        <span>2026-04-26 10:05:00</span>
+        <span>· 7 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/31477598/79c30475">AI 入门到精通 06 · AI 训练实战</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">学校教你 &#34;怎么写模型&#34;，工业界要你 &#34;怎么把训练跑稳跑快跑出效果&#34;。 90% 的工程师卡在这一章 —— 论文复现不了、loss 训不动、显存爆了、几张卡跑不起来。 一、训练一个模型涉及哪些事 每一环都能写一本书。本章给你&#34;先跑通、再调优&#34;的完整路径。 二、知识点 2.1 数据工程（决定上限） 数据采集**：自有日志、…</p>
+      <div class="entry-meta">
+        <span>2026-04-26 10:06:00</span>
+        <span>· 8 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/31477598/cae63e29">AI 入门到精通 07 · AI 推理与部署</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">训练只决定模型上限，**推理决定模型能不能被用户用上**。 工业界 80% 的算力账单花在推理而不是训练。 一、推理工程的目标矩阵 | 维度 | 含义 | 优化对象 | | --- | --- | --- | | **Latency (TTFT / TPOT)** | 首 token 延迟 / 每 token 延迟 |…</p>
+      <div class="entry-meta">
+        <span>2026-04-26 10:07:00</span>
+        <span>· 6 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/31477598/9f71a8f6">AI 入门到精通 08 · AI Agent</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">2024-2026 的最大叙事：从「LLM 回答问题」到「LLM 自主完成任务」。 Agent = LLM &#43; 工具 &#43; 记忆 &#43; 规划 &#43; 反馈循环。 一、什么是 Agent（避免概念膨胀） Anthropic 的简洁定义最实用： Workflow**：人写好步骤，LLM 执行某些环节。可控性高、能力上限低。 Age…</p>
+      <div class="entry-meta">
+        <span>2026-04-26 10:08:00</span>
+        <span>· 8 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/31477598/719d3ba2">AI 入门到精通 09 · 多模态与生成</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">LLM 让机器能听懂；多模态让机器能看见、能创造。 这一章覆盖：理解（看图看视频）&#43; 生成（图、视频、音频）&#43; 端到端多模态。 一、地图 主流路线： CLIP 系**：对比学习，把图文对齐到同一空间。理解、检索、引导生成都靠它。 VLM (视觉语言模型)**：图像 / 视频 token 化后塞进 LLM。代表：Qwen…</p>
+      <div class="entry-meta">
+        <span>2026-04-26 10:09:00</span>
+        <span>· 7 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/sepia/post/31477598/7d896b00">AI 入门到精通 10 · 前沿方向</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">走到这章意味着你已经能看懂论文、训得动模型、写得了 Agent。 下面是 2025-2026 最值得跟进的几条前沿主线 —— 选 1-2 条深耕，比啥都追要好。 一、推理与思考增强 (Reasoning Models) 最热的主线，从 OpenAI o1 → DeepSeek-R1 → o3 → Gemini 2.5 …</p>
+      <div class="entry-meta">
+        <span>2026-04-26 10:10:00</span>
+        <span>· 7 min</span>
+        
+      </div>
+    </article>
+    
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题10：二进制中1的个数 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：请实现一个函数，输入一个整数，输出该数二进制便是中1的个数。例如把9表示成二进制是1001，有2位是1.因此如果输入9，该函数输出2.** 分析 此题考查的是对位运算的掌握，题目不是很难，但一些细节问题还是需要注意的。 方法1：移位 我们把这个数和 0x1 相与，如果结果为 0，则表明该数的最后移位为 0，否则为…">
+<meta property="og:title" content="面试题10：二进制中1的个数">
+<meta property="og:description" content="题目：请实现一个函数，输入一个整数，输出该数二进制便是中1的个数。例如把9表示成二进制是1001，有2位是1.因此如果输入9，该函数输出2.** 分析 此题考查的是对位运算的掌握，题目不是很难，但一些细节问题还是需要注意的。 方法1：移位 我们把这个数和 0x1 相与，如果结果为 0，则表明该数的最后移位为 0，否则为…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/1e11b27f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600&family=Noto+Serif+SC:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/letter/css/theme.css">
+</head>
+<body class="post-page">
+
+<div class="reading-progress"><div class="reading-progress-bar"></div></div>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/letter/" class="brand-title">sbraveyoung · 字里行间</a>
+    <div class="brand-sub">阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/letter/">写作</a>
+    <a href="/__themes/letter/tag/">标签</a>
+    <a href="/__themes/letter/about">关于</a>
+    <a href="/__themes/letter/atom.xml">RSS</a>
+  </nav>
+</header>
+
+<article class="article">
+  <header class="article-head">
+    <div class="kicker">
+      2016-05-28
+    </div>
+    <h1 class="article-title">面试题10：二进制中1的个数</h1>
+    <p class="article-lede">题目：请实现一个函数，输入一个整数，输出该数二进制便是中1的个数。例如把9表示成二进制是1001，有2位是1.因此如果输入9，该函数输出2.** 分析 此题考查的是对位运算的掌握，题目不是很难，但一些细节问题还是需要注意的。 方法1：移位 我们把这个数和 0x1 相与，如果结果为 0，则表明该数的最后移位为 0，否则为…</p>
+    <div class="article-meta">
+      <span>3 min read</span>
+      <span>588 words</span>
+      
+      
+      <span class="article-meta-tags">
+        
+      </span>
+    </div>
+    
+  </header>
+
+  <div class="prose">
+    <h2>面试题10：二进制中1的个数</h2>
+<p><strong>题目：请实现一个函数，输入一个整数，输出该数二进制便是中1的个数。例如把9表示成二进制是1001，有2位是1.因此如果输入9，该函数输出2.</strong></p>
+<h3>分析</h3>
+<p>此题考查的是对位运算的掌握，题目不是很难，但一些细节问题还是需要注意的。</p>
+<p>方法1：移位</p>
+<p>我们把这个数和 0x1 相与，如果结果为 0，则表明该数的最后移位为 0，否则为 1。然后将这个数右移 1 位在此判断，循环 32 次。</p>
+<p>代码如下：</p>
+<pre><code class="language-C">int NumberOf1(int n)
+{
+    int count=0;
+    while(n)
+    {
+        if(n&amp;0x1!=0)
+        {
+            count++;
+        }
+        n&gt;&gt;=1;
+    }
+    return count;
+}
+</code></pre>
+<p>以上我们采用了右移来计算 1 的个数。不过当计算机使用逻辑右移的时候，n 最终会变成 0xFFFFFFFF，导致死循环。</p>
+<p>对于无符号数，左移和右移都是在相应的位上补 0；而对于有符号数，左移是在最低位补 0，而右移到底是采用算术右移还是逻辑右移，C 标准并没有明确规定。不过大多数机器上使用的是算数右移，所以以上代码可以很好地工作。但你能保证不会遇到例外情况吗？</p>
+<p>解决办法就是使用左移，或使 n 不动，移动 1 即可。
+代码如下：</p>
+<pre><code class="language-C">int NumberOf1(int n)
+{
+    int count=0;
+    unsigned int flag=1;
+    while(flag)
+    {
+    	if(n &amp; flag)
+	{
+		count++;
+	}
+	flag=flag&lt;&lt;1;
+    }
+    return count;
+}
+</code></pre>
+<p>然而更好的解决办法是：</p>
+<p>当 n 不为 0 时，n&amp;(n-1) 就相当于去掉了其二进制中的最后一位 1。比如 n 为 9，二进制位 1001，n-1=8，二进制位 1000，两者相与结果为 1000，就相当把 9 的二进制中最后一位 1 给去掉了。</p>
+<p>利用上述方法，来计算此题的话，给定数字的二进制中有几位 1 便只需循环几次。而第一种方法每次都要循环 32 次。
+代码如下：</p>
+<pre><code class="language-C">int NubmerOf1(int n)
+{
+    int count=0;
+    while(n)
+    {
+        n&amp;=(n-1);
+        count++;
+    }
+}
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/10_NumberOfInBinary/main.cpp">点我前往</a></p>
+
+  </div>
+
+  <footer class="article-foot">
+    <div class="kicker">— end —</div>
+    <div class="article-foot-meta">
+      
+    </div>
+    <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
+  </footer>
+</article>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung. Built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</span>
+</footer>
+
+<script>
+(function(){
+  var bar = document.querySelector('.reading-progress-bar');
+  if(!bar) return;
+  function update(){
+    var h = document.documentElement;
+    var p = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+    bar.style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

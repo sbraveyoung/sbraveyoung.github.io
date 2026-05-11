@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题5：从尾到头打印链表 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：输入一个链表的头结点，从尾到头反过来打印出每个节点的值。** 分析 这道题有如下几种解决方案： 1. 将链表逆置，然后顺次打印 2. 递归方案 3. 迭代方案 如果逆置链表的话，会改变链表原先的结构。我们可以在面试时询问面试过是否可以改变链表，如果是肯定的回答，就可以采用这种办法。否则只能采用后面的方法。 逆置链…">
+<meta property="og:title" content="面试题5：从尾到头打印链表">
+<meta property="og:description" content="题目：输入一个链表的头结点，从尾到头反过来打印出每个节点的值。** 分析 这道题有如下几种解决方案： 1. 将链表逆置，然后顺次打印 2. 递归方案 3. 迭代方案 如果逆置链表的话，会改变链表原先的结构。我们可以在面试时询问面试过是否可以改变链表，如果是肯定的回答，就可以采用这种办法。否则只能采用后面的方法。 逆置链…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/d44a3e2a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2016</span>
+    <span>Tuesday, May 24, 2016</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name compact">
+    <h1 class="title-mark small"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <nav class="mast-nav">
+      <a href="/__themes/press/">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<article class="press-article">
+  <header class="press-article-head">
+    <div class="kicker accent">essay · May 24, 2016</div>
+    <h1 class="press-article-title">
+      面试题5：从尾到头打印链表
+    </h1>
+    <div class="press-rule"></div>
+    <p class="press-article-lede"><em>题目：输入一个链表的头结点，从尾到头反过来打印出每个节点的值。** 分析 这道题有如下几种解决方案： 1. 将链表逆置，然后顺次打印 2. 递归方案 3. 迭代方案 如果逆置链表的话，会改变链表原先的结构。我们可以在面试时询问面试过是否可以改变链表，如果是肯定的回答，就可以采用这种办法。否则只能采用后面的方法。 逆置链…</em></p>
+    <div class="press-article-byline">
+      ── by sbraveyoung · 2 min read ──
+    </div>
+  </header>
+
+  
+
+  <div class="press-prose">
+    <h2>面试题5：从尾到头打印链表</h2>
+<p><strong>题目：输入一个链表的头结点，从尾到头反过来打印出每个节点的值。</strong></p>
+<h3>分析</h3>
+<p>这道题有如下几种解决方案：</p>
+<ol>
+<li>将链表逆置，然后顺次打印</li>
+<li>递归方案</li>
+<li>迭代方案</li>
+</ol>
+<p>如果逆置链表的话，会改变链表原先的结构。我们可以在面试时询问面试过是否可以改变链表，如果是肯定的回答，就可以采用这种办法。否则只能采用后面的方法。</p>
+<p>逆置链表也很简单，只需要从第二个节点开始，顺次摘取一个节点头插就可以。</p>
+<h3>代码如下</h3>
+<pre><code class="language-c">list* PrintListInReversedOrder(list* head)
+{
+    if(head==NULL || head-&gt;next==NULL)
+        return head;
+    list* tmp=NULL;
+    list* cur=head-&gt;next;
+    head-&gt;next=NULL;
+    while(cur!=NULL)
+    {
+        tmp=cur-&gt;next;
+        cur-&gt;next=head;
+        head=cur;
+        cur=tmp;
+    }
+    cur=head;
+    while(cur!=NULL)
+    {
+        cout &lt;&lt; cur-&gt;data &lt;&lt; &quot; &quot;;
+        cur=cur-&gt;next;
+    }
+    cout &lt;&lt; endl;
+    return head;
+}
+</code></pre>
+<p>递归方案很简单，如果当前函数参数所指向的节点是尾节点，则打印之。否则先打印它的下一个节点即可。</p>
+<h3>代码如下</h3>
+<pre><code class="language-c">void PrintListInReversedOrder(list* head)
+{
+    if(head==NULL)
+        return;
+    PrintListInReversedOrder(head-&gt;next);
+    cout &lt;&lt; head-&gt;data &lt;&lt; &quot; &quot;;
+}
+</code></pre>
+<p>但如果链表太长，采用递归的话可能会导致 Stack OverFlow，所以更好的办法是用循环来控制。而递归在本质上就是一个栈结构（系统栈），所以我们可以用自定义的栈（数据结构栈）来模拟递归的行为以实现这种效果</p>
+<h3>代码如下</h3>
+<pre><code>#include&lt;stack&gt;
+void PrintListInReversedOrder(list* head){
+//此处不用判断head是否为空，并非忘记
+    stack&lt;list*&gt; s;
+    list* cur=head;
+    while(cur!=NULL)
+    {
+        s.push(cur);
+        cur=cur-&gt;next;
+    }
+    while(!s.empty())
+    {
+        cout &lt;&lt; s.top()-&gt;data &lt;&lt; &quot; &quot;;
+        s.pop();
+    }
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：[点我前往]()</p>
+
+  </div>
+
+  <footer class="press-article-foot">
+    <div class="press-rule"></div>
+    <div class="kicker accent">cited under</div>
+    <div class="press-foot-tags">
+      
+    </div>
+    <p class="press-back">← <a href="/__themes/press/">back to front page</a></p>
+  </footer>
+</article>
+
+<footer class="press-foot">
+  <span>colophon · set in DM Serif Display & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  <span>© 2016 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

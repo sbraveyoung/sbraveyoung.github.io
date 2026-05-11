@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>sbraveyoung · 字里行间</title>
+<meta name="description" content="一个程序员的笔记本：技术拆解、踩坑总结、生活随笔。">
+<link rel="alternate" type="application/atom+xml" href="/__themes/press/atom.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/press/css/theme.css">
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-strip">
+    <span>vol. 2026 · the reading notebook</span>
+    <span>Monday, May 11, 2026</span>
+    <span>https://sbrave.cn</span>
+  </div>
+  <div class="mast-name">
+    <div class="kicker accent">⁂   essays · notes · marginalia   ⁂</div>
+    <h1 class="title-mark"><a href="/__themes/press/">sbraveyoung · 字里行间</a></h1>
+    <div class="kicker muted">since 2019 · by sbraveyoung</div>
+    <nav class="mast-nav">
+      <a href="/__themes/press/" class="active">Front</a>
+      <a href="/__themes/press/tag/">Tags</a>
+      <a href="/__themes/press/archive">Archive</a>
+      <a href="/__themes/press/about">About</a>
+      <a href="/__themes/press/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<main class="press">
+
+
+  <section class="page-intro">
+    <div class="kicker accent">── section</div>
+    <h2 class="page-title">数据库系列</h2>
+  </section>
+
+
+
+
+<article class="feature">
+  <div class="feature-text">
+    <div class="kicker accent">── cover story</div>
+    <h2 class="feature-title"><a href="/__themes/press/post/de570784/d87d70ee">数据库的事务及隔离级别</a></h2>
+    <p class="feature-lede"><em>在操作数据库时，经常需要将一系列操作打包成一个原子操作：要么全部执行，要么全部不执行。一个最常被用来举例子的场景是银行转账问题，假设有两个用户 A 和 B，A 要向 B 转账 100 元需要进行以下操作： 查询 A 的余额； 若余额大于 100，则减去 100，并写回数据库； B 的余额加上 100，并写回数据库； 这…</em></p>
+    <div class="feature-meta">
+      <span>by sbraveyoung · 2018-08-02</span>
+      <span>continue reading →</span>
+    </div>
+  </div>
+  <div class="feature-art">
+    
+      <div class="feature-art-fallback">
+        <div class="art-num">FIG. 01</div>
+        <div class="art-tags"></div>
+      </div>
+    
+  </div>
+</article>
+
+
+
+
+<section class="digest">
+  
+  <article class="digest-col">
+    <div class="kicker accent">№02</div>
+    <h3 class="digest-title"><a href="/__themes/press/post/de570784/92fe9da2">浅谈数据库的索引</a></h3>
+    <p class="digest-lede">我们知道，数据库的分类有关系型数据库和非关系型数据库。关系型数据库的代表是MySQL。这里我们不谈关系型和非关系型的区别于联系，只侧重于讲讲关系型数据库的索引实现原理。 之所以称为关系型数据库，是因为它记录了各种数据之间的“关系”，我们可以形象地将若干个属性它看做一张表，一个数据库有若干个这样的表，这些表之间靠某些共有…</p>
+    <div class="digest-meta">2016-08-23 · 4 min</div>
+  </article>
+  
+</section>
+
+
+
+<section class="also">
+  <div class="also-label">also in<br>this issue</div>
+  <div class="also-list">
+    
+  </div>
+</section>
+
+</main>
+
+<footer class="press-foot">
+  <span>set in DM Serif & Newsreader</span>
+  <span>built with <a href="https://github.com/sbraveyoung/gobog">gobog</a> · markdown · go</span>
+  <span>© 2026 sbraveyoung</span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

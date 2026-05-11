@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>我的博客演进历程（二）：Obsidian + gobog + GitHub Actions · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/blog-evolve-2">
+<meta name="description" content="写在前面 之前写过一篇 [《我的博客演进历程》](/post/77a668)，讲了从 CSDN → WordPress → hexo → 自研引擎一路的折腾。两年过去了，写作工具和发布链路又都换过一轮，正好趁着这次重构把整套架构落定，记录一下。 &lt;!-- 内容大纲： 1. 为啥要再折腾一次（动机） 2. 现在的整体架构…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="我的博客演进历程（二）：Obsidian + gobog + GitHub Actions">
+<meta property="og:url" content="https://sbrave.cn/post/blog-evolve-2">
+<meta property="og:description" content="写在前面 之前写过一篇 [《我的博客演进历程》](/post/77a668)，讲了从 CSDN → WordPress → hexo → 自研引擎一路的折腾。两年过去了，写作工具和发布链路又都换过一轮，正好趁着这次重构把整套架构落定，记录一下。 &lt;!-- 内容大纲： 1. 为啥要再折腾一次（动机） 2. 现在的整体架构…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        <span class="badge badge-ai" title="AI 辅助">🤖 AI 辅助</span>
+        <span>2026-05-10 21:00:00</span>
+        <span>· 3107 字</span>
+        <span>· 13 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>我的博客演进历程（二）：Obsidian + gobog + GitHub Actions</h2>
+<h3>写在前面</h3>
+<p>之前写过一篇 <a href="/__themes/ocean/post/77a668">《我的博客演进历程》</a>，讲了从 CSDN → WordPress → hexo → 自研引擎一路的折腾。两年过去了，写作工具和发布链路又都换过一轮，正好趁着这次重构把整套架构落定，记录一下。</p>
+<!-- 内容大纲：
+     1. 为啥要再折腾一次（动机）
+     2. 现在的整体架构（一张图说清）
+     3. 四个仓库各自的职责
+     4. 一篇文章从写到上线，走过的每一跳
+     5. 踩过的坑 & 一些设计决策
+-->
+<h3>为啥要再折腾一次</h3>
+<p>老的方案，简单说，是一个跑在云服务器上的 Go 服务（也就是 <code>gobog</code>）：</p>
+<ul>
+<li>服务直接读一个挂载的目录，里面是 Markdown；</li>
+<li>每次内容更新，先在另一个仓库（<code>blog</code>）push，再触发 docker 镜像重建，把博客容器重新部署一次；</li>
+<li>sbrave.cn 域名解析过去；GitHub Pages 那个 <code>xxx.github.io</code> 仓库基本是<strong>手动同步</strong>的副本。</li>
+</ul>
+<p>跑了一段时间，问题就出来了：</p>
+<ul>
+<li>每次写完一篇就要等容器重启，30 秒到 2 分钟不等，体验拉胯；</li>
+<li>写作端我从 Typora 换成了 Obsidian，自带的 wikilink、双链、附件管理实在太香，但 gobog 当时是按照&quot;扁平 markdown + 一个 image 目录&quot;设计的，跟 Obsidian 的 vault 结构不完全吻合；</li>
+<li>云服务器是按月续费的，<del>但博客访问量根本配不上这个成本</del>，能跑在 GitHub Pages 上就跑在 GitHub Pages 上；</li>
+<li>最关键的：每次写完都要打开终端 <code>git add → commit → push</code>，<strong>摩擦感</strong>很重。我希望写作的最后一步就是按 <code>Ctrl+S</code>，剩下的事让脚本去跑。</li>
+</ul>
+<p>于是决定再折腾一次。</p>
+<h3>现在的整体架构</h3>
+<p>一张图，先看全貌：</p>
+<pre><code>   ┌──────────────────────────┐
+   │  本地 Obsidian vault      │
+   │   Blog/                  │
+   │     post/                │
+   │     pages/               │
+   │     resource/image/      │
+   └────────────┬─────────────┘
+                │
+        gobog-obsidian 插件
+        （push / pull / front-matter 自动填充）
+                │
+                ▼
+   ┌──────────────────────────┐
+   │  GitHub: sbraveyoung/blog │  ← markdown 单一可信源
+   └────────────┬─────────────┘
+                │ push 触发
+                │ repository_dispatch
+                ▼
+   ┌──────────────────────────────────────┐
+   │  GitHub Actions @ github.io repo     │
+   │   1. checkout sbraveyoung/blog       │
+   │   2. checkout sbraveyoung/gobog      │
+   │   3. go build &amp;&amp; gobog -export       │
+   │   4. 替换工作树并 commit              │
+   └────────────┬─────────────────────────┘
+                │
+                ▼
+   ┌──────────────────────────┐
+   │  sbraveyoung.github.io   │  ← 渲染好的 HTML
+   │  (GitHub Pages 自动伺服)  │
+   └────────────┬─────────────┘
+                │
+                ▼
+              sbrave.cn
+</code></pre>
+<p>四个仓库，三层职责，一条链路。每一跳都解释一下。</p>
+<h3>四个仓库各自的职责</h3>
+<h4>1. <code>blog</code>：原始 markdown 的家</h4>
+<p>只放内容，没有代码。目录契约只有三个：</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>source/post/</code></td>
+<td>文章。直接放在底下的是单篇；子目录会被识别为&quot;系列/合集&quot;。</td>
+</tr>
+<tr>
+<td><code>source/pages/</code></td>
+<td>顶层独立页面。<code>pages/about.md</code> 自动对应 <code>/about</code> 这个 URL。</td>
+</tr>
+<tr>
+<td><code>source/resource/image/</code></td>
+<td>文章里引用的图片资源。</td>
+</tr>
+</tbody>
+</table>
+<p>老的设计里，<code>about</code> 是写死在引擎里的特殊页面。这次直接通用化：你想加 <code>contact</code>、<code>now</code>、<code>projects</code>，往 <code>pages/</code> 丢一个 markdown 就行，引擎会按文件名生成路由，不需要改任何代码。</p>
+<h4>2. <code>gobog</code>：Markdown 渲染引擎</h4>
+<p>用 Go 写的小静态站点生成器。两种模式：</p>
+<ul>
+<li><strong>Server 模式</strong>：起一个 HTTP 服务，监听 vault 目录变化（<code>fsnotify</code>），改完 markdown 浏览器刷新就能看到效果——主要用来本地预览。</li>
+<li><strong>静态导出模式</strong>（<code>gobog -export ./dist</code>）：把整个站点渲染成 HTML/CSS/XML，结果直接 drop-in 到任何静态托管。</li>
+</ul>
+<p>这次重构主要做了几件事：</p>
+<ul>
+<li><strong>主题系统</strong>重写。新增了三个主题：<code>minimal</code>（默认，黑白极简）、<code>sepia</code>（暖色阅读）、<code>ocean</code>（冷蓝）。三个主题共享 HTML 模板和 JS，只是 CSS 颜色 token 不同——这样维护一处改三处生效。每个主题都自带 SVG 图标，并自动跟随系统的浅色/深色模式（也支持手动覆盖，用 <code>localStorage</code> 持久化）；</li>
+<li><strong>列表页和详情页拆开</strong>。原来 group 和 single article 共用一个 <code>index.html</code>，渲染逻辑很别扭。现在分成 <code>index.html</code>（首页）、<code>group.html</code>（系列/标签/搜索结果列表）、<code>post.html</code>（单篇详情）三个模板，各自只负责自己的事；</li>
+<li><strong>空 group 不展示</strong>。一个目录下如果一篇可发布的文章都没有（比如里面全是 draft），这个目录就不会出现在列表里，更不会渲染一个空的 landing 页；</li>
+<li><strong>去掉了阅读人数</strong>。原来的 <code>views.json</code> 计数器其实没啥用，每次部署还要同步状态目录，干脆下掉；</li>
+<li><strong>AI 标签</strong>。文章 front-matter 写 <code>ai: true</code> 默认展示&quot;🤖 AI 辅助&quot;角标；想表达&quot;AI 主笔我审稿&quot;写 <code>ai: generated</code>（&quot;🤖 AI 生成&quot;）；&quot;我写 AI 校&quot;写 <code>ai: edited</code>（&quot;🤖 AI 校对&quot;）；想直接给某个模型署名，比如 <code>ai: claude</code> 就直接展示模型名。这套三档分级借鉴的是 IPTC 的 digitalSourceType 词表，也跟少数派、Medium 那边的&quot;AI 辅助/AI 生成&quot;约定对齐。AI 参与的内容应该被标识出来，不是因为它&quot;低人一等&quot;，而是读者有知情权。</li>
+</ul>
+<p>最后值得一提的是 URL 稳定性。gobog 第一次扫到一篇没有 <code>id</code> / <code>url</code> / <code>create_time</code> 的 markdown 时，会<strong>把这些字段写回到原文件的 front-matter 里</strong>，之后再改名/移动文件，URL 不变。这个逻辑是从老 gobog 继承下来的，是博客这种&quot;URL 即对外契约&quot;的内容产品里非常关键的一条规则。</p>
+<h4>3. <code>gobog-obsidian</code>：Obsidian 端的同步插件</h4>
+<p>这次彻底重写了。老插件做的事是&quot;在 Obsidian 里跑 gobog 把站点 push 到 GitHub Pages&quot;，把渲染和同步揉在了一起。新插件只做两件事：</p>
+<ol>
+<li>
+<p><strong>push/pull markdown</strong>：本地 vault 里有一个 <code>Blog/</code> 文件夹，跟 <code>blog</code> 仓库做双向同步。我可以在任何一台机器上 <code>git pull</code> 拿到最新内容继续写；写完不用打开终端，命令面板里 &quot;Push blog repo&quot; 一下，commit + push 一气呵成。可选自动 push（debounced），保存后 30 秒自动提交。</p>
+</li>
+<li>
+<p><strong>新文件自动填 front-matter</strong>：在 <code>post/</code> 里新建一个 <code>xxx.md</code>，插件监听到 <code>vault.create</code> 事件，自动给文件头插入：</p>
+<pre><code class="language-yaml">---
+title: xxx
+author: sbraveyoung
+id: a1b2c3d4
+url: /post/a1b2c3d4
+create_time: 2026-05-10 21:00:00
+updated_time: 2026-05-10 21:00:00
+---
+</code></pre>
+<p><code>pages/</code> 下的文件会用 <code>/&lt;basename-slug&gt;</code> 作为 URL（跟 gobog 的页面路由对齐）。<strong>已存在的 key 永远不会被覆盖</strong>——只补缺失的，这点很关键，否则用户辛辛苦苦写好的 title 被你改成 basename 就尴尬了。</p>
+</li>
+</ol>
+<p>冲突处理上，pull 走 <code>merge --ff-only</code>。本地已经 commit、远端也有新提交，那就直接报错让我手动处理——一个同步插件最不该做的就是悄悄 rebase 重写本地文件。</p>
+<h4>4. <code>sbraveyoung.github.io</code>：发布目标</h4>
+<p>这个仓库不是手写的，是被<strong>机器管理</strong>的。主分支的内容由 GitHub Actions 在每次 deploy 时整体替换。</p>
+<p>工作流（<code>.github/workflows/deploy.yml</code>）的触发器有三个：</p>
+<ul>
+<li><code>repository_dispatch</code>（事件类型 <code>blog-update</code>）：blog 仓库 push 时由它的 notify workflow 主动通知；</li>
+<li><code>workflow_dispatch</code>：手动触发，可以传一个 <code>theme</code> 参数临时换主题预览；</li>
+<li><code>schedule</code>：每天凌晨跑一次兜底——万一某次 webhook 没送达，至少不会 24 小时落后。</li>
+</ul>
+<p>跑起来后做的事：</p>
+<pre><code class="language-bash"># 1. checkout 三个仓库
+checkout sbraveyoung.github.io  # 自己
+checkout sbraveyoung/blog → _blog
+checkout sbraveyoung/gobog → _gobog
+
+# 2. 编 gobog
+cd _gobog &amp;&amp; go build -o ../_bin/gobog ./src
+
+# 3. 写一份临时 toml 配置（主题从 _gobog.json 读）
+cat &gt; _gobog.toml &lt;&lt;EOF
+[blog]
+theme  = &quot;_gobog/themes/${THEME}&quot;
+source = &quot;_blog/source&quot;
+...
+EOF
+
+# 4. 渲染
+./_bin/gobog -config _gobog.toml -export _dist
+
+# 5. 替换 working tree + commit + push
+rm -rf !(.git|.github|_gobog.json|_dist)
+cp -a _dist/. .
+git add -A &amp;&amp; git commit -m &quot;deploy: theme=$THEME ...&quot; &amp;&amp; git push
+</code></pre>
+<p>主题切换通过 repo 根目录的 <code>_gobog.json</code> 控制：</p>
+<pre><code class="language-json">{
+  &quot;theme&quot;: &quot;minimal&quot;,
+  &quot;domain&quot;: &quot;https://sbrave.cn&quot;,
+  &quot;title&quot;: &quot;sbraveyoung · 字里行间&quot;,
+  &quot;subtitle&quot;: &quot;阅读 · 实践 · 思考&quot;,
+  &quot;author&quot;: &quot;sbraveyoung&quot;,
+  &quot;cname&quot;: &quot;sbrave.cn&quot;
+}
+</code></pre>
+<p>改主题就是改这一行 JSON、commit、push。下一次部署生效。</p>
+<h3>一篇文章从写到上线</h3>
+<p>把上面这些拼起来，一篇文章的生命周期是：</p>
+<ol>
+<li>Obsidian 里 <code>Cmd+N</code> 新建 <code>Blog/post/xxx.md</code>；</li>
+<li>插件监听到 create 事件，0 延迟把 front-matter 填好；</li>
+<li>我在编辑区写正文，wikilink、<code>image.png</code> 嵌图随便用；</li>
+<li><code>Cmd+S</code>。如果开了 auto-push，30 秒内静默 commit + push 到 <code>blog</code> 仓库；否则我手动喊一下 &quot;Push blog repo&quot;；</li>
+<li><code>blog</code> 仓库收到 push，notify workflow 触发，对着 <code>sbraveyoung.github.io</code> 发一个 <code>repository_dispatch</code>；</li>
+<li>github.io 的 deploy workflow 跑起来，checkout 三仓库、编 gobog、渲染、commit；</li>
+<li>GitHub Pages 检测到主分支更新，CDN 几秒内刷新；</li>
+<li>sbrave.cn 上看到新文章。</li>
+</ol>
+<p>从 <code>Cmd+S</code> 到线上看到，端到端一般 1～2 分钟。比老方案的&quot;等容器重启&quot;快不少，关键是<strong>全自动</strong>。</p>
+<h3>几个有意思的设计决策</h3>
+<h4>为什么把渲染放在 github.io，而不是 blog？</h4>
+<p>直觉上，blog 仓库自己 build 完直接 push HTML 到 github.io 似乎更直接。但反过来更好：</p>
+<ul>
+<li><strong>secret 的爆炸半径更小</strong>。blog 仓库只需要一个能 dispatch 事件的窄 PAT；真正能写入 github.io 的 token 留在 github.io 自己的 workflow 里；</li>
+<li><strong>github.io 自包含</strong>。任何时候打开它的 Actions 页都能手动重跑——比如换主题、强制重建——不需要碰 blog 仓库；</li>
+<li><strong>避免循环依赖</strong>。blog 仓库 push HTML 到 github.io，github.io 又是 blog 引用图片的地方，这种相互依赖在 CI 里很容易绕进去。把&quot;渲染逻辑&quot;统一收在消费方（github.io），契约只剩下&quot;blog 内容更新了&quot;这一个事件。</li>
+</ul>
+<h4>为什么不用 hexo / Hugo / 11ty / Astro？</h4>
+<p>我承认它们都很好。但是：</p>
+<ul>
+<li>gobog 是我自己写的——出问题我心里有数，要加什么改什么手起刀落。十年之内，&quot;用 hexo 的某个特定版本&quot;未必比&quot;用我自己 200 行的 Go&quot;更可持续；</li>
+<li>gobog 的 wikilink / Obsidian 嵌图解析跟我的写作习惯完全对齐。换主流引擎要么写一堆 plugin，要么放弃 Obsidian 风格；</li>
+<li>&quot;自己造一个轮子&quot;——那个老 CSDN 时代起就刻在骨子里的小执拗，<del>改不掉了</del>。</li>
+</ul>
+<h4>主题为什么要做三个？</h4>
+<p>实话实说，<strong>两个就够了</strong>——浅色（minimal）+ 暖色（sepia）。但做到第二个时发现，因为 HTML 模板和 JS 都是抽出来共享的，多加一个 ocean 只是再写 80 行 CSS 变量的事。代价小，可玩性大，就放进来了。</p>
+<h4>Obsidian 插件为什么不直接用 git CLI 包一层？</h4>
+<p>社区里已经有 <a href="https://github.com/Vinzent03/obsidian-git">obsidian-git</a> 这种通用插件。但那个插件的工作粒度是<strong>整个 vault</strong>，对我来说太粗——我的 vault 里除了博客还有 OKR、读书笔记、随手的 scratch，这些东西不该被推到公开仓库。把同步范围限定到&quot;vault 里的某一个子目录&quot;是这次插件存在的核心理由，所以索性自己写。</p>
+<h3>接下来想做的</h3>
+<ul>
+<li>评论：现在还没接，可能找个轻量方案，比如 utterances（基于 GitHub Issues）；</li>
+<li>站内搜索：目前是 server 模式才能用，静态站点上还没接客户端搜索（比如 lunr.js），下一版加；</li>
+<li>RSS：原本就有 <code>atom.xml</code>，但还没好好测过订阅器兼容性；</li>
+<li>移动端：themes 的响应式只到能用的程度，还有调优空间。</li>
+</ul>
+<p>折腾博客这件事，从大学第一次开 CSDN 到现在快十年了。每次写&quot;我的博客演进历程&quot;的时候，写作引擎换了，发布方式换了，连&quot;博客&quot;在我心里的定义都换了——从&quot;知识的搬运&quot;到&quot;思考的存档&quot;。</p>
+<p>但写下去这件事没变，挺好的。</p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>sbraveyoung · 字里行间</title>
+<meta name="description" content="一个程序员的笔记本：技术拆解、踩坑总结、生活随笔。">
+<link rel="alternate" type="application/atom+xml" href="/__themes/tufte/atom.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2026 · 阅读 · 实践 · 思考</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/" class="active"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/" class="">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <div class="layout">
+    <section class="main-col">
+      
+        <div class="kicker">section</div>
+        <h1 class="page-title">数据库系列</h1>
+      
+
+      
+      <article class="entry">
+        <div class="kicker">
+          2018-08-02
+          · §01
+        </div>
+        <h2 class="entry-title">
+          <a href="/__themes/tufte/post/de570784/d87d70ee">数据库的事务及隔离级别</a>
+          
+          
+        </h2>
+        <p class="entry-summary">在操作数据库时，经常需要将一系列操作打包成一个原子操作：要么全部执行，要么全部不执行。一个最常被用来举例子的场景是银行转账问题，假设有两个用户 A 和 B，A 要向 B 转账 100 元需要进行以下操作： 查询 A 的余额； 若余额大于 100，则减去 100，并写回数据库； B 的余额加上 100，并写回数据库； 这…</p>
+        <div class="entry-meta">
+          6 min · 1252 words
+        </div>
+      </article>
+      
+      <article class="entry">
+        <div class="kicker">
+          2016-08-23
+          · §02
+        </div>
+        <h2 class="entry-title">
+          <a href="/__themes/tufte/post/de570784/92fe9da2">浅谈数据库的索引</a>
+          
+          
+        </h2>
+        <p class="entry-summary">我们知道，数据库的分类有关系型数据库和非关系型数据库。关系型数据库的代表是MySQL。这里我们不谈关系型和非关系型的区别于联系，只侧重于讲讲关系型数据库的索引实现原理。 之所以称为关系型数据库，是因为它记录了各种数据之间的“关系”，我们可以形象地将若干个属性它看做一张表，一个数据库有若干个这样的表，这些表之间靠某些共有…</p>
+        <div class="entry-meta">
+          4 min · 808 words
+        </div>
+      </article>
+      
+    </section>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>This notebook follows Edward Tufte's <em>side-note</em> convention. Footnotes and marginalia float into this column instead of the bottom of the page.</p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags, by weight</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">colophon</div>
+        <p>set in <em>IBM Plex Serif</em>. built with <a href="https://github.com/sbraveyoung/gobog">gobog</a>.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung.</span>
+  <span><a href="/__themes/tufte/atom.xml">atom feed</a> · <a href="/__themes/tufte/sitemap.xml">sitemap</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>算法系列 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-group">
+  <nav class="crumbs"><a href="/__themes/ocean/">Home</a><span>›</span><span>算法系列</span></nav>
+  <header class="group-head">
+    <h1>算法系列</h1>
+    <p class="group-count">7 篇</p>
+  </header>
+
+  <section class="post-list">
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/cf4cc8e2/5dc644dc">动态规划算法</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">最近忙于校招，好长时间没写博客了。鉴于这几天的笔试特别多，而且很多的笔试题和动态规划算法相关，因此再次复习复习这个算法。 动态规划算法的关键之处在于用一个一维或二维数组来保存已经计算出来的结果，避免了重复的计算，因此将很多指数级的时间复杂度降低到了多项式级别。而光满足这一点还不能称之为动态规划，最多只能称为“记忆搜索”…</p>
+      <div class="entry-meta">
+        <span>2016-09-19 14:22:54</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/cf4cc8e2/2da0528d">KMP算法</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">众所周知，KMP 算法的作用是匹配字符串，比如在一个文本编辑器中查找符合某一模式的所有字符等。 就我认为，这个算法还是比较难的，反正我是看了好长时间都没懂，哈哈~ 今天看了《算法导论》中关于该算法的部分，对求 next 数组部分不是特别理解，参考了网上的某些文章(地址已失效)，他这篇文章的分析确实不错，但代码部分有些缺…</p>
+      <div class="entry-meta">
+        <span>2016-08-05 12:48:41</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/782f445a">求给定数组的最大子数组</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">话说前天晚上被网易虐的也是够惨，3道编程题做出来两道，一个运行超时，一个通过率为70%。其实考的是动态规划之类的东西，只可惜我当时没有好好学。虽然牛客网服务器挂了导致考试延长一个小时，但这对我并没有什么实质帮助，不会还是不会呀。 今天开始啃《算法导论》，每天一个算法，坚持！ 简单看了下分治这一节，照着书上的思想敲出了”…</p>
+      <div class="entry-meta">
+        <span>2016-08-04 13:58:03</span>
+        <span>· 3 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/cf4cc8e2/43d00a99">选择排序</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">我个人认为冒泡排序和选择排序真是一对孪生兄弟，因为我总感觉这两个算法的思想很像，时间复杂度也相同。但其实他们的算法思想是不同的。 冒泡排序是从前往后逐个比较相邻的元素，从而使得最大的元素”冒”到数组的最右边。 而选择排序则是将某一个元素与其余所有元素相比较，选出一个最小/最大的元素放在当前位置。 代码如下： 在[这里]…</p>
+      <div class="entry-meta">
+        <span>2016-08-01 17:23:15</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/cf4cc8e2/14e6f1eb">冒泡排序</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">冒泡排序可以说是最简单的一种排序了，其核心思想是： 每次比较相邻的两个数，若后面的比前面大，则交换之； 重复以上步骤，直到所有数都有序为止。 代码如下： 可以看出，冒泡排序采用了比较相邻数字的做法，所以时间复杂度为O(n&lt;sup&gt;2&lt;/sup&gt;)。事实上，所有基于位置的比较排序的时间复杂度都逃不了O(n&lt;sup&gt;2&lt;/…</p>
+      <div class="entry-meta">
+        <span>2016-07-31 17:10:16</span>
+        <span>· 2 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/cf4cc8e2/56292c42">九章算法答案(上)</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">一 1\. 实现一个memcpy函数。 2\. STL中vector的实现原理（衍生：Map/Set的实现原理） vector即一个对象，含有_start,_end和_finish成员变量，这三个成员变量共同管理着一个堆上的数组空间。_start指向数组头，_end指向有效元素的尾部，_finish指向整个空间的尾部。…</p>
+      <div class="entry-meta">
+        <span>2016-07-18 10:32:42</span>
+        <span>· 27 min</span>
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/__themes/ocean/post/cf4cc8e2/e667fb74">浅谈STL</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">由于我刚开始学习系统的写博客，个人方面不管是能力还是经验都会有所欠缺，所以肯定会有很多不完善的地方，包括结构安排、**要点遗漏、知识错误**等等，还请各位批判着看，如有问题，恳请斧正，我将十分感激！ STL(Stardand Template Library)，即标准模板库的简称。于 1994 年 2 月正式成为 AN…</p>
+      <div class="entry-meta">
+        <span>2016-06-23 23:25:32</span>
+        <span>· 15 min</span>
+        
+      </div>
+    </article>
+    
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

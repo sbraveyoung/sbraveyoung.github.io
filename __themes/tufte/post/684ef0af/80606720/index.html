@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>面试题30：最小的K个数 · sbraveyoung · 字里行间</title>
+<meta name="description" content="题目：输入n个整数，找出其中最小的前K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4.** 分析 这是一道很经典的topK问题。前段时间我在参加360实习生面试的时候就考到了这个问题。主要解决方法如下： 排序 基于partition函数 堆(或红黑树) 这三种方法的推荐指数依次…">
+<meta property="og:title" content="面试题30：最小的K个数">
+<meta property="og:description" content="题目：输入n个整数，找出其中最小的前K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4.** 分析 这是一道很经典的topK问题。前段时间我在参加360实习生面试的时候就考到了这个问题。主要解决方法如下： 排序 基于partition函数 堆(或红黑树) 这三种方法的推荐指数依次…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/684ef0af/80606720">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2016 · NO. §802</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/__themes/tufte/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · June 22, 2016
+      </div>
+      <h1 class="article-title">面试题30：最小的K个数</h1>
+      <p class="article-lede">题目：输入n个整数，找出其中最小的前K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4.** 分析 这是一道很经典的topK问题。前段时间我在参加360实习生面试的时候就考到了这个问题。主要解决方法如下： 排序 基于partition函数 堆(或红黑树) 这三种方法的推荐指数依次…</p>
+      <div class="article-meta">
+        <span>4 min read</span>
+        <span>·</span>
+        <span>802 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>面试题30：最小的K个数</h2>
+<p><strong>题目：输入n个整数，找出其中最小的前K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4.</strong></p>
+<hr />
+<h3>分析</h3>
+<p>这是一道很经典的topK问题。前段时间我在参加360实习生面试的时候就考到了这个问题。主要解决方法如下：</p>
+<ul>
+<li>排序</li>
+<li>基于partition函数</li>
+<li>堆(或红黑树)</li>
+</ul>
+<p>这三种方法的推荐指数依次递增。</p>
+<ul>
+<li>排序</li>
+</ul>
+<p>思路很简单，将数组排序后，返回其前K个数即可。由于排序最好的算法时间复杂度为O(nlgn)。所以这种方法的时间复杂度也是O(nlgn)。对于n远大于K的情况，时间效率不是很理想。代码略。</p>
+<ul>
+<li>partition函数</li>
+</ul>
+<p>受益于快速排序的启发，我们可以利用快排中的partition函数来完成。由于一趟partition函数可以确定一个数的最终位置，所以当这个数的下标为K时，返回前面K个数即可。由于返回的前K个数没有排序，所以效率较上一种方法高。因为题目只要求返回前K个数字即可，并没有要求是排序的，所以这种方法是合理的。时间复杂度为O(n)。</p>
+<p>代码如下：</p>
+<pre><code>template&lt;typename T&gt;
+void Partition(vector&lt;T&gt;&amp;amp; v,int left,int right,int k)
+{
+    if(left&gt;=right-1)
+        return;
+    T tmp=v[left];
+    int i=left,j=right-1;
+    while(i&lt;j)
+    {
+        while(i&lt;j &amp;amp;&amp;amp; v[j]&gt;=tmp)
+            j--;
+        swap(v[i],v[j]);
+        while(i&lt;j &amp;amp;&amp;amp; v[i]&lt;=tmp)
+            i++;
+        swap(v[i],v[j]);
+    }
+    if(i==k)
+        return;
+    else if(i&lt;k)
+        Partition(v,i+1,right,k);
+    else
+        Partition(v,left,i,k);
+}
+
+template&lt;typename T&gt;
+vector&lt;T&gt; GetLeastNumbers(vector&lt;T&gt; v,int k)
+{
+    if(k&gt;v.size())
+        return v;
+    Partition(v,0,v.size(),k);
+    return vector&lt;T&gt;(v.begin(),v.begin()+k);
+}
+</code></pre>
+<ul>
+<li>堆或红黑树</li>
+</ul>
+<p>这是三种方法中最优的。因为其时间复杂度只有O(nlgK)。在K远小于n时，特别适合于处理海量数据。具体思想如下：因为题目要求找出最小的K个数，我们可以用数组中前K个数建立一个含有K个元素的最大堆，这个堆里面保存的是当前最小的K个数。然后遍历数组中剩下的数字。如果大于堆中的最大值（堆顶元素），说明当前值大于堆中的所有数字，不可能是前K个数字之一。反之如果当钱数字小于堆中最大值，则将最大值pop出去，将当前值插入。由于获取堆顶元素时间复杂度为O(1),插入元素为O(lgK)，并且需要遍历一遍长度我n的数组，因此总的时间复杂度为O(nlgK)。</p>
+<p>代码如下：</p>
+<pre><code>template&lt;typename T&gt;
+vector&lt;T&gt; GetLeastNumbers(vector&lt;T&gt; v,int k)
+{
+    //堆
+    if(k&gt;v.size())
+        return v;
+    make_heap(v.begin(),v.begin()+k);
+    int i;
+    for(i=k;i&lt;v.size();++i)
+    {
+        if(v[i]&gt;v[0])
+            continue;
+        else
+        {
+            swap(v[i],v[0]);
+            make_heap(v.begin(),v.begin()+k);
+        }
+    }
+    return vector&lt;T&gt;(v.begin(),v.begin()+k);
+}
+template&lt;typename T&gt;
+vector&lt;T&gt; GetLeastNumbers(vector&lt;T&gt; v,int k)
+{
+    //红黑树
+    if(k&gt;v.size())
+        return v;
+    multiset&lt;T&gt; ms;
+    int i;
+    for(i=0;i&lt;v.size();++i)
+    {
+        if(ms.size()&lt;k)
+        {
+            ms.insert(v[i]);
+        }
+        else
+        {
+            if(v[i]&lt;*ms.begin())
+            {
+                ms.erase(ms.begin());
+                ms.insert(v[i]);
+            }
+        }
+        typename multiset&lt;T&gt;::iterator it=ms.begin();
+    }
+    return vector&lt;T&gt;(ms.begin(),ms.end());
+}
+</code></pre>
+<p><strong>以上</strong></p>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码及测试用例在github上：<a href="https://github.com/SmartBrave/Sword-to-Offer/blob/master/30_KLeastNumbers/main.cpp">点我前往</a></p>
+<div>[来自为知笔记(Wiz)](http://www.wiz.cn/i/96171253 "来自为知笔记(Wiz)")</div>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2016-06-22<br>
+          <em>read in</em> 4 min<br>
+          <em>words</em> 802<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2016 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/684ef0af/80606720">https://sbrave.cn/post/684ef0af/80606720</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

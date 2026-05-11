@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>红黑树 · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<link rel="canonical" href="https://sbrave.cn/post/e660f1d5/f89cb603">
+<meta name="description" content="当我们在使用二叉搜索树时，如果树的高度较高，对其的操作并不比对链表操作要快。原因是二叉搜索树在插入顺序基本有序时会退化为一个排序链表，所以说是不平衡的。 对二叉搜索树的改进有 AVL 树和红黑树。先来看红黑树，它广泛应用在 STL 的 set 和 map，Java 库和 Linux 内核中。 红黑树是一颗平衡的二叉搜索…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="红黑树">
+<meta property="og:url" content="https://sbrave.cn/post/e660f1d5/f89cb603">
+<meta property="og:description" content="当我们在使用二叉搜索树时，如果树的高度较高，对其的操作并不比对链表操作要快。原因是二叉搜索树在插入顺序基本有序时会退化为一个排序链表，所以说是不平衡的。 对二叉搜索树的改进有 AVL 树和红黑树。先来看红黑树，它广泛应用在 STL 的 set 和 map，Java 库和 Linux 内核中。 红黑树是一颗平衡的二叉搜索…">
+
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<div class="reading-progress" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-post">
+  <article class="post">
+    
+    <header class="post-head">
+      <div class="post-meta">
+        
+        
+        
+        <span>2016-08-07 11:29:09</span>
+        <span>· 870 字</span>
+        <span>· 4 min</span>
+        
+      </div>
+    </header>
+
+    <div class="post-body"><h2>红黑树</h2>
+<p>当我们在使用二叉搜索树时，如果树的高度较高，对其的操作并不比对链表操作要快。原因是二叉搜索树在插入顺序基本有序时会退化为一个排序链表，所以说是不平衡的。</p>
+<p>对二叉搜索树的改进有 AVL 树和红黑树。先来看红黑树，它广泛应用在 STL 的 set 和 map，Java 库和 Linux 内核中。</p>
+<p>红黑树是一颗平衡的二叉搜索树，它在每个节点上增加了一个存储位来表示节点的颜色，可以是 RED 或 BLANK。通过对任何一条从根节点到叶子节点的简单路径上各个节点的颜色进行约束，红黑树确保没有一条路径会比其他路径长出 2 倍，因而是近似平衡的。</p>
+<p>红黑树的约束如下：</p>
+<ul>
+<li>每个节点要么是红色的，要么是黑色的；</li>
+<li>根节点是黑色的；</li>
+<li>如果一个节点是红色的，那么它的两个子节点都是黑色的；</li>
+<li>对每个节点，从该节点到其所有后代叶子节点的简单路径上，均包含数目相同的黑色节点；</li>
+<li>每个叶子节点是黑色的(这里的叶子节点指的是 NIL 节点，即空节点)。</li>
+</ul>
+<p>红黑树的插入操作步骤如下：</p>
+<ul>
+<li>先按照搜索树的步骤将节点插入到相应位置，并置该节点颜色为红色。设该节点指针为 cur；</li>
+<li>如果破坏了以上某些条件，则对该树进行相应的调整，步骤如下：
+<ul>
+<li>情况1：若 cur 的父亲结点和叔叔节点都为红色，则进行红色提升；</li>
+<li>情况2：若父红叔黑或叔叔不存在，且 cur 为其父节点的右孩子，则令 cur = parent 并以父节点为根进行旋转；</li>
+<li>情况3：若父红叔黑或叔叔不存在，且 cur 为其父节点的左孩子，则将父节点变为黑色，祖父节点变为红色并以祖父节点为根进行旋转；</li>
+</ul>
+</li>
+</ul>
+<p>代码如下：</p>
+<pre><code class="language-C">#pragma once
+
+#include&lt;iostream&gt;
+using namespace std;
+
+enum Color
+{
+    RED,
+    BLANK,
+};
+
+template&lt;typename K,typename V&gt;
+struct RBTreeNode{
+    K _key;
+    V _value;
+
+    RBTreeNode&lt;K,V&gt;* _left;
+    RBTreeNode&lt;K,V&gt;* _right;
+    RBTreeNode&lt;K,V&gt;* _parent;
+
+    Color _color;
+
+    RBTreeNode(const K&amp; key=K(),const V&amp; value=V())
+        :_key(key),_value(value)
+         ,_left(NULL),_right(NULL)
+         ,_parent(NULL)
+         ,_color(RED)
+    {}
+};
+
+template&lt;typename K,typename V&gt;
+class RBTree{
+    typedef RBTreeNode&lt;K,V&gt; Node;
+
+public:
+    RBTree()
+        :_root(nil)
+    {}
+
+    bool Insert(const K&amp; key,const V&amp; value)
+    {
+        Node* s=new Node(key,value);
+        Node* parent=nil;
+        Node* cur=_root;
+        while(cur!=nil)
+        {
+            parent=cur;
+            if(cur-&gt;_key&gt;cur-&gt;_key)
+                cur=cur-&gt;_left;
+            else
+                cur=cur-&gt;_right;
+        }
+        cur-&gt;_parent=parent;
+        if(parent==nil)
+            _root=s;
+        else if(s-&gt;_key&gt;parent-&gt;_key)
+            parent-&gt;_right=s;
+        else 
+            parent-&gt;_left=s;
+        s-&gt;_left=s-&gt;_right=nil;
+        //s-&gt;_color=RED;
+        RB_INSERT_FIX(s);
+    }
+
+    bool Remove(const K&amp; key);
+    Node* Find(const K&amp; key);
+    bool IsBalance();
+
+protected:
+    void RotateL(Node* root)
+    {
+        if(root==NULL)
+            return;
+        Node* parent=root;
+        Node* subR=parent-&gt;_right;
+        Node* subRL=subR-&gt;_left;
+        parent-&gt;_right=subRL;
+        if(subRL!=NULL)
+            subRL-&gt;_parent=parent;
+        Node* ppNode=parent-&gt;_parent;
+        subR-&gt;_left=parent;
+        parent-&gt;_parent=subR;
+        if(ppNode!=NULL)
+        {
+            if(ppNode-&gt;_left==parent)
+                ppNode-&gt;_left=subR;
+            else
+                ppNode-&gt;_right=subR;
+        }
+        else
+        {
+            _root=subR;
+        }
+        subR-&gt;_parent=ppNode;
+        parent-&gt;_bf = subR-&gt;_bf = 0;
+    }
+
+    void RotateR(Node* root)
+    {
+        if(root==NULL)
+            return;
+        Node* parent=root;
+        Node* subL=parent-&gt;_left;
+        Node* subLR=subL-&gt;_right;
+        parent-&gt;_left=subLR;
+        if(subLR!=NULL)
+            subLR-&gt;_parent=parent;
+        Node* ppNode=parent-&gt;_parent;
+        subL-&gt;_right=parent;
+        parent-&gt;_parent=subL;
+        if(ppNode!=NULL)
+        {
+            if(ppNode-&gt;_left==parent)
+                ppNode-&gt;_left=subL;
+            else
+                ppNode-&gt;_right=subL;
+        }
+        else
+        {
+            _root=subL;
+        }
+        subL-&gt;_parent=ppNode;
+        parent-&gt;_bf = subL-&gt;_bf = 0;
+    }
+
+    void RB_INSERT_FIX(Node* cur)
+    {
+        while(cur-&gt;_parent._color==RED)
+        {
+            Node* parent=cur-&gt;_parent;
+            Node* grandfather=parent-&gt;_parent;
+            Node* uncle;
+            if(parent=grandfather-&gt;_left)
+            {
+                uncle=grandfather-&gt;_right;
+                if(uncle-&gt;_color=RED)
+                {
+                    parent-&gt;_color=BLANK;
+                    uncle-&gt;_color=BLANK;
+                    grandfather-&gt;_color=RED;
+                    cur=grandfather;
+                }
+                else if(cur=parent-&gt;_right)
+                {
+                    cur=parent;
+                    rotateL(cur);
+                }
+                else
+                {
+                    parent-&gt;_color=BLANK;
+                    grandfather-&gt;_color=RED;
+                    rotateR(grandfather);
+                }
+            }
+            else
+            {
+                uncle=grandfather-&gt;_left;
+                if(uncle-&gt;_color=RED)
+                {
+                    parent-&gt;_color=BLANK;
+                    uncle-&gt;_color=BLANK;
+                    grandfather-&gt;_color=RED;
+                    cur=grandfather;
+                }
+                else if(cur=parent-&gt;_left)
+                {
+                    cur=parent;
+                    rotateR(cur);
+                }
+                else
+                {
+                    parent-&gt;_color=BLANK;
+                    grandfather-&gt;_color=RED;
+                    rotateL(grandfather);
+                }
+            }
+        }
+        _root-&gt;_color=BLANK;
+    }
+
+private:
+    Node* _root;
+    static Node* nil;
+};
+
+template&lt;typename K,typename V&gt;
+RBTreeNode&lt;K,V&gt;* RBTree&lt;K,V&gt;::nil=new RBTreeNode&lt;K,V&gt;();
+</code></pre>
+<p>如果你有任何想法或是可以改进的地方，欢迎和我交流！</p>
+<p>完整代码在github上：<a href="https://github.com/SmartBrave/DataStruct/blob/master/RBTree/RBTree.h">点我前往</a></p>
+</div>
+
+    <footer class="post-foot">
+      <a class="back-home" href="/__themes/ocean/">← back</a>
+    </footer>
+  </article>
+</main>
+
+<!-- Floating TOC: button bottom-right, drawer slides in from the right.
+     Works identically across viewports. JS hides the button entirely when
+     the article has fewer than 3 headings (no point of navigation). -->
+<button class="toc-toggle" type="button" aria-controls="post-toc" aria-expanded="false" aria-label="Open table of contents" hidden>
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h10"/>
+  </svg>
+</button>
+<aside class="post-toc" id="post-toc" hidden aria-label="Table of contents">
+  <header class="post-toc-head">
+    <h2>目录 · Contents</h2>
+    <button class="toc-close" type="button" aria-label="Close">✕</button>
+  </header>
+  <ol class="post-toc-list"></ol>
+</aside>
+<div class="toc-backdrop" hidden></div>
+
+
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>
