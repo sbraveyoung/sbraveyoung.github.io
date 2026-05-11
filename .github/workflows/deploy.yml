@@ -109,7 +109,7 @@ jobs:
           cat > _gobog.toml <<EOF
           [blog]
           domain = "${DOMAIN:-https://sbrave.cn}"
-          title = "${TITLE:-sbraveyoung 的代码笔记}"
+          title = "${TITLE:-字里行间}"
           subtitle = "${SUBTITLE:-阅读 · 实践 · 思考}"
           description = "${DESCRIPTION:-一个程序员的笔记本：技术拆解、踩坑总结、生活随笔。}"
           author = "${AUTHOR:-sbraveyoung}"

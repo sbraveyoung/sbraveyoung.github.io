@@ -1,5 +1,7 @@
 # sbraveyoung.github.io
 
+**[English](./README.md)** | [简体中文](./README.zh-CN.md)
+
 Public mirror of <https://sbrave.cn>. The repo is **machine-managed** —
 its contents are rebuilt on every push to [`sbraveyoung/blog`](https://github.com/sbraveyoung/blog)
 and committed by the deploy workflow.
