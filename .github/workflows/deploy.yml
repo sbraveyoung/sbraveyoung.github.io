@@ -168,12 +168,22 @@ jobs:
       - name: Render site
         run: ./_bin/gobog -config _gobog.toml -export _dist
 
+      - name: Sanity check rendered output
+        # Warnings only by default — dead links / orphan images don't
+        # block the deploy. To make findings fatal, set the env var
+        # CHECK_EXPORT_FATAL=1 above this step.
+        env:
+          CHECK_EXPORT_FATAL: '0'
+        run: bash scripts/check-export.sh _dist
+
       - name: Replace working tree with rendered output
         run: |
-          # Wipe everything except the .git/.github/_gobog.json/CNAME so the
-          # commit reflects the rendered site exactly. Keep workflow files.
+          # Wipe everything except .git, .github, _gobog.json, scripts/
+          # and the temporary build dirs so the commit reflects the
+          # rendered site exactly. scripts/ holds check-export.sh, which
+          # the previous step needs to survive across deploys.
           shopt -s extglob
-          rm -rf !(\.git|\.github|_gobog.json|_dist|_blog|_gobog|_bin|_data|_gobog.toml)
+          rm -rf !(\.git|\.github|_gobog.json|scripts|_dist|_blog|_gobog|_bin|_data|_gobog.toml)
           # Move rendered files into the repo root.
           shopt -s dotglob
           cp -a _dist/. .
