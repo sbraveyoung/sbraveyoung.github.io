@@ -69,6 +69,27 @@ jobs:
           echo "description=$description" >> "$GITHUB_OUTPUT"
           echo "cname=$cname" >> "$GITHUB_OUTPUT"
 
+          # Comments (giscus). Each field defaults to empty so the
+          # gobog config block stays valid even with comments off.
+          comments_enabled=$(jq -r '.comments.enabled // false'    _gobog.json 2>/dev/null || echo false)
+          comments_repo=$(jq -r    '.comments.repo // empty'       _gobog.json 2>/dev/null || echo "")
+          comments_repo_id=$(jq -r '.comments.repo_id // empty'    _gobog.json 2>/dev/null || echo "")
+          comments_cat=$(jq -r     '.comments.category // empty'   _gobog.json 2>/dev/null || echo "")
+          comments_cat_id=$(jq -r  '.comments.category_id // empty' _gobog.json 2>/dev/null || echo "")
+          comments_mapping=$(jq -r '.comments.mapping // "pathname"' _gobog.json 2>/dev/null || echo "pathname")
+          comments_reactions=$(jq -r '.comments.reactions_enabled // "1"' _gobog.json 2>/dev/null || echo "1")
+          comments_input=$(jq -r   '.comments.input_position // "bottom"' _gobog.json 2>/dev/null || echo "bottom")
+          {
+            echo "comments_enabled=$comments_enabled"
+            echo "comments_repo=$comments_repo"
+            echo "comments_repo_id=$comments_repo_id"
+            echo "comments_cat=$comments_cat"
+            echo "comments_cat_id=$comments_cat_id"
+            echo "comments_mapping=$comments_mapping"
+            echo "comments_reactions=$comments_reactions"
+            echo "comments_input=$comments_input"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Checkout sbraveyoung/blog
         uses: actions/checkout@v4
         with:
@@ -105,11 +126,19 @@ jobs:
           AUTHOR: ${{ steps.cfg.outputs.author }}
           DESCRIPTION: ${{ steps.cfg.outputs.description }}
           CNAME: ${{ steps.cfg.outputs.cname }}
+          COMMENTS_ENABLED: ${{ steps.cfg.outputs.comments_enabled }}
+          COMMENTS_REPO: ${{ steps.cfg.outputs.comments_repo }}
+          COMMENTS_REPO_ID: ${{ steps.cfg.outputs.comments_repo_id }}
+          COMMENTS_CAT: ${{ steps.cfg.outputs.comments_cat }}
+          COMMENTS_CAT_ID: ${{ steps.cfg.outputs.comments_cat_id }}
+          COMMENTS_MAPPING: ${{ steps.cfg.outputs.comments_mapping }}
+          COMMENTS_REACTIONS: ${{ steps.cfg.outputs.comments_reactions }}
+          COMMENTS_INPUT: ${{ steps.cfg.outputs.comments_input }}
         run: |
           cat > _gobog.toml <<EOF
           [blog]
           domain = "${DOMAIN:-https://sbrave.cn}"
-          title = "${TITLE:-字里行间}"
+          title = "${TITLE:-sbraveyoung · 字里行间}"
           subtitle = "${SUBTITLE:-阅读 · 实践 · 思考}"
           description = "${DESCRIPTION:-一个程序员的笔记本：技术拆解、踩坑总结、生活随笔。}"
           author = "${AUTHOR:-sbraveyoung}"
@@ -123,6 +152,16 @@ jobs:
           addrs = ""
           [data]
           dir = "_data"
+          [comments]
+          enabled = ${COMMENTS_ENABLED:-false}
+          provider = "giscus"
+          repo = "${COMMENTS_REPO}"
+          repo_id = "${COMMENTS_REPO_ID}"
+          category = "${COMMENTS_CAT}"
+          category_id = "${COMMENTS_CAT_ID}"
+          mapping = "${COMMENTS_MAPPING:-pathname}"
+          reactions_enabled = "${COMMENTS_REACTIONS:-1}"
+          input_position = "${COMMENTS_INPUT:-bottom}"
           EOF
           cat _gobog.toml
 
