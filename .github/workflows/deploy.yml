@@ -12,6 +12,8 @@ name: Deploy
 # (When all three repos are public, the default GITHUB_TOKEN suffices for
 #  read; the PAT is mainly needed for the cross-repo checkouts when any
 #  side is private and for the commit back into this repo.)
+# See docs/AUTH.md for migration path to a GitHub App when a PAT stops
+# being convenient.
 
 on:
   repository_dispatch:
@@ -143,6 +145,27 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
 
+      - name: Source-side image dedupe check
+        # Warn when the same image basename lives in both _blog/image/
+        # (legacy) and _blog/resource/image/ (canonical). gobog copies
+        # both into _dist/image/, so a collision silently overwrites.
+        # Non-fatal — we only flag it so the author can pick one home.
+        if: steps.gate.outputs.skip != 'true'
+        run: |
+          legacy="_blog/image"
+          canon="_blog/resource/image"
+          if [ -d "$legacy" ] && [ -d "$canon" ]; then
+            comm -12 \
+              <(cd "$legacy" && find . -type f 2>/dev/null | sed 's|^./||' | sort -u) \
+              <(cd "$canon"  && find . -type f 2>/dev/null | sed 's|^./||' | sort -u) \
+              | while IFS= read -r f; do
+                  [ -z "$f" ] && continue
+                  echo "::warning::image basename collision: '$f' exists in both _blog/image/ and _blog/resource/image/ — the second copy will overwrite the first in _dist/image/"
+                done
+          else
+            echo "image-dedupe: only one of legacy/canonical image dirs present — nothing to check"
+          fi
+
       - name: Checkout sbraveyoung/gobog
         if: steps.gate.outputs.skip != 'true'
         uses: actions/checkout@v4
@@ -242,15 +265,24 @@ jobs:
           CHECK_EXPORT_FATAL: '0'
         run: bash scripts/check-export.sh _dist
 
+      - name: Index with pagefind
+        # Generates _dist/_pagefind/ — a static search index +
+        # bundled UI assets. themes/minimal pulls these in via
+        # /_pagefind/pagefind-ui.{css,js}. When the theme doesn't have
+        # search wired up, the directory is just unused dead bytes.
+        if: steps.gate.outputs.skip != 'true'
+        run: npx -y pagefind@latest --site _dist
+
       - name: Replace working tree with rendered output
         if: steps.gate.outputs.skip != 'true'
         run: |
-          # Wipe everything except .git, .github, _gobog.json, scripts/
-          # and the temporary build dirs so the commit reflects the
-          # rendered site exactly. scripts/ holds check-export.sh, which
-          # the previous step needs to survive across deploys.
+          # Wipe everything except .git, .github, _gobog.json, scripts/,
+          # docs/ and the temporary build dirs so the commit reflects
+          # the rendered site exactly. scripts/ holds check-export.sh,
+          # docs/ holds repo-level notes (AUTH.md etc.) — both must
+          # survive across deploys.
           shopt -s extglob
-          rm -rf !(\.git|\.github|_gobog.json|scripts|_dist|_blog|_gobog|_bin|_data|_gobog.toml)
+          rm -rf !(\.git|\.github|_gobog.json|scripts|docs|_dist|_blog|_gobog|_bin|_data|_gobog.toml)
           # Move rendered files into the repo root.
           shopt -s dotglob
           cp -a _dist/. .

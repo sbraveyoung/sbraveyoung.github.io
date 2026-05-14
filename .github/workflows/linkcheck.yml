@@ -1,0 +1,62 @@
+name: External link check
+
+# Weekly scan of every http(s):// reference in the deployed HTML. Dead
+# external links are surfaced as workflow annotations — the job never
+# fails, since rate-limited / momentarily-down third parties are
+# common false positives. Treat findings as a triage queue, not a
+# stop-the-world signal.
+#
+# To check more aggressively, run manually via workflow_dispatch with
+# `fatal=true` — the job will exit 1 if anything 4xx/5xx/timeout-ed.
+
+on:
+  schedule:
+    - cron: '0 7 * * 0'   # 07:00 UTC every Sunday
+  workflow_dispatch:
+    inputs:
+      fatal:
+        description: 'Fail the job on any dead link (default: false).'
+        required: false
+        default: 'false'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Find dead external links
+        env:
+          FATAL: ${{ github.event.inputs.fatal }}
+        run: |
+          set -u
+          # Collect unique http(s):// URLs from rendered HTML. Skip our
+          # own domain (covered by check-export.sh) and obvious local /
+          # placeholder hosts. Strip common trailing punctuation that
+          # leaks in from prose.
+          mapfile -t urls < <(
+            find . -name '*.html' -not -path './.git/*' -print0 \
+              | xargs -0 grep -hoE 'https?://[^"<>'\'' ]+' \
+              | sed 's/[).,;!?]*$//' \
+              | sort -u \
+              | grep -Ev '://(sbrave\.cn|localhost|127\.0\.0\.1|example\.(com|org))'
+          )
+          total=${#urls[@]}
+          dead=0
+          echo "linkcheck: scanning $total URLs"
+          for url in "${urls[@]}"; do
+            code=$(curl -ksS --max-time 15 -o /dev/null -w '%{http_code}' -L \
+              -A 'gobog-linkcheck/1.0 (+https://sbrave.cn)' "$url" 2>/dev/null || echo "000")
+            case "$code" in
+              2*|3*) ;;
+              # 401/403 happen for sites that block scrapers; not really dead.
+              401|403|429) echo "::notice::skipped (auth/rate-limit $code): $url" ;;
+              *) echo "::warning::dead external link: $url ($code)"; dead=$((dead+1)) ;;
+            esac
+          done
+          echo "linkcheck: total=$total dead=$dead"
+          if [ "${FATAL:-false}" = "true" ] && [ "$dead" -gt 0 ]; then
+            exit 1
+          fi
