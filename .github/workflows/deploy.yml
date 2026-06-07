@@ -145,8 +145,18 @@ jobs:
         # A raw `git clone` with no header is the simplest way to read a
         # public sister repo. Update the URL if blog ever goes private —
         # at that point switch to a fine-grained PAT scoped to it.
+        #
+        # The -c override is load-bearing: github.io's self-checkout set
+        # http.https://github.com/.extraheader to a basic-auth header
+        # in its .git/config. Because CWD is inside that working tree,
+        # the header would be inherited by this clone too — and rejected
+        # by the server (out-of-scope token), causing a CI-hostile
+        # credential prompt. Clearing it inline forces an anonymous
+        # request.
         if: steps.gate.outputs.skip != 'true'
-        run: git clone --depth=1 https://github.com/sbraveyoung/blog _blog
+        run: |
+          git -c http.https://github.com/.extraheader= \
+              clone --depth=1 https://github.com/sbraveyoung/blog _blog
 
       - name: Source-side image dedupe check
         # Warn when the same image basename lives in both _blog/image/
@@ -170,12 +180,19 @@ jobs:
           fi
 
       - name: Clone sbraveyoung/gobog @ pinned SHA (anonymous)
-        # Same reason as the blog clone above. `git fetch <sha>` works
-        # because github.com sets uploadpack.allowReachableSHA1InWant.
+        # Same reasoning as the blog clone above, including the inline
+        # extraheader override on every git invocation. `git fetch <sha>`
+        # works because github.com sets uploadpack.allowReachableSHA1InWant.
         # Always runs (not gated on cache-hit) because the render step
         # needs _gobog/themes/ regardless of whether we rebuild the
         # binary — only the `go build` itself is cached.
         if: steps.gate.outputs.skip != 'true'
+        env:
+          # Apply the override to every git command in this step via
+          # GIT_CONFIG_*, less noisy than -c on each line.
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: 'http.https://github.com/.extraheader'
+          GIT_CONFIG_VALUE_0: ''
         run: |
           mkdir -p _gobog
           cd _gobog
