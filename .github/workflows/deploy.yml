@@ -137,14 +137,16 @@ jobs:
             echo "comments_input=$comments_input"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Checkout sbraveyoung/blog
+      - name: Clone sbraveyoung/blog (anonymous)
+        # actions/checkout always sends an Authorization header. When the
+        # token is the workflow's own GITHUB_TOKEN, it only has access to
+        # this repo — GitHub returns 404 on /repos/sbraveyoung/blog as an
+        # anti-enumeration measure, and the action errors before fetch.
+        # A raw `git clone` with no header is the simplest way to read a
+        # public sister repo. Update the URL if blog ever goes private —
+        # at that point switch to a fine-grained PAT scoped to it.
         if: steps.gate.outputs.skip != 'true'
-        uses: actions/checkout@v4
-        with:
-          repository: sbraveyoung/blog
-          path: _blog
-          fetch-depth: 1
-          token: ${{ secrets.GITHUB_TOKEN }}
+        run: git clone --depth=1 https://github.com/sbraveyoung/blog _blog
 
       - name: Source-side image dedupe check
         # Warn when the same image basename lives in both _blog/image/
@@ -167,15 +169,20 @@ jobs:
             echo "image-dedupe: only one of legacy/canonical image dirs present — nothing to check"
           fi
 
-      - name: Checkout sbraveyoung/gobog
+      - name: Clone sbraveyoung/gobog @ pinned SHA (anonymous)
+        # Same reason as the blog clone above. `git fetch <sha>` works
+        # because github.com sets uploadpack.allowReachableSHA1InWant.
+        # Always runs (not gated on cache-hit) because the render step
+        # needs _gobog/themes/ regardless of whether we rebuild the
+        # binary — only the `go build` itself is cached.
         if: steps.gate.outputs.skip != 'true'
-        uses: actions/checkout@v4
-        with:
-          repository: sbraveyoung/gobog
-          ref: ${{ env.GOBOG_REF }}
-          path: _gobog
-          fetch-depth: 1
-          token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p _gobog
+          cd _gobog
+          git init -q
+          git remote add origin https://github.com/sbraveyoung/gobog
+          git fetch --depth=1 origin "$GOBOG_REF"
+          git checkout -q FETCH_HEAD
 
       - name: Cache gobog binary
         if: steps.gate.outputs.skip != 'true'
