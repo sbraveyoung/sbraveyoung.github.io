@@ -26,25 +26,23 @@ installation tokens. Steps below.
      - **Metadata: Read** (mandatory)
    - Where can this App be installed: "Only on this account".
 
-2. **Install** the App on the three repos it needs to act on:
-   - `sbraveyoung/blog`
-   - `sbraveyoung/sbraveyoung.github.io`
-   - `sbraveyoung/gobog`
+2. **Install** the App on the one repo it needs to act on:
+   `sbraveyoung/sbraveyoung.github.io` (target of the dispatch). The
+   github.io deploy workflow itself uses `GITHUB_TOKEN` for everything
+   and never sees the App; gobog is fetched anonymously (public).
 
 3. **Generate a private key** on the App's settings page; download the
    `.pem`.
 
-4. **Add two repository secrets** to *both* `sbraveyoung/blog` and
-   `sbraveyoung/sbraveyoung.github.io`:
+4. **Add two repository secrets** to `sbraveyoung/blog`:
 
    | Name             | Value                                  |
    | ---------------- | -------------------------------------- |
    | `GOBOG_APP_ID`   | numeric App ID                         |
    | `GOBOG_APP_PEM`  | entire `.pem` file contents (newlines intact) |
 
-5. **Update the workflows** to mint an installation token instead of
-   reading `GH_PAT`. In `sbraveyoung/blog/.github/workflows/deploy.yml`
-   replace the existing `Dispatch deploy event` step's auth header:
+5. **Update `sbraveyoung/blog/.github/workflows/deploy.yml`** to mint
+   an installation token instead of reading `GH_PAT`:
 
    ```yaml
    - name: Mint installation token
@@ -68,14 +66,12 @@ installation tokens. Steps below.
          -d '{"event_type":"blog-update","client_payload":{"sha":"${{ github.sha }}","ref":"${{ github.ref }}"}}'
    ```
 
-   In `sbraveyoung/sbraveyoung.github.io/.github/workflows/deploy.yml`
-   do the same at the top of the job and swap every
-   `${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}` for
-   `${{ steps.app-token.outputs.token }}`. The token expires after 1h
-   — the deploy runs much faster than that, so no renewal needed.
+   The token expires after 1h — the dispatch call is instantaneous,
+   so no renewal logic needed. `sbraveyoung.github.io`'s deploy
+   workflow needs no changes; it already runs on GITHUB_TOKEN alone.
 
 6. **Revoke the old PAT** at https://github.com/settings/tokens once
-   the App is verified working through a successful run.
+   the App is verified working through a successful dispatch.
 
 ## Why we haven't done this yet
 

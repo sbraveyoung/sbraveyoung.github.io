@@ -7,13 +7,14 @@ name: Deploy
 #   - workflow_dispatch — manual run, optionally with a theme override.
 #   - schedule — nightly safety-net rebuild.
 #
-# Required secret: GH_PAT — Fine-grained PAT with Contents: Read on
-# sbraveyoung/blog and sbraveyoung/gobog, and Read & Write on this repo.
-# (When all three repos are public, the default GITHUB_TOKEN suffices for
-#  read; the PAT is mainly needed for the cross-repo checkouts when any
-#  side is private and for the commit back into this repo.)
-# See docs/AUTH.md for migration path to a GitHub App when a PAT stops
-# being convenient.
+# Auth: the default GITHUB_TOKEN is all we need. It has
+# `contents: write` on this repo (commit-back + push), and sbraveyoung
+# owns blog + gobog publicly so cross-repo checkouts work without an
+# explicit token. GH_PAT is only required in sbraveyoung/blog's notify
+# workflow, where it has to call the dispatches API on this repo. If
+# any sister repo ever goes private, swap the affected `token:` lines
+# back to a Fine-grained PAT (or follow docs/AUTH.md for the GitHub
+# App migration).
 
 on:
   repository_dispatch:
@@ -48,7 +49,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 2  # need previous commit to read its message for the schedule short-circuit
-          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Schedule short-circuit
         # On the nightly cron, skip the whole build if neither blog
@@ -58,7 +59,7 @@ jobs:
         # and the current GOBOG_REF.
         id: gate
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ "${{ github.event_name }}" != "schedule" ] || [ "${{ github.event.inputs.force }}" = "true" ]; then
             echo "skip=false" >> "$GITHUB_OUTPUT"
@@ -143,7 +144,7 @@ jobs:
           repository: sbraveyoung/blog
           path: _blog
           fetch-depth: 1
-          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Source-side image dedupe check
         # Warn when the same image basename lives in both _blog/image/
@@ -174,7 +175,7 @@ jobs:
           ref: ${{ env.GOBOG_REF }}
           path: _gobog
           fetch-depth: 1
-          token: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Cache gobog binary
         if: steps.gate.outputs.skip != 'true'
@@ -292,9 +293,9 @@ jobs:
 
       - name: Commit + push if changed
         if: steps.gate.outputs.skip != 'true'
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # No token env needed — git inherits the credential helper that
+        # actions/checkout set up from GITHUB_TOKEN at the start of the
+        # job, which already has `contents: write` on this repo.
         run: |
           git config user.name  "gobog-deploy"
           git config user.email "gobog-deploy@users.noreply.github.com"
