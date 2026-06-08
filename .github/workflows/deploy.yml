@@ -137,26 +137,48 @@ jobs:
             echo "comments_input=$comments_input"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Clone sbraveyoung/blog (anonymous)
-        # actions/checkout always sends an Authorization header. When the
-        # token is the workflow's own GITHUB_TOKEN, it only has access to
-        # this repo — GitHub returns 404 on /repos/sbraveyoung/blog as an
-        # anti-enumeration measure, and the action errors before fetch.
-        # A raw `git clone` with no header is the simplest way to read a
-        # public sister repo. Update the URL if blog ever goes private —
-        # at that point switch to a fine-grained PAT scoped to it.
+      - name: Clone sister repos (anonymous, restore github.io auth after)
+        # github.io's self-checkout left an http.<url>.extraheader in
+        # this repo's .git/config so its end-of-job push back to origin
+        # works. That same header is inherited by *every* git command
+        # run with CWD inside this working tree — including the
+        # cross-repo clones below. Since the embedded token is scoped
+        # to github.io only, the server rejects it as out-of-scope for
+        # blog / gobog, returning 401 and triggering a credential
+        # prompt that has no TTY in CI (the classic "could not read
+        # Username" error).
         #
-        # The -c override is load-bearing: github.io's self-checkout set
-        # http.https://github.com/.extraheader to a basic-auth header
-        # in its .git/config. Because CWD is inside that working tree,
-        # the header would be inherited by this clone too — and rejected
-        # by the server (out-of-scope token), causing a CI-hostile
-        # credential prompt. Clearing it inline forces an anonymous
-        # request.
+        # Setting the header to an empty string via `-c key=` doesn't
+        # work — git still emits a literal `AUTHORIZATION:` header
+        # which the server reads as a malformed auth attempt. We have
+        # to *unset* the entry. Stash it, unset, clone anonymously,
+        # restore on EXIT so the final push at end-of-job still has
+        # credentials whether the clones succeeded or not.
         if: steps.gate.outputs.skip != 'true'
         run: |
-          git -c http.https://github.com/.extraheader= \
-              clone --depth=1 https://github.com/sbraveyoung/blog _blog
+          set -euo pipefail
+          saved=$(git config --local --get http.https://github.com/.extraheader || true)
+          git config --local --unset-all http.https://github.com/.extraheader 2>/dev/null || true
+          restore_auth() {
+            if [ -n "${saved:-}" ]; then
+              git config --local http.https://github.com/.extraheader "$saved"
+            fi
+          }
+          trap restore_auth EXIT
+
+          # blog: shallow clone of master.
+          git clone --depth=1 https://github.com/sbraveyoung/blog _blog
+
+          # gobog: pinned SHA. init + fetch-by-SHA works because
+          # github.com sets uploadpack.allowReachableSHA1InWant=true.
+          mkdir -p _gobog
+          (
+            cd _gobog
+            git init -q
+            git remote add origin https://github.com/sbraveyoung/gobog
+            git fetch --depth=1 origin "$GOBOG_REF"
+            git checkout -q FETCH_HEAD
+          )
 
       - name: Source-side image dedupe check
         # Warn when the same image basename lives in both _blog/image/
@@ -178,28 +200,6 @@ jobs:
           else
             echo "image-dedupe: only one of legacy/canonical image dirs present — nothing to check"
           fi
-
-      - name: Clone sbraveyoung/gobog @ pinned SHA (anonymous)
-        # Same reasoning as the blog clone above, including the inline
-        # extraheader override on every git invocation. `git fetch <sha>`
-        # works because github.com sets uploadpack.allowReachableSHA1InWant.
-        # Always runs (not gated on cache-hit) because the render step
-        # needs _gobog/themes/ regardless of whether we rebuild the
-        # binary — only the `go build` itself is cached.
-        if: steps.gate.outputs.skip != 'true'
-        env:
-          # Apply the override to every git command in this step via
-          # GIT_CONFIG_*, less noisy than -c on each line.
-          GIT_CONFIG_COUNT: '1'
-          GIT_CONFIG_KEY_0: 'http.https://github.com/.extraheader'
-          GIT_CONFIG_VALUE_0: ''
-        run: |
-          mkdir -p _gobog
-          cd _gobog
-          git init -q
-          git remote add origin https://github.com/sbraveyoung/gobog
-          git fetch --depth=1 origin "$GOBOG_REF"
-          git checkout -q FETCH_HEAD
 
       - name: Cache gobog binary
         if: steps.gate.outputs.skip != 'true'
