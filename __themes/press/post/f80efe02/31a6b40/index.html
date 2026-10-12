@@ -30,7 +30,7 @@
       <a href="/__themes/press/tag/">Tags</a>
       <a href="/__themes/press/archive">Archive</a>
       <a href="/__themes/press/about">About</a>
-      <a href="/__themes/press/atom.xml">RSS</a>
+      <a href="/atom.xml">RSS</a>
     </nav>
   </div>
 </header>
@@ -65,10 +65,10 @@
 <li>多级反馈队列调度算法：此算法设置了优先级不同的多个队列，为每个队列中进程分配的时间片也不一样，优先级和时间片成反比关系。在每个队列中采用 FCFS（先来先服务）算法。调度程序从优先级最高的队列开始调度，只有当优先级较高的队列为空时才可以调度优先级较低的队列中的进程。</li>
 </ul>
 <p>调度是根据进程的状态来进行的，一个进程的状态转移图如下，也就是进程的生命期：</p>
-<p><img src="../../../image/31a6b40-1.png" alt="|30%" /></p>
+<p><img src="/__themes/press/image/31a6b40-1.png" alt="|30%" /></p>
 <p>在 32 位系统下，CPU可寻址的范围是 $0\sim2^{32}-1$，每个进程都有自己独立的 4GB 地址空间，称为虚拟地址空间。自底向上分别为代码段、数据段（已初始化数据段和未初始化数据段）、堆、共享区、栈、命令行参数和环境变量区、内核区。其中内核区占据了 $\frac14 * 4GB=1GB$ 的空间，其余的用户区占了$\frac34 * 4GB=3GB$。</p>
 <p>具体见下图:（图片来自网络)</p>
-<p><img src="../../../image/31a6b40-2.jpg" alt="" /></p>
+<p><img src="/__themes/press/image/31a6b40-2.jpg" alt="" /></p>
 <h2>进程间通信</h2>
 <p>现代操作系统中，进程间通信的主要手段有：管道、FIFO、消息队列、共享内存、信号、信号量、socket。</p>
 <ul>

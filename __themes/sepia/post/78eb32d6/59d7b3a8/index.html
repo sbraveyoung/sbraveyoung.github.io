@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>golang 性能优化实践 · sbraveyoung · 字里行间</title>
 <link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
-<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
 <link rel="stylesheet" href="/__themes/sepia/css/main.css">
 <link rel="canonical" href="https://sbrave.cn/post/78eb32d6/59d7b3a8">
 <meta name="description" content="一、缘起 golang 作为一门 google 主导开发的语言，已经有十年光景了。在这期间，golang 一直朝着 &#34;high performence and easy writing&#34; 的目标在演进，从普及程度上看已经取得了良好的效果。在我们公司技术团队，也在将开发语言从 c++/python 等逐渐切换到 gola…">
@@ -39,7 +39,7 @@
     <nav class="site-nav">
       <a href="/__themes/sepia/">Home</a>
       <a href="/__themes/sepia/about">about</a>
-      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <a href="/atom.xml">RSS</a>
       <button class="lang-toggle icon-btn" type="button" aria-label="language">
         <span class="lang-zh">中</span><span class="lang-en">EN</span>
       </button>
@@ -61,7 +61,7 @@
         <span>2020-04-30 21:00:00</span>
         <span>· 2604 字</span>
         <span>· 11 min</span>
-        
+        <a class="tag" href="/__themes/sepia/tag/go">#go</a><a class="tag" href="/__themes/sepia/tag/golang">#golang</a><a class="tag" href="/__themes/sepia/tag/性能">#性能</a>
       </div>
     </header>
 
@@ -115,10 +115,10 @@ func update(){
 <h4>4. 缓存</h4>
 <p>前面提到，我们会请求某个下游接口获取 liveid 相关信息，这些信息都是固化的，不会再修改。因此可以使用缓存来减小时间消耗，也可以尽量避免下游接口抖动对上游的影响。</p>
 <p>我们实现了两级缓存：本地进程内缓存和 redis 缓存。redis 缓存的目的是多台机器共享，一个 liveid 由一个进程请求一次就可以了。本地缓存则会设定一个过期时间，配合 LFU 算法避免内存无限增长。流程图如下：</p>
-<p><img src="../../../image/59d7b3a8-x.png" alt="" /></p>
+<p><img src="/__themes/sepia/image/59d7b3a8-x.png" alt="" /></p>
 <h4>5. GC</h4>
 <p>为便于理解，这里先简要介绍下 golang 的垃圾回收过程：</p>
-<p><img src="../../../image/gogc.png" alt="" /></p>
+<p><img src="/__themes/sepia/image/gogc.png" alt="" /></p>
 <ol>
 <li>stop the world；</li>
 <li>开启写屏障；</li>

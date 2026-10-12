@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>sbraveyoung · 字里行间</title>
 <meta name="description" content="一个程序员的笔记本：技术拆解、踩坑总结、生活随笔。">
-<link rel="alternate" type="application/atom+xml" href="/__themes/press/atom.xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
 <header class="mast">
   <div class="mast-strip">
     <span>vol. 2026 · the reading notebook</span>
-    <span>Sunday, June 7, 2026</span>
+    <span>Monday, October 12, 2026</span>
     <span>https://sbrave.cn</span>
   </div>
   <div class="mast-name">
@@ -28,7 +28,7 @@
       <a href="/__themes/press/tag/">Tags</a>
       <a href="/__themes/press/archive">Archive</a>
       <a href="/__themes/press/about">About</a>
-      <a href="/__themes/press/atom.xml">RSS</a>
+      <a href="/atom.xml">RSS</a>
     </nav>
   </div>
 </header>
@@ -47,10 +47,10 @@
 <article class="feature">
   <div class="feature-text">
     <div class="kicker accent">── cover story</div>
-    <h2 class="feature-title"><a href="/__themes/press/post/684ef0af/791ef0ca">面试题42：反转单词顺序 VS 左旋转字符串</a></h2>
-    <p class="feature-lede"><em>题目一：输入一个英文句子，反转句子中单词的顺序，但单词内字符的顺序不变。为简单起见，标点符号和普通字母一样处理。例如输入字符串”I am a student.”，则输出”student. a am I”。** 分析 解法如下： 1.  先将整个字符串翻转； 2.  将每个单词翻转(以空格分隔)。 代码如下： 题目二：字…</em></p>
+    <h2 class="feature-title"><a href="/__themes/press/post/offer/30k">面试题30：最小的K个数</a></h2>
+    <p class="feature-lede"><em>题目：输入n个整数，找出其中最小的前K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4.** 分析 这是一道很经典的topK问题。前段时间我在参加360实习生面试的时候就考到了这个问题。主要解决方法如下： 排序 基于partition函数 堆(或红黑树) 这三种方法的推荐指数依次…</em></p>
     <div class="feature-meta">
-      <span>by sbraveyoung · 2016-07-09</span>
+      <span>by sbraveyoung · 2026-10-12</span>
       <span>continue reading →</span>
     </div>
   </div>
@@ -71,23 +71,23 @@
   
   <article class="digest-col">
     <div class="kicker accent">№02</div>
-    <h3 class="digest-title"><a href="/__themes/press/post/684ef0af/6dbf5b3c">面试题41：和为S的两个数字VS和为s的连续正数序列</a></h3>
-    <p class="digest-lede">题目一：输入一个递增排序的数组和一个数字s,在数组中查找两个数，使得他们的和正好是s。如果有多对数字的和等于s,输出任意一对即可。** 分析 今天上课，老师说了，在面试的时候不要一上来就去找最优的解法，因为你一时半会儿可能会找不到最优的。而且就算立即做出来了，面试官会认为你以前刷过这道题。所以可以先将最简单的思路哪怕是…</p>
-    <div class="digest-meta">2016-07-08 · 4 min</div>
+    <h3 class="digest-title"><a href="/__themes/press/post/offer/24">面试题24：二叉搜索时的后序遍历序列</a></h3>
+    <p class="digest-lede">题目：输入一个整数数组，判断该数组是不是某二叉搜索时的后序遍历的结果。如果是则返回true，否则返回false。假设输入的数组的任一两个数字都不相同。** 分析 我们先假设该数组是某颗二叉搜索树的后序遍历序列，则它有如下性质： 数组最后一个元素是该二叉树的根节点； 若数组为arr，长度为n，则arr[0..k-1]&lt;a…</p>
+    <div class="digest-meta">2026-10-12 · 2 min</div>
   </article>
   
   <article class="digest-col">
     <div class="kicker accent">№03</div>
-    <h3 class="digest-title"><a href="/__themes/press/post/684ef0af/557c6d6a">面试题40：数组中只出现一次的数字</a></h3>
-    <p class="digest-lede">题目：一个整型数组中除了两个数字之外，其他的数字都出现了两次。请写程序找出这两个数字。要求时间复杂度是O(n)，空间复杂度是O(1)。** 分析 我们先来看一道问题： 一个整型数组中除了一个数字出现了一次之外，其他的数字都出现了两次。请找出这个数字。 这题怎么做呢？记得我们原来有一个模拟面试，当时面试老师就给我出了这么…</p>
-    <div class="digest-meta">2016-07-05 · 3 min</div>
+    <h3 class="digest-title"><a href="/__themes/press/post/offer/9">面试题9：斐波那契数列</a></h3>
+    <p class="digest-lede">题目一：写一个函数，输入n，求斐波那契数列的第n项。斐波那契数列的定义如下： $$f(n)=\begin{cases}0 &amp; &amp;{n=0} \\\ 1 &amp; &amp;{n=1} \\\ f(n-1)&#43;f(n-2) &amp; &amp;{n&gt;1} \end{cases} $$ 分析 根据上述公式，我们可以很容易地写出如下递归代码： 不过递归方…</p>
+    <div class="digest-meta">2026-10-12 · 3 min</div>
   </article>
   
   <article class="digest-col">
     <div class="kicker accent">№04</div>
-    <h3 class="digest-title"><a href="/__themes/press/post/684ef0af/821982b6">面试题39：二叉树的深度</a></h3>
-    <p class="digest-lede">题目一：输入一颗二叉树的根节点，求该树的深度。从根节点到叶节点一次经过的节点形成树的一条路径，最长路径的长度为树的深度。** 二叉树节点定义如下： 分析 此题可利用递归很方便的完成，步骤如下： 判断参数root是否为空？为空就返回0； 否则计算root的左右子树的高度； 比较左右子树高度，取较大者，返回较大的值加1（r…</p>
-    <div class="digest-meta">2016-07-04 · 3 min</div>
+    <h3 class="digest-title"><a href="/__themes/press/post/offer/8">面试题8：旋转数组的最小数字</a></h3>
+    <p class="digest-lede">题目：把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如数组{3,4,5,1,2}为{1,2,3,4,5}的一个旋转，该数组的最小值为1。 分析 很自然地，最直观的解法就是设置一个最小值，并顺次检查数组的每一个元素，如果小于最小值，就更新这个…</p>
+    <div class="digest-meta">2026-10-12 · 3 min</div>
   </article>
   
 </section>
@@ -98,208 +98,208 @@
   <div class="also-label">also in<br>this issue</div>
   <div class="also-list">
     
-    <a class="also-row" href="/__themes/press/post/684ef0af/4d0eb241">
+    <a class="also-row" href="/__themes/press/post/offer/7">
       <span class="also-num">05</span>
-      <span class="also-title">面试题38：数字在排序数组中出现的次数</span>
+      <span class="also-title">面试题7：用两个栈实现队列</span>
       <span class="also-meta">3 min</span>
     </a>
     
-    <a class="also-row" href="/__themes/press/post/684ef0af/4e7da307">
+    <a class="also-row" href="/__themes/press/post/offer/6">
       <span class="also-num">06</span>
-      <span class="also-title">面试题37：两个链表的第一个公共节点</span>
-      <span class="also-meta">2 min</span>
+      <span class="also-title">面试题6：重建二叉树</span>
+      <span class="also-meta">1 min</span>
     </a>
     
-    <a class="also-row" href="/__themes/press/post/684ef0af/14312f1f">
+    <a class="also-row" href="/__themes/press/post/offer/4">
       <span class="also-num">07</span>
-      <span class="also-title">面试题36：数组中的逆序对</span>
+      <span class="also-title">面试题4：替换空格</span>
       <span class="also-meta">3 min</span>
     </a>
     
-    <a class="also-row" href="/__themes/press/post/684ef0af/25a0eda4">
+    <a class="also-row" href="/__themes/press/post/offer/42-vs">
       <span class="also-num">08</span>
-      <span class="also-title">面试题35：第一个只出现一次的数字</span>
-      <span class="also-meta">3 min</span>
+      <span class="also-title">面试题42：反转单词顺序 VS 左旋转字符串</span>
+      <span class="also-meta">2 min</span>
     </a>
     
-    <a class="also-row" href="/__themes/press/post/684ef0af/ad1595d5">
+    <a class="also-row" href="/__themes/press/post/offer/41svss">
       <span class="also-num">09</span>
-      <span class="also-title">面试题34：丑数</span>
-      <span class="also-meta">2 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/791b405b">
-      <span class="also-num">10</span>
-      <span class="also-title">面试题33：把数组排成最小的数</span>
-      <span class="also-meta">3 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/27e33fde">
-      <span class="also-num">11</span>
-      <span class="also-title">面试题32：从1到n整数中1出现的次数</span>
-      <span class="also-meta">3 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/ae492552">
-      <span class="also-num">12</span>
-      <span class="also-title">面试题31：连续子数组的最大和</span>
-      <span class="also-meta">2 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/80606720">
-      <span class="also-num">13</span>
-      <span class="also-title">面试题30：最小的K个数</span>
+      <span class="also-title">面试题41：和为S的两个数字VS和为s的连续正数序列</span>
       <span class="also-meta">4 min</span>
     </a>
     
-    <a class="also-row" href="/__themes/press/post/684ef0af/fbf1e86c">
-      <span class="also-num">14</span>
-      <span class="also-title">面试题29：数组中出现次数超过一半的数字</span>
-      <span class="also-meta">2 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/19deb5aa">
-      <span class="also-num">15</span>
-      <span class="also-title">面试题28：字符串的排列</span>
-      <span class="also-meta">2 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/f672ae4b">
-      <span class="also-num">16</span>
-      <span class="also-title">面试题26：复杂链表的复制</span>
-      <span class="also-meta">2 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/97b6f9f3">
-      <span class="also-num">17</span>
-      <span class="also-title">面试题25：二叉树中和为某一值的路径</span>
-      <span class="also-meta">2 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/4d4ff175">
-      <span class="also-num">18</span>
-      <span class="also-title">面试题24：二叉搜索时的后序遍历序列</span>
-      <span class="also-meta">2 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/2dc774f">
-      <span class="also-num">19</span>
-      <span class="also-title">面试题23：从上往下打印二叉树</span>
-      <span class="also-meta">2 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/cccf5d8">
-      <span class="also-num">20</span>
-      <span class="also-title">面试题22：栈的压入、弹出序列</span>
+    <a class="also-row" href="/__themes/press/post/offer/40">
+      <span class="also-num">10</span>
+      <span class="also-title">面试题40：数组中只出现一次的数字</span>
       <span class="also-meta">3 min</span>
     </a>
     
-    <a class="also-row" href="/__themes/press/post/684ef0af/4135afc8">
-      <span class="also-num">21</span>
-      <span class="also-title">面试题21：包含min函数的栈</span>
-      <span class="also-meta">3 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/fc27231f">
-      <span class="also-num">22</span>
+    <a class="also-row" href="/__themes/press/post/offer/20">
+      <span class="also-num">11</span>
       <span class="also-title">面试题20：顺时针打印矩阵</span>
       <span class="also-meta">2 min</span>
     </a>
     
-    <a class="also-row" href="/__themes/press/post/684ef0af/3bb6fddb">
+    <a class="also-row" href="/__themes/press/post/offer/21min">
+      <span class="also-num">12</span>
+      <span class="also-title">面试题21：包含min函数的栈</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/22">
+      <span class="also-num">13</span>
+      <span class="also-title">面试题22：栈的压入、弹出序列</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/3">
+      <span class="also-num">14</span>
+      <span class="also-title">面试题3：二维数组中的查找</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/39">
+      <span class="also-num">15</span>
+      <span class="also-title">面试题39：二叉树的深度</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/25">
+      <span class="also-num">16</span>
+      <span class="also-title">面试题25：二叉树中和为某一值的路径</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/26">
+      <span class="also-num">17</span>
+      <span class="also-title">面试题26：复杂链表的复制</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/28">
+      <span class="also-num">18</span>
+      <span class="also-title">面试题28：字符串的排列</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/38">
+      <span class="also-num">19</span>
+      <span class="also-title">面试题38：数字在排序数组中出现的次数</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/29">
+      <span class="also-num">20</span>
+      <span class="also-title">面试题29：数组中出现次数超过一半的数字</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/35">
+      <span class="also-num">21</span>
+      <span class="also-title">面试题35：第一个只出现一次的数字</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/31">
+      <span class="also-num">22</span>
+      <span class="also-title">面试题31：连续子数组的最大和</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/321n1">
       <span class="also-num">23</span>
+      <span class="also-title">面试题32：从1到n整数中1出现的次数</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/33">
+      <span class="also-num">24</span>
+      <span class="also-title">面试题33：把数组排成最小的数</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/34">
+      <span class="also-num">25</span>
+      <span class="also-title">面试题34：丑数</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/101">
+      <span class="also-num">26</span>
+      <span class="also-title">面试题10：二进制中1的个数</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/36">
+      <span class="also-num">27</span>
+      <span class="also-title">面试题36：数组中的逆序对</span>
+      <span class="also-meta">3 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/offer/37">
+      <span class="also-num">28</span>
+      <span class="also-title">面试题37：两个链表的第一个公共节点</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/2dc774f">
+      <span class="also-num">29</span>
+      <span class="also-title">面试题23：从上往下打印二叉树</span>
+      <span class="also-meta">2 min</span>
+    </a>
+    
+    <a class="also-row" href="/__themes/press/post/684ef0af/3bb6fddb">
+      <span class="also-num">30</span>
       <span class="also-title">面试题19：二叉树的镜像</span>
       <span class="also-meta">1 min</span>
     </a>
     
     <a class="also-row" href="/__themes/press/post/684ef0af/344824d0">
-      <span class="also-num">24</span>
+      <span class="also-num">31</span>
       <span class="also-title">面试题18：树的子结构</span>
       <span class="also-meta">2 min</span>
     </a>
     
     <a class="also-row" href="/__themes/press/post/684ef0af/4e76bcbe">
-      <span class="also-num">25</span>
+      <span class="also-num">32</span>
       <span class="also-title">面试题17：合并两个排序的链表</span>
       <span class="also-meta">2 min</span>
     </a>
     
     <a class="also-row" href="/__themes/press/post/684ef0af/78c57671">
-      <span class="also-num">26</span>
+      <span class="also-num">33</span>
       <span class="also-title">面试题16：反转链表</span>
       <span class="also-meta">2 min</span>
     </a>
     
     <a class="also-row" href="/__themes/press/post/684ef0af/db6fb12">
-      <span class="also-num">27</span>
+      <span class="also-num">34</span>
       <span class="also-title">面试题15：链表中倒数第K个节点</span>
       <span class="also-meta">2 min</span>
     </a>
     
     <a class="also-row" href="/__themes/press/post/684ef0af/99207d23">
-      <span class="also-num">28</span>
+      <span class="also-num">35</span>
       <span class="also-title">面试题14：调整数组顺序使奇数位于偶数前面</span>
       <span class="also-meta">2 min</span>
     </a>
     
     <a class="also-row" href="/__themes/press/post/684ef0af/42a2a49">
-      <span class="also-num">29</span>
+      <span class="also-num">36</span>
       <span class="also-title">面试题12：打印1到最大的n位数</span>
       <span class="also-meta">2 min</span>
     </a>
     
     <a class="also-row" href="/__themes/press/post/684ef0af/a8f4a07e">
-      <span class="also-num">30</span>
+      <span class="also-num">37</span>
       <span class="also-title">面试题11：数值的整数次方</span>
       <span class="also-meta">2 min</span>
     </a>
     
-    <a class="also-row" href="/__themes/press/post/684ef0af/1e11b27f">
-      <span class="also-num">31</span>
-      <span class="also-title">面试题10：二进制中1的个数</span>
-      <span class="also-meta">3 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/c44c0724">
-      <span class="also-num">32</span>
-      <span class="also-title">面试题9：斐波那契数列</span>
-      <span class="also-meta">3 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/a6a26368">
-      <span class="also-num">33</span>
-      <span class="also-title">面试题8：旋转数组的最小数字</span>
-      <span class="also-meta">3 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/24dc1be5">
-      <span class="also-num">34</span>
-      <span class="also-title">面试题7：用两个栈实现队列</span>
-      <span class="also-meta">3 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/78733cab">
-      <span class="also-num">35</span>
-      <span class="also-title">面试题6：重建二叉树</span>
-      <span class="also-meta">1 min</span>
-    </a>
-    
     <a class="also-row" href="/__themes/press/post/684ef0af/d44a3e2a">
-      <span class="also-num">36</span>
+      <span class="also-num">38</span>
       <span class="also-title">面试题5：从尾到头打印链表</span>
       <span class="also-meta">2 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/a202f9ef">
-      <span class="also-num">37</span>
-      <span class="also-title">面试题4：替换空格</span>
-      <span class="also-meta">3 min</span>
-    </a>
-    
-    <a class="also-row" href="/__themes/press/post/684ef0af/d82e31ee">
-      <span class="also-num">38</span>
-      <span class="also-title">面试题3：二维数组中的查找</span>
-      <span class="also-meta">3 min</span>
     </a>
     
     <a class="also-row" href="/__themes/press/post/684ef0af/d617458">

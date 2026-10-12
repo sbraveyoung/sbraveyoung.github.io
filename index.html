@@ -8,6 +8,8 @@
 <link rel="icon" href="/css/favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
 <link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="/_pagefind/pagefind-ui.css">
 <script>
 
 (function () {
@@ -52,9 +54,47 @@
   <section class="hero">
     <h1>sbraveyoung · 字里行间</h1>
     <p class="hero-sub">阅读 · 实践 · 思考</p>
+    
+    <div id="site-search" class="hero-search" data-pagefind-ignore></div>
   </section>
 
   <section class="post-list">
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/arts">ARTS</a>
+          <span class="entry-count">2 篇</span>
+        </h2>
+      </header>
+      
+      <div class="entry-meta">
+        <span>2026-10-12 11:55:34</span>
+        
+        
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          
+          <a href="/post/offer">剑指offer系列</a>
+          <span class="entry-count">40 篇</span>
+        </h2>
+      </header>
+      
+      <div class="entry-meta">
+        <span>2026-10-12 11:55:34</span>
+        
+        
+      </div>
+    </article>
     
     <article class="entry">
       <header class="entry-head">
@@ -88,7 +128,7 @@
       <div class="entry-meta">
         <span>2026-05-10 21:00:00</span>
         <span>· 13 min</span>
-        
+        <a class="tag" href="/tag/%e5%8d%9a%e5%ae%a2">#博客</a><a class="tag" href="/tag/obsidian">#obsidian</a><a class="tag" href="/tag/gobog">#gobog</a><a class="tag" href="/tag/github-actions">#github-actions</a>
       </div>
     </article>
     
@@ -153,7 +193,7 @@
           
           
           <a href="/post/go">Go语言系列</a>
-          <span class="entry-count">3 篇</span>
+          <span class="entry-count">2 篇</span>
         </h2>
       </header>
       
@@ -512,24 +552,6 @@
           
           
           
-          <a href="/post/offer">剑指offer系列</a>
-          <span class="entry-count">40 篇</span>
-        </h2>
-      </header>
-      
-      <div class="entry-meta">
-        <span>2016-07-09 15:27:35</span>
-        
-        
-      </div>
-    </article>
-    
-    <article class="entry">
-      <header class="entry-head">
-        <h2 class="entry-title">
-          
-          
-          
           <a href="/post/869bd286">《C陷阱与缺陷》读书笔记</a>
           
         </h2>
@@ -573,5 +595,20 @@
 
 <script src="/js/site.js" defer></script>
 <script src="/__theme-switcher.js" defer></script>
+
+<script src="/_pagefind/pagefind-ui.js" onload="
+  if (typeof PagefindUI === 'undefined') return;
+  new PagefindUI({
+    element: '#site-search',
+    showSubResults: true,
+    showImages: false,
+    pageSize: 6,
+    translations: {
+      placeholder: '搜索文章…',
+      zero_results: '没找到 &quot;[SEARCH_TERM]&quot; 相关的内容',
+      load_more: '加载更多',
+    },
+  });
+"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Git工作流开发实践 · sbraveyoung · 字里行间</title>
 <link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
-<link rel="alternate" type="application/atom+xml" href="/__themes/sepia/atom.xml" title="Atom feed">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
 <link rel="stylesheet" href="/__themes/sepia/css/main.css">
 <link rel="canonical" href="https://sbrave.cn/post/331f81e4">
 <meta name="description" content="作为一个程序员，毫无疑问是需要和代码打交道的。俗话说，有人的地方就有江湖，同样，有代码的地方就有版本控制。 当年，Linus Torvalds 大神以一己之力开发出了初始的 Linux 内核，一举奠定其在开源界的江湖地位。但随着代码越来越庞大，再加上 BitKeeper 不再授权 Linux 项目免费使用，Linus …">
@@ -39,7 +39,7 @@
     <nav class="site-nav">
       <a href="/__themes/sepia/">Home</a>
       <a href="/__themes/sepia/about">about</a>
-      <a href="/__themes/sepia/atom.xml">RSS</a>
+      <a href="/atom.xml">RSS</a>
       <button class="lang-toggle icon-btn" type="button" aria-label="language">
         <span class="lang-zh">中</span><span class="lang-en">EN</span>
       </button>
@@ -80,7 +80,7 @@
 </ol>
 <p>此时 Git flow 出现了，我将它称为「Git 工作流」，从字面意思来看，就是按照一个规定好的工作流程来操作，以保证规范性（此处解决了上述第三个问题）。Git flow 严格来说是一种思想、机制，Git 相关的大部分操作都可以用某些「流」来完成。它不同于许多开发人员惯用的方式。在传统开发模式下，许多人只维护了「master」和「develop」分支，相关的新功能在 develop 上开发，完成后 merge 到 master 分支上，更有甚者只有一个 master 分支。这样的工作模式对于对于并发进行多个 feature 的管理简直是个噩梦。</p>
 <p>Git flow 设定了五个分支：master、develop、hotfix、feature、release。各个分支通过不同的耦合，形成一个「流」，共同完成代码从编写到上线的一系列流程。各个分支之间的关系如下图：</p>
-<p><img src="../../image/git-flow.png" alt="" /></p>
+<p><img src="/__themes/sepia/image/git-flow.png" alt="" /></p>
 <p>（图片来自网络）</p>
 <p>下面来逐一解释：</p>
 <ul>

@@ -153,7 +153,7 @@ void testcase1()
     }
 }
 </code></pre>
-<p><img src="../../image/3284a3f5-1.png" alt="" /></p>
+<p><img src="/image/3284a3f5-1.png" alt="" /></p>
 <h4>多重继承</h4>
 <p>多重继承的实现和单一继承的原理差不多，只不过在多重继承里，子类会覆盖所有父类对应的虚函数，并且子类新增的虚函数只添加到第一个被继承的父类的虚函数表尾部，这样主要是为了效率问题。</p>
 <p>代码和内存图如下：</p>
@@ -264,7 +264,7 @@ void testcase2()
     }
 }
 </code></pre>
-<p><img src="../../image/3284a3f5-2.png" alt="" /></p>
+<p><img src="/image/3284a3f5-2.png" alt="" /></p>
 <h4>菱形继承</h4>
 <p>有时候在逻辑上需要菱形继承。所谓菱形继承，也就是两个或多个派生自同一个父类的类又派生出一个共同的子类。如下：</p>
 <pre><code class="language-C++">class base{};
@@ -376,7 +376,7 @@ void testcase3()
     }
 }
 </code></pre>
-<p><img src="../../image/3284a3f5-3.png" alt="" /></p>
+<p><img src="/image/3284a3f5-3.png" alt="" /></p>
 <h4>菱形虚拟继承</h4>
 <p>为了解决菱形继承中数据的不一致问题，可以使用虚拟继承来解决。也就是说虚拟继承是专为菱形继承而生的，在单一继承中使用虚拟继承不会有什么作用，反而会增加运行的开销，拖慢程序速度。这也就是我为什么没有列出单一虚拟继承的原因。</p>
 <p>以如下代码为例子：</p>
@@ -494,7 +494,7 @@ void testcase4()
     }
 }
 </code></pre>
-<p><img src="../../image/3284a3f5-4.png" alt="" /></p>
+<p><img src="/image/3284a3f5-4.png" alt="" /></p>
 </div>
 
     <footer class="post-foot">

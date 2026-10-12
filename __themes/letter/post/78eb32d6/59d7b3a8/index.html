@@ -28,14 +28,14 @@
     <a href="/__themes/letter/">写作</a>
     <a href="/__themes/letter/tag/">标签</a>
     <a href="/__themes/letter/about">关于</a>
-    <a href="/__themes/letter/atom.xml">RSS</a>
+    <a href="/atom.xml">RSS</a>
   </nav>
 </header>
 
 <article class="article">
   <header class="article-head">
     <div class="kicker">
-      2020-04-30
+      go · golang · 性能 · 2020-04-30
     </div>
     <h1 class="article-title">golang 性能优化实践</h1>
     <p class="article-lede">一、缘起 golang 作为一门 google 主导开发的语言，已经有十年光景了。在这期间，golang 一直朝着 "high performence and easy writing" 的目标在演进，从普及程度上看已经取得了良好的效果。在我们公司技术团队，也在将开发语言从 c++/python 等逐渐切换到 gola…</p>
@@ -45,7 +45,7 @@
       
       
       <span class="article-meta-tags">
-        
+        <a href="/__themes/letter/tag/go">#go</a><a href="/__themes/letter/tag/golang">#golang</a><a href="/__themes/letter/tag/性能">#性能</a>
       </span>
     </div>
     
@@ -102,10 +102,10 @@ func update(){
 <h4>4. 缓存</h4>
 <p>前面提到，我们会请求某个下游接口获取 liveid 相关信息，这些信息都是固化的，不会再修改。因此可以使用缓存来减小时间消耗，也可以尽量避免下游接口抖动对上游的影响。</p>
 <p>我们实现了两级缓存：本地进程内缓存和 redis 缓存。redis 缓存的目的是多台机器共享，一个 liveid 由一个进程请求一次就可以了。本地缓存则会设定一个过期时间，配合 LFU 算法避免内存无限增长。流程图如下：</p>
-<p><img src="../../../image/59d7b3a8-x.png" alt="" /></p>
+<p><img src="/__themes/letter/image/59d7b3a8-x.png" alt="" /></p>
 <h4>5. GC</h4>
 <p>为便于理解，这里先简要介绍下 golang 的垃圾回收过程：</p>
-<p><img src="../../../image/gogc.png" alt="" /></p>
+<p><img src="/__themes/letter/image/gogc.png" alt="" /></p>
 <ol>
 <li>stop the world；</li>
 <li>开启写屏障；</li>
@@ -203,7 +203,7 @@ func GetSlice() (slice []Buffer, putFunc func(giveUpSlice []Buffer))
   <footer class="article-foot">
     <div class="kicker">— end —</div>
     <div class="article-foot-meta">
-      
+      <a href="/__themes/letter/tag/go" class="tag">#go</a><a href="/__themes/letter/tag/golang" class="tag">#golang</a><a href="/__themes/letter/tag/性能" class="tag">#性能</a>
     </div>
     <div class="back"><a href="/__themes/letter/">← 回到首页</a></div>
   </footer>

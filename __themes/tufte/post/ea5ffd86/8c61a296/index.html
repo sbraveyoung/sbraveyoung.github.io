@@ -27,7 +27,7 @@
     <a href="/__themes/tufte/tag/">tags</a>
     <a href="/__themes/tufte/archive">archive</a>
     <a href="/__themes/tufte/about">about</a>
-    <a href="/__themes/tufte/atom.xml">atom</a>
+    <a href="/atom.xml">atom</a>
   </nav>
 </header>
 
@@ -59,7 +59,7 @@
 </ol>
 <h2>二、常规 hls 方案</h2>
 <h4>不考虑 CDN 的情况</h4>
-<p><img src="../../../image/low-hls-1.png" alt="low-hls-1|100%" /></p>
+<p><img src="/__themes/tufte/image/low-hls-1.png" alt="low-hls-1|100%" /></p>
 <p>客户端播放 hls 的流程如上图：</p>
 <ol>
 <li>服务端先生成 6s 的分片，此过程会导致延时 +6s；</li>
@@ -68,7 +68,7 @@
 </ol>
 <p>综上，传统 hls 延时时间为 12s+2rtt；</p>
 <h3>考虑 CDN</h3>
-<p><img src="../../../image/low-hls-2.png" alt="" /></p>
+<p><img src="/__themes/tufte/image/low-hls-2.png" alt="" /></p>
 <p>在 CDN 场景下，当客户端 1 第一次请求到 CDN 时，由于 m3u8 尚未被缓存，此时回源获取到包含 1-3 分片的 m3u8 播放列表。之后，源站生成了分片 4，客户端 2 再请求 CDN 时，还是只会返回 1-3 分片，因为 CDN 不知道源站的播放列表已经更新。此时延时会更大。</p>
 <h2>三、低延时方案</h2>
 <h4>要求</h4>

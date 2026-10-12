@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>数据库的事务及隔离级别 · sbraveyoung · 字里行间</title>
 <link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
-<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
 <link rel="stylesheet" href="/__themes/ocean/css/main.css">
 <link rel="canonical" href="https://sbrave.cn/post/de570784/d87d70ee">
 <meta name="description" content="在操作数据库时，经常需要将一系列操作打包成一个原子操作：要么全部执行，要么全部不执行。一个最常被用来举例子的场景是银行转账问题，假设有两个用户 A 和 B，A 要向 B 转账 100 元需要进行以下操作： 查询 A 的余额； 若余额大于 100，则减去 100，并写回数据库； B 的余额加上 100，并写回数据库； 这…">
@@ -39,7 +39,7 @@
     <nav class="site-nav">
       <a href="/__themes/ocean/">Home</a>
       <a href="/__themes/ocean/about">about</a>
-      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <a href="/atom.xml">RSS</a>
       <button class="lang-toggle icon-btn" type="button" aria-label="language">
         <span class="lang-zh">中</span><span class="lang-en">EN</span>
       </button>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>#branding · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/ocean/css/main.css">
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/ocean/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/ocean/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/ocean/">Home</a>
+      <a href="/__themes/ocean/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-group">
+  <nav class="crumbs"><a href="/__themes/ocean/">Home</a><span>›</span><span>#branding</span></nav>
+  <header class="group-head">
+    <h1>#branding</h1>
+    <p class="group-count">1 篇</p>
+  </header>
+
+  <section class="post-list">
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          <span class="badge badge-ai" title="AI">🤖 AI 辅助</span>
+          <a href="/__themes/ocean/post/skills/themes-and-branding">Skill · 主题与品牌</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">何时用**：想换主题、改站名、改副标题、加自定义域名时。 解决什么**：把&#34;哪个开关在哪个仓库的哪个文件里&#34;一次说清——避免每次都到处翻。 改这些都在 _gobog.json `sbraveyoung.github.io` 仓库根目录有一个 `_gobog.json`。它**不是 gobog 自己读的**——是 dep…</p>
+      <div class="entry-meta">
+        <span>2026-05-11 09:05:00</span>
+        <span>· 4 min</span>
+        <a class="tag" href="/__themes/ocean/tag/skill">#skill</a><a class="tag" href="/__themes/ocean/tag/theme">#theme</a><a class="tag" href="/__themes/ocean/tag/branding">#branding</a>
+      </div>
+    </article>
+    
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/ocean/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

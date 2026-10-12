@@ -28,7 +28,7 @@
     <a href="/__themes/letter/">写作</a>
     <a href="/__themes/letter/tag/">标签</a>
     <a href="/__themes/letter/about">关于</a>
-    <a href="/__themes/letter/atom.xml">RSS</a>
+    <a href="/atom.xml">RSS</a>
   </nav>
 </header>
 
@@ -62,7 +62,7 @@
 <li>发送 TCP 数据时，应用层需将数据写入到 OS 提供的 buffer 里面，操作系统将其看作一连串的，没有边界的数据流，通过相对序号进行定位；而发送 UDP 数据时，应用层交给 OS 多大的数据包，操作系统就直接发送出去。根本不考虑效率，如果数据太大，可能会在 IP 层进行分片，如果数据太小，则每个数据包的有效载荷会比较低，浪费带宽；</li>
 </ul>
 <h2>TCP 报头的格式</h2>
-<p><img src="../../../image/51aeee82-1.png" alt="" /></p>
+<p><img src="/__themes/letter/image/51aeee82-1.png" alt="" /></p>
 <p>图中各字段含义解释如下：</p>
 <ul>
 <li>源端口和目的端口：指明该 TCP 报文是由哪一个应用程序发送给哪一个应用程序的。因为端口号标示这应用层的一个服务进程。</li>
@@ -88,7 +88,7 @@
 <p>TCP 通过建立一条全双工的通信链路来保证数据的可靠传输。建立连接的过程即为三次握手和四次挥手。</p>
 <p>TCP 通信的两端都处于某些状态之中，通过在各种不同状态间的切换来完成数据传输。</p>
 <p>示意图如下：</p>
-<p><img src="../../images/51aeee82-2.png" alt="" /></p>
+<p><img src="/__themes/letter/image/51aeee82-2.png" alt="" /></p>
 <p>图中绿色大写部分标注出来的是 TCP 的状态转移过程，橙色小写部分标注出来的是客户端和服务器各自所调用的函数。</p>
 <ul>
 <li>

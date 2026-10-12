@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>一些常见的协议详解 · sbraveyoung · 字里行间</title>
 <link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
-<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
 <link rel="stylesheet" href="/__themes/ocean/css/main.css">
 <link rel="canonical" href="https://sbrave.cn/post/afe65937/9eddd0c8">
 <meta name="description" content="TCP/IP 协议族里面有众多的协议，分别分布在各个不同的层次上。现将跟 TCP 有关的部分协议详解如下： ARP协议 ARP 协议处于 TCP/IP 协议族的最底层，即网络接口层。它的主要用途就是实现一台主机的 IP 地址到 MAC 地址的转换。 以太网 ARP 请求/应答报文的格式如下图所示： ![](../../…">
@@ -39,7 +39,7 @@
     <nav class="site-nav">
       <a href="/__themes/ocean/">Home</a>
       <a href="/__themes/ocean/about">about</a>
-      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <a href="/atom.xml">RSS</a>
       <button class="lang-toggle icon-btn" type="button" aria-label="language">
         <span class="lang-zh">中</span><span class="lang-en">EN</span>
       </button>
@@ -70,7 +70,7 @@
 <h2>ARP协议</h2>
 <p>ARP 协议处于 TCP/IP 协议族的最底层，即网络接口层。它的主要用途就是实现一台主机的 IP 地址到 MAC 地址的转换。</p>
 <h4>以太网 ARP 请求/应答报文的格式如下图所示：</h4>
-<p><img src="../../images/9eddd0c8-1.png" alt="" /></p>
+<p><img src="/__themes/ocean/image/9eddd0c8-1.png" alt="" /></p>
 <ul>
 <li>硬件类型字段表示物理地址的类型，它的值为 1 表示 MAC 地址。</li>
 <li>协议类型字段表示要映射的协议地址类型，它的值为 0x800，表示 IP 地址。</li>
@@ -99,7 +99,7 @@
 <h2>IP 协议</h2>
 <p>IP 协议处于网络层，几乎所有上层协议都会使用到 IP 协议。</p>
 <h4>IP协议的报文格式如下：</h4>
-<p><img src="../../images/9eddd0c8-2.png" alt="" /></p>
+<p><img src="/__themes/ocean/image/9eddd0c8-2.png" alt="" /></p>
 <p>解释如下：</p>
 <ul>
 <li>版本号指定 IP 协议的版本，长度为 4bit。对于 IPv4 来说，其值为 4。</li>

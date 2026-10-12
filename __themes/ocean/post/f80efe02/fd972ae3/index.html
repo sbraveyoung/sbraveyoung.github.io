@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>虚拟存储器 · sbraveyoung · 字里行间</title>
 <link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
-<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
 <link rel="stylesheet" href="/__themes/ocean/css/main.css">
 <link rel="canonical" href="https://sbrave.cn/post/f80efe02/fd972ae3">
 <meta name="description" content="今天上午看了《深入理解计算机系统》中关于虚拟存储器的章节，记录如下： 首先说为什么要有虚拟存储器 我个人觉得虚拟存储器的概念是和进程概念一起出现的。在计算机技术发展的早期，只有单道批处理系统，特点是一次只能运行一个进程，只有运行完毕后才能将下一个进程加载到内存里面，所以进程的数据都是直接放在物理内存上的。 到后来发展出…">
@@ -39,7 +39,7 @@
     <nav class="site-nav">
       <a href="/__themes/ocean/">Home</a>
       <a href="/__themes/ocean/about">about</a>
-      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <a href="/atom.xml">RSS</a>
       <button class="lang-toggle icon-btn" type="button" aria-label="language">
         <span class="lang-zh">中</span><span class="lang-en">EN</span>
       </button>
@@ -83,7 +83,7 @@
 <h2>虚拟存储器的工作原理</h2>
 <p>当操作系统将一个程序载入内存时，会为其创建一个 PCB 出来，PCB 在 Linux 系统中就是一个task_struct 的内核结构体，其中的元素包含或者指向内核运行该进程所需要的所有信息（例如：PID、指向用户栈的指针、可执行目标文件的名称以及程序计数器）。</p>
 <p>task_struct 中有一个条目 mm 指向 mm_struct，它描述了虚拟存储器的当前状态。我们感兴趣的两个字段是 pgd 和 mmap，其中 pgd 指向一级页表的基址，而 mmap 指向一个 vm_area_structs 的链表，其中每个 vm_area_structs 都描述了虚拟地址空间的一个区域，也就是我上文所说的「段」。示意图如下：</p>
-<p><img src="../../../image/fd972ae3-1.png" alt="" /></p>
+<p><img src="/__themes/ocean/image/fd972ae3-1.png" alt="" /></p>
 <p>由上图可知，vm_are_struct 结构体中各字段含义如下:</p>
 <ul>
 <li>vm_start：指向这个区域的起始处</li>

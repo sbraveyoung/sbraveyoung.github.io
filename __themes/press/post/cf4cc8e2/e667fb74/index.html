@@ -30,7 +30,7 @@
       <a href="/__themes/press/tag/">Tags</a>
       <a href="/__themes/press/archive">Archive</a>
       <a href="/__themes/press/about">About</a>
-      <a href="/__themes/press/atom.xml">RSS</a>
+      <a href="/atom.xml">RSS</a>
     </nav>
   </div>
 </header>
@@ -65,7 +65,7 @@ sort(iarr,iarr+sizeof(iarr)/sizeof(iarr[0]));
 </code></pre>
 <p>这样，我们便可以不用自己编写复杂的排序函数，大大地提高了开发效率。sort 函数的原型到后面说算法的部分再说。</p>
 <p>STL 主要由六大组件组成，他们之间的关系如下：</p>
-<p><img src="../../../image/e667fb74-1.png" alt="" /></p>
+<p><img src="/__themes/press/image/e667fb74-1.png" alt="" /></p>
 <p>可见，迭代器、存储分配器和函数对象都是为容器服务的。迭代器就像一个指针一样指向容器中某个元素，可以很方便地对其进行存取；存储分配器为容器分配内存空间；</p>
 <h3>容器</h3>
 <p>容器类定义在下表所示的头文件中：</p>
@@ -351,7 +351,7 @@ list (const list&amp; x);//(4)
 </tbody>
 </table>
 <p>list 的内存映像如下：</p>
-<p><img src="../../../image/e667fb74-2.png" alt="" /></p>
+<p><img src="/__themes/press/image/e667fb74-2.png" alt="" /></p>
 <p>由此可以看出，list 只支持顺序存取，而不支持随机存取，因为其底层实现上各元素不是连续存放的。</p>
 <p>以上只是对 list 中的成员函数进行了简单的介绍，其中很多函数都是有重载版本的，在此不再一一列举，具有好奇心的读者可移步：<a href="">www.cplusplus.com</a> ，然后在最上方的搜索栏搜索&quot;list&quot;即可。其实不止是 list，C/C++ 标准库里面的最多内容这里都介绍得非常全面，本文以下即将介绍的各种东东也可以在上面查到。只不过该网站是英文的，英文和我一样挫的读者就多花点时间读一读，还是很值得的！</p>
 <h5>vector</h5>
@@ -420,7 +420,7 @@ protected:
 </table>
 <p>出于节省空间的考虑，vector 内部对 bool 类型进行了特化 <code>vector&lt;bool&gt;</code>，但它与 bitset 支持的很多操作是不同的。</p>
 <p>vector 内存映像如图：</p>
-<p><img src="../../../image/e667fb74-3.png" alt="" /></p>
+<p><img src="/__themes/press/image/e667fb74-3.png" alt="" /></p>
 <!--- 
 
 ##### queue/deque

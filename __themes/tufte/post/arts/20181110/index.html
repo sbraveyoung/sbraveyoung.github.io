@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>20181110 · sbraveyoung · 字里行间</title>
+<meta name="description" content="Overview** Algorithm: [字符串相乘](https://leetcode-cn.com/explore/interview/card/tencent/221/array-and-strings/904/) Review: [Why should you learn Go?](https://medi…">
+<meta property="og:title" content="20181110">
+<meta property="og:description" content="Overview** Algorithm: [字符串相乘](https://leetcode-cn.com/explore/interview/card/tencent/221/array-and-strings/904/) Review: [Why should you learn Go?](https://medi…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/arts/20181110">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2026 · NO. §1404</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · October 12, 2026
+      </div>
+      <h1 class="article-title">20181110</h1>
+      <p class="article-lede">Overview** Algorithm: [字符串相乘](https://leetcode-cn.com/explore/interview/card/tencent/221/array-and-strings/904/) Review: [Why should you learn Go?](https://medi…</p>
+      <div class="article-meta">
+        <span>6 min read</span>
+        <span>·</span>
+        <span>1404 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>20181110</h2>
+<p><strong>Overview</strong></p>
+<ul>
+<li>Algorithm: <a href="https://leetcode-cn.com/explore/interview/card/tencent/221/array-and-strings/904/">字符串相乘</a></li>
+<li>Review: <a href="https://medium.com/@kevalpatel2106/why-should-you-learn-go-f607681fad65">Why should you learn Go?</a></li>
+<li>Technique: 暂无，待补充</li>
+<li>Share: 暂无，待补充</li>
+</ul>
+<h3>Algorithm: 字符串相乘</h3>
+<h4>题目</h4>
+<p>给定两个以字符串形式表示的非负整数<code>num1</code>和<code>num2</code>，返回<code>num1</code>和<code>num2</code>的乘积，它们的乘积也表示为字符串形式。</p>
+<p><strong>示例1：</strong></p>
+<pre><code>输入：num1 = &quot;2&quot;, num2 = &quot;3&quot;
+输出：&quot;6&quot;
+</code></pre>
+<p><strong>示例2：</strong></p>
+<pre><code>输入：num1 = &quot;123&quot;, num2 = &quot;456&quot;
+输出：&quot;56088&quot;
+</code></pre>
+<p><strong>说明：</strong></p>
+<ol>
+<li><code>num1</code>和<code>num2</code>的长度小于 110。</li>
+<li><code>num1</code>和<code>num2</code>只包含数字<code>0-9</code>。</li>
+<li><code>num1</code>和<code>num2</code>均不以零开头，除非是数字 0 本身。</li>
+<li>不能使用任何标准库的大数类型（比如 BigInteger）或直接将输入转换为整数来处理。</li>
+</ol>
+<h4>思路</h4>
+<ul>
+<li>使用字符串模拟乘法计算，重点是处理好两个数中各个位相乘及相加的关系；</li>
+<li>假设数字为 A 和 B，且每个数字个位下标为 0，每进一位，下标加 1，即十位、百位对应下标分别为 1 和 2。</li>
+<li>A 可以表示为： $A=A_0 * 10^0 + A_1 * 10^1 + ... + A_n * 10^n$，同理，B 也可以表示为：$B=B_0 * 10^0 + B_1 * 10^1 + ... + B_m * 10^m$。</li>
+<li>模拟乘法计算：使用 $A_i$ 乘以 $B_j$，得到结果矩阵。如果 $A=1234$，$B=56$，则结果如下：</li>
+</ul>
+<table border="1" align="center">
+    <tr>
+        <th></th>
+        <th>进位</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+    </tr>
+    <tr>
+        <th>5</th>
+        <td></td>
+        <td>6</td>
+        <td>1</td>
+        <td>7</td>
+        <td>0</td>
+    </tr>
+    <tr>
+        <th>6</th>
+        <td></td>
+        <td>7</td>
+        <td>4</td>
+        <td>0</td>
+        <td>4</td>
+    </tr>
+</table>
+<ul>
+<li>从右下角开始，对每一条 $45^。$角射线上的值求和，并依次作为结果的个位、十位、百位等。如有进位也一并计算在内。</li>
+</ul>
+<h4>测试用例及代码实现</h4>
+<ul>
+<li>代码请移步<a href="https://github.com/SmartBrave/leetcode_sb/tree/master/Multiply">Github</a></li>
+</ul>
+<h3>Review: Why should you learn Go?</h3>
+<p>Go 语言从发布至今，已经走过了十个年头。对于编程语言来说，十年正是焕发青春的时期。并且到现在已经有越来越多的人和组织使用 Go 来编写自己的应用。这篇文章从软硬件的角度介绍了为什么你应该学习 Go，以及 Go 相对于其他语言的优势。以下是核心脉络：</p>
+<p>过去几年间，硬件的发展已逐渐碰到了天花板。以作者为例，奔腾 3.0 GHz 4 核心处理在 2004 年就已经发布，但他的 MacBook Pro 2016 的处理器仍然是 2.9GHz。所以作者结合下图，得出了一个结论：<strong>摩尔定律正在失效！</strong></p>
+<img src="/__themes/tufte/image/ProcessingPowerIncreasing.png" width="100%" height="100%">
+<p>那有没有可以提升处理器性能的方法呢？作者给出了三条方法：</p>
+<ul>
+<li>增加更多的核心数；</li>
+<li>超线程技术；</li>
+<li>增加更大的处理器缓存；</li>
+</ul>
+<p>但很遗憾，这些方法也有局限之处。缓存越大，获取数据就越慢，因此不能无限增大缓存。同样，增加更多的核心会导致更大的花销。</p>
+<p>所以，我们不能依赖于硬件性能的提升，提升性能唯一的办法是寻求一个更高效的软件。但目前的编程语言都不够高效。因为它们都是按照 90 年代单线程的硬件环境去设计的。虽然它们也支持多线程，但随之而来的是锁、竞态、死锁等问题，而这会让一个问题变得无比复杂。</p>
+<p>那 Go 有什么优势呢？goroutines!</p>
+<p>Go 诞生于 2009 年，正是多核处理器大放异彩的几年，所以 Go 从设计之初就考虑到了对并发的处理。比如一个 goroutines 只消耗 2KB 的堆空间，而线程至少需要 1MB，因此你可以创建数以百万计的 goroutines。其他的优势比如：</p>
+<ul>
+<li>goroutines 的栈空间可以在用到的时候再增长；</li>
+<li>goroutines 比线程更快；</li>
+<li>goroutines 之间通信使用 channel，而这是线程安全的；</li>
+<li>gouroutines 允许你共享数据而不用锁机制；Go 的宗旨是<code>Do not communicate by sharing memory; instead, share memory by communicating.</code></li>
+<li>goroutines 和系统线程不是 1:1 的关系，这样 grroutines 和线程之间可以灵活调度；</li>
+</ul>
+<p>这些所有的特性，使得 Go 处理并发如 Java 一样方便，但拥有 C/C++ 的执行速度，并且和 Erlang 一样漂亮、简洁、优雅！</p>
+<img src="/__themes/tufte/image/CompareGoWithOtherLanguages.png" width="100%" height="100%">
+<p>另外，不同于 Java 等基于虚拟机的语言，Go 是直接运行在硬件上的。如果是 Java，虚拟机需要先将高级语言代码转换为字节码，然后才能执行：</p>
+<img src="/__themes/tufte/image/VMBasedLanguages.png" width="100%" height="100%">
+<p>而 C/C++ 等编译型语言则直接有高级语言代码翻译成二进制机器码：</p>
+<img src="/__themes/tufte/image/StepOfCompilesLanguage.png" width="100%" height="100%">
+<p>但是，同样是编译型语言，Go 和 C/C++ 最大的区别是：C/C++ 竟然将变量的分配、释放这么痛苦的事情交给程序员来管理！而 Go 既有能和 C/C++ 媲美的执行速度，又有面向对象语言的垃圾回收机制，实在是太酷了！</p>
+<img src="/__themes/tufte/image/CodeReadabilityVSEfficiency.png" width="100%" height="100%">
+<p>因此，如果你还没有学习 Go 的计划，硬件的限制会促使你去写出更高效的代码，而 Go 就是最好的选择！</p>
+<blockquote>
+<p>This article was posted on my <a href="https://sbrave.cn/post/41618284">blog</a> and <a href="https://github.com/SmartBrave/ARTS">Github</a> using the MIT Open Source License.
+ng the MIT Open Source License.</p>
+</blockquote>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2026-10-12<br>
+          <em>read in</em> 6 min<br>
+          <em>words</em> 1404<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/arts/20181110">https://sbrave.cn/post/arts/20181110</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>20181117 · sbraveyoung · 字里行间</title>
+<meta name="description" content="Overview: Algorithm: [螺旋矩阵](https://leetcode-cn.com/explore/interview/card/tencent/221/array-and-strings/912/),[螺旋矩阵II](https://leetcode-cn.com/explore/intervie…">
+<meta property="og:title" content="20181117">
+<meta property="og:description" content="Overview: Algorithm: [螺旋矩阵](https://leetcode-cn.com/explore/interview/card/tencent/221/array-and-strings/912/),[螺旋矩阵II](https://leetcode-cn.com/explore/intervie…">
+<meta property="og:type" content="article">
+
+<link rel="canonical" href="https://sbrave.cn/post/arts/20181117">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/__themes/tufte/css/theme.css">
+</head>
+<body class="post-page">
+
+<header class="masthead">
+  <div class="brand">
+    <a href="/__themes/tufte/" class="brand-title">sbraveyoung<em>'s notebook</em></a>
+    <div class="brand-sub">VOL. 2026 · NO. §1117</div>
+  </div>
+  <nav class="nav">
+    <a href="/__themes/tufte/"><em>essays</em></a>
+    <a href="/__themes/tufte/tag/">tags</a>
+    <a href="/__themes/tufte/archive">archive</a>
+    <a href="/__themes/tufte/about">about</a>
+    <a href="/atom.xml">atom</a>
+  </nav>
+</header>
+
+<main class="container">
+  <article class="layout">
+    <div class="main-col">
+      <div class="kicker">
+        ESSAY · October 12, 2026
+      </div>
+      <h1 class="article-title">20181117</h1>
+      <p class="article-lede">Overview: Algorithm: [螺旋矩阵](https://leetcode-cn.com/explore/interview/card/tencent/221/array-and-strings/912/),[螺旋矩阵II](https://leetcode-cn.com/explore/intervie…</p>
+      <div class="article-meta">
+        <span>5 min read</span>
+        <span>·</span>
+        <span>1117 words</span>
+        
+        
+      </div>
+
+      
+
+      <div class="prose">
+        <h2>20181117</h2>
+<p>Overview:</p>
+<ul>
+<li>Algorithm: <a href="https://leetcode-cn.com/explore/interview/card/tencent/221/array-and-strings/912/">螺旋矩阵</a>,<a href="https://leetcode-cn.com/explore/interview/card/tencent/221/array-and-strings/913/">螺旋矩阵II</a></li>
+<li>Review: <a href="https://medium.com/@fredrikmorken/why-you-should-stop-using-git-rebase-5552bee4fed1">Why you should stop using Git rebase?</a></li>
+<li>Technique</li>
+<li>Share</li>
+</ul>
+<h3>Algorithm: 螺旋矩阵</h3>
+<h4>题目</h4>
+<p>给定一个包含 m x n 个元素的矩阵（m 行，n 列），请按照顺时针螺旋顺序，返回矩阵中的所有元素。</p>
+<p><strong>示例1：</strong></p>
+<pre><code>输入：
+[
+    [ 1,2,3 ],
+    [ 4,5,6 ],
+    [ 7,8,9 ]
+]
+输出：[1,2,3,6,9,8,7,4,5]
+</code></pre>
+<p><strong>示例2：</strong></p>
+<pre><code>输入：
+[
+    [1, 2, 3, 4],
+    [5, 6, 7, 8],
+    [9,10,11,12]
+]
+输出：[1,2,3,4,8,12,11,10,9,5,6,7]
+</code></pre>
+<h4>思路</h4>
+<p>这两道题都比较简单，都可以用四个变量 top,bottom,left,right 代表矩阵的上下左右边界，不断缩小矩阵空间并打印或者修改矩阵即可。因此第二道题不在此列出。</p>
+<h4>测试用例及代码实现</h4>
+<ul>
+<li>代码请移步Github: <a href="https://github.com/SmartBrave/leetcode_sb/tree/master/SpiralOrder">题目一</a> 和 <a href="https://github.com/SmartBrave/leetcode_sb/tree/master/GenerateMatrix">题目二</a></li>
+</ul>
+<h3>Review: Why you should stop using Git rebase?</h3>
+<p>Git 作为一个优秀的版本控制系统，提供了很多强大的功能。其中就比如分支的管理。这篇文章描述了在合并分支时，你为什么不应该使用 rebase，而应该使用 merge。</p>
+<p>如果你有一个 feature 分支，打算把它合并到 master 分支上。如下图所示，我们创建一个新的 commit <code>g</code>，代表了两个分支的合并:</p>
+<img src="/__themes/tufte/image/ExampleOfMerging.gif" width="100%" height="100%">
+<p>但是我们也可以通过 rebase。这样 feature 分支就被重置到 master 分支上:</p>
+<img src="/__themes/tufte/image/ExampleOfRebasing.gif" width="100%" height="100%">
+<p>这样，我们将 feature 分支的父 commit 由 b 变成了 c，然后将 feature 合并到 master 上将会很快，因为只需要移动 master 的 HEAD 指针就可以了。</p>
+<img src="/__themes/tufte/image/ExampleOfFastForwardMerging.gif" width="100%" height="100%">
+<p>与合并的方法相比，这样得到的提交历史是线性的，没有不同的分支。由此带来的可读性使得越来越多的人在 merge 前使用 rebase 命令。</p>
+<p>然而，考虑这么一种情况，当 feature 被 rebase 到 master 上时，第一次重新应该的提交将破坏你的构建。只要没有合并冲突，rebase 不会有任何问题。第一次提交中的的 bug 将保留在后续所有的提交中，从而导致一系列不正确的提交。只有当 rebase 完成时，才可能在 g 上发现这个问题：</p>
+<img src="/__themes/tufte/image/ExampleOfFailedRebasing.gif" width="100%" height="100%">
+<p>如果在 rebase 的过程中出现了冲突，git 将会暂停在有冲突的提交上，然后需要你去解决冲突并继续提交。</p>
+<p>rebase 过程中引入的错误会带来额外的问题。因为 rebase 会覆盖原来的提交历史，如果错误出现在原来的提交历史中，就会被覆盖。这样也会导致用 git bisect 定位 bug 十分困难。因为你可能会在 rebase 之后的数周后才会发现这个错误，从而不得不在特别多的 commit 中寻找真正的问题。这个操作可以使用 git bisect 并通过脚本自动完成。举个例子，如下图所示，我们在 rebase 的时候引入了错误，错误出现的 commit f 上，但 bisect 错误识别到了 commit d 上。</p>
+<img src="/__themes/tufte/image/ExampleOfaFailedGitBisect.gif" width="100%" height="100%">
+<p>为什么我们一直使用 git？因为它是我们管理代码、追踪 bug 最重要的工具。通过 rebase，我们实现了线性提交历史的愿望。但是有更简单的方法吗？</p>
+<p>有！那就是 merge。这是一个简单的一步过程，所有的冲突都在一次提交中得到解决。由此产生的合并提交清楚地表明了我们分支之间的集成点，我们的历史描述了实际发生的事情以及发生的时间。但通过 rebase，你对自己和你的团队撒谎，你假装提交时在今天写的，但实际上时昨天写的，并且基于另一个提交。你已经提交了它们原来的背景，来伪装实际发生的事情。</p>
+<h3>Technique</h3>
+<ul>
+<li>pwdx 命令可以根据 pid 查到可执行文件的具体路径；</li>
+<li>w 命令可用来查看谁都登录了机器并且在做什么；</li>
+</ul>
+<hr />
+<blockquote>
+<p>This article was posted on my <a href="https://sbrave.cn/post/41618284/4700bbaa">blog</a> and <a href="https://github.com/SmartBrave/ARTS/blob/master/20181117.md">Github</a> using the MIT Open Source License.
+ng the MIT Open Source License.</p>
+</blockquote>
+
+      </div>
+
+      <footer class="article-foot">
+        <div class="kicker">cited under</div>
+        <div class="article-foot-tags">
+          
+        </div>
+        <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
+      </footer>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-block">
+        <div class="side-head">page info</div>
+        <p>
+          <em>created</em> 2026-10-12<br>
+          <em>read in</em> 5 min<br>
+          <em>words</em> 1117<br>
+          <em>views</em> 0
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">tags</div>
+        <p class="side-tags">
+          
+        </p>
+      </div>
+      <div class="side-block">
+        <div class="side-head">marginalia</div>
+        <p>Footnotes appear here in the margin, beside the body line they refer to. The body is never interrupted by a numbered list at the bottom.</p>
+      </div>
+    </aside>
+  </article>
+</main>
+
+<footer class="footer">
+  <span>© 2026 sbraveyoung.</span>
+  <span><a href="https://sbrave.cn/post/arts/20181117">https://sbrave.cn/post/arts/20181117</a></span>
+</footer>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

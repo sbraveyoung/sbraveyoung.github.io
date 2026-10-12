@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>#publish · sbraveyoung · 字里行间</title>
+<link rel="icon" href="/__themes/sepia/css/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
+<link rel="stylesheet" href="/__themes/sepia/css/main.css">
+<script>
+(function () {
+  var saved = localStorage.getItem("gobog-theme");
+  var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (saved === null && prefersDark)) document.documentElement.setAttribute("data-theme", "dark");
+  else if (saved === "light") document.documentElement.setAttribute("data-theme", "light");
+  var lang = localStorage.getItem("gobog-lang");
+  if (lang) document.documentElement.setAttribute("lang", lang);
+})();
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="row">
+    <a class="brand" href="/__themes/sepia/" aria-label="home">
+      <svg class="brand-mark" viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><use href="/__themes/sepia/css/icon.svg#mark"/></svg>
+      <span class="brand-text">sbraveyoung · 字里行间</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="menu" aria-expanded="false">≡</button>
+    <nav class="site-nav">
+      <a href="/__themes/sepia/">Home</a>
+      <a href="/__themes/sepia/about">about</a>
+      <a href="/atom.xml">RSS</a>
+      <button class="lang-toggle icon-btn" type="button" aria-label="language">
+        <span class="lang-zh">中</span><span class="lang-en">EN</span>
+      </button>
+      <button class="theme-toggle icon-btn" type="button" aria-label="theme">
+        <span class="theme-icon-light">☀</span><span class="theme-icon-dark">☾</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main class="page page-group">
+  <nav class="crumbs"><a href="/__themes/sepia/">Home</a><span>›</span><span>#publish</span></nav>
+  <header class="group-head">
+    <h1>#publish</h1>
+    <p class="group-count">2 篇</p>
+  </header>
+
+  <section class="post-list">
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          <span class="badge badge-ai" title="AI">🤖 AI 辅助</span>
+          <a href="/__themes/sepia/post/skills/wechat-publish">Skill · 一键推送公众号草稿</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">何时用**：写完一篇博客想顺便发到公众号上去。 解决什么**：把&#34;打开公众号后台 → 复制粘贴 → 调样式 → 上传图片&#34;这一整套手工活省掉，留下&#34;人工审核 &#43; 一键发布&#34;这两件事。 工作模型 插件**只把内容推到草稿箱**，**永远不替你发布**。最终的发布按钮只能你自己在 mp.weixin.qq.com 上点。这…</p>
+      <div class="entry-meta">
+        <span>2026-05-11 09:07:00</span>
+        <span>· 4 min</span>
+        <a class="tag" href="/__themes/sepia/tag/skill">#skill</a><a class="tag" href="/__themes/sepia/tag/wechat">#wechat</a><a class="tag" href="/__themes/sepia/tag/publish">#publish</a>
+      </div>
+    </article>
+    
+    <article class="entry">
+      <header class="entry-head">
+        <h2 class="entry-title">
+          
+          
+          <span class="badge badge-ai" title="AI">🤖 AI 辅助</span>
+          <a href="/__themes/sepia/post/skills/publish-and-sync">Skill · 写完一篇 → 上线全流程</a>
+          
+        </h2>
+      </header>
+      <p class="entry-summary">何时用**：写完一篇文章想发出去；或者要排查&#34;我 push 了为啥 sbrave.cn 没更新&#34;。 解决什么**：把&#34;敲完最后一个字 → sbrave.cn 上看到&#34;这条端到端链路拆成可观察的步骤。 端到端时序 整体时间：从 (a) 到 sbrave.cn 上看到，**1～2 分钟**为常态。 触发器 | 触发    …</p>
+      <div class="entry-meta">
+        <span>2026-05-11 09:03:00</span>
+        <span>· 4 min</span>
+        <a class="tag" href="/__themes/sepia/tag/skill">#skill</a><a class="tag" href="/__themes/sepia/tag/publish">#publish</a><a class="tag" href="/__themes/sepia/tag/workflow">#workflow</a>
+      </div>
+    </article>
+    
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="row">
+    <span>© 2026 sbraveyoung</span>
+    <span class="dot">·</span>
+    <span>powered by <a href="https://github.com/sbraveyoung/gobog">gobog</a></span>
+  </div>
+</footer>
+
+<script src="/__themes/sepia/js/site.js" defer></script>
+<script src="/__theme-switcher.js" defer></script>
+</body>
+</html>

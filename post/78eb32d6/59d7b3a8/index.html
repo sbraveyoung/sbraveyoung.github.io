@@ -61,7 +61,7 @@
         <span>2020-04-30 21:00:00</span>
         <span>· 2604 字</span>
         <span>· 11 min</span>
-        
+        <a class="tag" href="/tag/go">#go</a><a class="tag" href="/tag/golang">#golang</a><a class="tag" href="/tag/性能">#性能</a>
       </div>
     </header>
 
@@ -115,10 +115,10 @@ func update(){
 <h4>4. 缓存</h4>
 <p>前面提到，我们会请求某个下游接口获取 liveid 相关信息，这些信息都是固化的，不会再修改。因此可以使用缓存来减小时间消耗，也可以尽量避免下游接口抖动对上游的影响。</p>
 <p>我们实现了两级缓存：本地进程内缓存和 redis 缓存。redis 缓存的目的是多台机器共享，一个 liveid 由一个进程请求一次就可以了。本地缓存则会设定一个过期时间，配合 LFU 算法避免内存无限增长。流程图如下：</p>
-<p><img src="../../../image/59d7b3a8-x.png" alt="" /></p>
+<p><img src="/image/59d7b3a8-x.png" alt="" /></p>
 <h4>5. GC</h4>
 <p>为便于理解，这里先简要介绍下 golang 的垃圾回收过程：</p>
-<p><img src="../../../image/gogc.png" alt="" /></p>
+<p><img src="/image/gogc.png" alt="" /></p>
 <ol>
 <li>stop the world；</li>
 <li>开启写屏障；</li>

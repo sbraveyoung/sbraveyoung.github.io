@@ -72,35 +72,35 @@
 <h3>UML 类图</h3>
 <p>说到类，自然离不开接口、对象和面向对象，离不开其三大特性：抽象、继承和多态。UML 通过定义「事物」和它们之间的「关系」，来表示一个系统中面向对象设计的概况。</p>
 <p>事物是实体抽象化的结果，是 UML 构建块最重要的组成部分。在类图中，存在「类」和「接口」事物。类是具有相同属性、方法、关系和语义的对象的集合：</p>
-<p><img src="../../image/class.jpeg" alt="" /></p>
+<p><img src="/image/class.jpeg" alt="" /></p>
 <p>其中 <code>+</code> 表示该成员或方法的属性为 publish，<code>-</code> 表示属性为 private，同样的，还有 <code>#</code> 表示 protected；</p>
 <p>接口也叫做抽象类，是指类或组件所提供的方法，描述了类或组件对外可见的动作：</p>
-<p><img src="../../image/interface.jpeg" alt="" /></p>
+<p><img src="/image/interface.jpeg" alt="" /></p>
 <p>「关系」描述元素之间如何彼此关联，类之间有如下关系：</p>
 <h4>实现关系</h4>
 <p>实现关系用一条带空心箭头的虚线表示；比如「猫」这个类就实现了「动物」这个接口：</p>
-<p><img src="../../image/realize.jpeg" alt="" /></p>
+<p><img src="/image/realize.jpeg" alt="" /></p>
 <p>在代码中表现为「猫」继承了「动物」这个抽象类。</p>
 <h4>泛化关系</h4>
 <p>泛化关系也表示继承，但跟实现关系不同的是，泛化关系继承的不是抽象类，而是另一个非抽象类。用一条带空心箭头的实线表示，比如「家猫」继承「猫」：</p>
-<p><img src="../../image/generalization.jpeg" alt="" /></p>
+<p><img src="/image/generalization.jpeg" alt="" /></p>
 <h4>聚合关系</h4>
 <p>聚合关系表示对象实体之间的关联，表示由部分构成整体的语义，例如一个部门由多个员工组成。但与组合关系不同的是，整体和部分不是强依赖的，即使整体不存在了，部分仍然存在。用一条带空心菱形箭头的实线表示：</p>
-<p><img src="../../image/aggregation.jpeg" alt="" /></p>
+<p><img src="/image/aggregation.jpeg" alt="" /></p>
 <h4>组合关系</h4>
 <p>组合关系表示强依赖的特殊聚合关系，如果整体不存在了，部分也就不存在。如公司不存在了，部门也就不存在了。组合关系使用一条带实心菱形箭头表示：</p>
-<p><img src="../../image/composition.jpeg" alt="" /></p>
+<p><img src="/image/composition.jpeg" alt="" /></p>
 <h3>UML对象图</h3>
 <p>UML 对象图显示某个时刻对象和对象之间的关系。一个 UML 对象图可以看成一个类图的特殊用例，或者系统内对象在某一时刻的快照。所以对象图几乎使用和类图完全相同的标识，并且只在系统某一段时间内存在。以下是一个对象图的例子：</p>
-<p><img src="../../image/object.jpeg" alt="" /></p>
+<p><img src="/image/object.jpeg" alt="" /></p>
 <p>可以看出，对象图除了名字含有下划线外，其余和类图完全一样。</p>
 <p>对象之间的关系有两种：</p>
 <h4>关联关系</h4>
 <p>关联关系描述不同对象之间的结构关系，通常与运行状态无关，而是根据常识决定的，比如「学生」类就依赖于「学校」类，用一根直线表示，如果强调方向，也可以带上箭头：</p>
-<p><img src="../../image/association.jpeg" alt="" /></p>
+<p><img src="/image/association.jpeg" alt="" /></p>
 <h4>依赖关系</h4>
 <p>依赖关系用一条带箭头的虚线表示，表示一个对象会在运行期用到另一个对象，比如一个订单对象就依赖于一个商品对象：</p>
-<p><img src="../../image/dependency.jpeg" alt="" /></p>
+<p><img src="/image/dependency.jpeg" alt="" /></p>
 <p>运行期间产生，并且其状态也会不断改变。</p>
 </div>
 

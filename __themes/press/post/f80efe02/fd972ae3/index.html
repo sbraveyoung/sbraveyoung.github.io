@@ -30,7 +30,7 @@
       <a href="/__themes/press/tag/">Tags</a>
       <a href="/__themes/press/archive">Archive</a>
       <a href="/__themes/press/about">About</a>
-      <a href="/__themes/press/atom.xml">RSS</a>
+      <a href="/atom.xml">RSS</a>
     </nav>
   </div>
 </header>
@@ -69,7 +69,7 @@
 <h2>虚拟存储器的工作原理</h2>
 <p>当操作系统将一个程序载入内存时，会为其创建一个 PCB 出来，PCB 在 Linux 系统中就是一个task_struct 的内核结构体，其中的元素包含或者指向内核运行该进程所需要的所有信息（例如：PID、指向用户栈的指针、可执行目标文件的名称以及程序计数器）。</p>
 <p>task_struct 中有一个条目 mm 指向 mm_struct，它描述了虚拟存储器的当前状态。我们感兴趣的两个字段是 pgd 和 mmap，其中 pgd 指向一级页表的基址，而 mmap 指向一个 vm_area_structs 的链表，其中每个 vm_area_structs 都描述了虚拟地址空间的一个区域，也就是我上文所说的「段」。示意图如下：</p>
-<p><img src="../../../image/fd972ae3-1.png" alt="" /></p>
+<p><img src="/__themes/press/image/fd972ae3-1.png" alt="" /></p>
 <p>由上图可知，vm_are_struct 结构体中各字段含义如下:</p>
 <ul>
 <li>vm_start：指向这个区域的起始处</li>

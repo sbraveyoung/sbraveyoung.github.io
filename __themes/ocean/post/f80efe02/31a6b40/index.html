@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>进程 · sbraveyoung · 字里行间</title>
 <link rel="icon" href="/__themes/ocean/css/favicon.svg" type="image/svg+xml">
-<link rel="alternate" type="application/atom+xml" href="/__themes/ocean/atom.xml" title="Atom feed">
+<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom feed">
 <link rel="stylesheet" href="/__themes/ocean/css/main.css">
 <link rel="canonical" href="https://sbrave.cn/post/f80efe02/31a6b40">
 <meta name="description" content="今天开始复习一些操作系统方面的知识，从最基本的进程开始。 进程 在早期的单道批处理系统中，一次只能向内存中装入一个程序来运行，另一个程序只有等到这个程序运行完成后才能被装载，因此程序执行的关系是串行的，并没有进程这个概念。 单道系统的缺点是太慢了，一次只能运行一个程序不说，当这个程序遇到 I/O 操作，资源申请等耗时操…">
@@ -39,7 +39,7 @@
     <nav class="site-nav">
       <a href="/__themes/ocean/">Home</a>
       <a href="/__themes/ocean/about">about</a>
-      <a href="/__themes/ocean/atom.xml">RSS</a>
+      <a href="/atom.xml">RSS</a>
       <button class="lang-toggle icon-btn" type="button" aria-label="language">
         <span class="lang-zh">中</span><span class="lang-en">EN</span>
       </button>
@@ -79,10 +79,10 @@
 <li>多级反馈队列调度算法：此算法设置了优先级不同的多个队列，为每个队列中进程分配的时间片也不一样，优先级和时间片成反比关系。在每个队列中采用 FCFS（先来先服务）算法。调度程序从优先级最高的队列开始调度，只有当优先级较高的队列为空时才可以调度优先级较低的队列中的进程。</li>
 </ul>
 <p>调度是根据进程的状态来进行的，一个进程的状态转移图如下，也就是进程的生命期：</p>
-<p><img src="../../../image/31a6b40-1.png" alt="|30%" /></p>
+<p><img src="/__themes/ocean/image/31a6b40-1.png" alt="|30%" /></p>
 <p>在 32 位系统下，CPU可寻址的范围是 $0\sim2^{32}-1$，每个进程都有自己独立的 4GB 地址空间，称为虚拟地址空间。自底向上分别为代码段、数据段（已初始化数据段和未初始化数据段）、堆、共享区、栈、命令行参数和环境变量区、内核区。其中内核区占据了 $\frac14 * 4GB=1GB$ 的空间，其余的用户区占了$\frac34 * 4GB=3GB$。</p>
 <p>具体见下图:（图片来自网络)</p>
-<p><img src="../../../image/31a6b40-2.jpg" alt="" /></p>
+<p><img src="/__themes/ocean/image/31a6b40-2.jpg" alt="" /></p>
 <h2>进程间通信</h2>
 <p>现代操作系统中，进程间通信的主要手段有：管道、FIFO、消息队列、共享内存、信号、信号量、socket。</p>
 <ul>

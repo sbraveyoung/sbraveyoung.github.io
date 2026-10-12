@@ -27,7 +27,7 @@
     <a href="/__themes/tufte/tag/">tags</a>
     <a href="/__themes/tufte/archive">archive</a>
     <a href="/__themes/tufte/about">about</a>
-    <a href="/__themes/tufte/atom.xml">atom</a>
+    <a href="/atom.xml">atom</a>
   </nav>
 </header>
 
@@ -35,7 +35,7 @@
   <article class="layout">
     <div class="main-col">
       <div class="kicker">
-        ESSAY · April 30, 2020
+        ESSAY · go · golang · 性能 · April 30, 2020
       </div>
       <h1 class="article-title">golang 性能优化实践</h1>
       <p class="article-lede">一、缘起 golang 作为一门 google 主导开发的语言，已经有十年光景了。在这期间，golang 一直朝着 "high performence and easy writing" 的目标在演进，从普及程度上看已经取得了良好的效果。在我们公司技术团队，也在将开发语言从 c++/python 等逐渐切换到 gola…</p>
@@ -100,10 +100,10 @@ func update(){
 <h4>4. 缓存</h4>
 <p>前面提到，我们会请求某个下游接口获取 liveid 相关信息，这些信息都是固化的，不会再修改。因此可以使用缓存来减小时间消耗，也可以尽量避免下游接口抖动对上游的影响。</p>
 <p>我们实现了两级缓存：本地进程内缓存和 redis 缓存。redis 缓存的目的是多台机器共享，一个 liveid 由一个进程请求一次就可以了。本地缓存则会设定一个过期时间，配合 LFU 算法避免内存无限增长。流程图如下：</p>
-<p><img src="../../../image/59d7b3a8-x.png" alt="" /></p>
+<p><img src="/__themes/tufte/image/59d7b3a8-x.png" alt="" /></p>
 <h4>5. GC</h4>
 <p>为便于理解，这里先简要介绍下 golang 的垃圾回收过程：</p>
-<p><img src="../../../image/gogc.png" alt="" /></p>
+<p><img src="/__themes/tufte/image/gogc.png" alt="" /></p>
 <ol>
 <li>stop the world；</li>
 <li>开启写屏障；</li>
@@ -201,7 +201,7 @@ func GetSlice() (slice []Buffer, putFunc func(giveUpSlice []Buffer))
       <footer class="article-foot">
         <div class="kicker">cited under</div>
         <div class="article-foot-tags">
-          
+          <a href="/__themes/tufte/tag/go">#go</a><a href="/__themes/tufte/tag/golang">#golang</a><a href="/__themes/tufte/tag/性能">#性能</a>
         </div>
         <p class="back"><a href="/__themes/tufte/">← back to index</a></p>
       </footer>
@@ -220,7 +220,7 @@ func GetSlice() (slice []Buffer, putFunc func(giveUpSlice []Buffer))
       <div class="side-block">
         <div class="side-head">tags</div>
         <p class="side-tags">
-          
+          <a href="/__themes/tufte/tag/go">go</a><a href="/__themes/tufte/tag/golang">golang</a><a href="/__themes/tufte/tag/性能">性能</a>
         </p>
       </div>
       <div class="side-block">
