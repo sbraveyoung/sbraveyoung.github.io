@@ -7,6 +7,7 @@ from urllib.parse import urlsplit, unquote
 root=Path(sys.argv[1] if len(sys.argv)>1 else '_dist').resolve()
 if not root.is_dir():raise SystemExit('Missing export directory: '+str(root))
 errors=set();warnings=set();used=set()
+include_search='--include-search' in sys.argv[2:]
 class Scan(HTMLParser):
     def __init__(self,page): super().__init__(convert_charrefs=True);self.page=page
     def handle_starttag(self,tag,attrs):
@@ -18,7 +19,7 @@ class Scan(HTMLParser):
             if u.scheme or u.netloc or value.startswith('#'):continue
             # Search assets are generated after rendering; the pre-index check
             # still verifies every renderer-owned asset and article route.
-            if u.path.startswith('/_pagefind/'):continue
+            if u.path.startswith('/_pagefind/') and not include_search:continue
             target=(root/unquote(u.path).lstrip('/') if u.path.startswith('/') else self.page.parent/unquote(u.path)).resolve()
             try:target.relative_to(root)
             except ValueError:errors.add((str(self.page.relative_to(root)),value));continue
