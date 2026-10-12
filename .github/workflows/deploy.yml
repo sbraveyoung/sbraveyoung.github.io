@@ -21,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
     outputs:
       gobog_ref: ${{ steps.cfg.outputs.gobog_ref }}
     steps:
@@ -65,7 +65,7 @@ jobs:
       - name: Test and build renderer
         working-directory: _gobog
         run: |
-          go test ./src/...
+          go test ./...
           mkdir -p ../_bin
           go build -o ../_bin/gobog ./src
       - name: Resolve source revision
@@ -83,22 +83,17 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           path: _dist
-      - name: Commit generated site
+      - name: Record build provenance
         env:
           BLOG_SHA: ${{ steps.source.outputs.sha }}
           GOBOG_SHA: ${{ steps.cfg.outputs.gobog_ref }}
           THEME: ${{ steps.cfg.outputs.theme }}
         run: |
-          # Remove only tracked generated output. Preserve source configuration.
-          git ls-files -z | python3 -c 'import sys,subprocess; paths=[p.decode() for p in sys.stdin.buffer.read().split(b"\0") if p]; paths=[p for p in paths if not p.startswith((".github/","scripts/","docs/")) and p!="_gobog.json"]; subprocess.run(["git","rm","--ignore-unmatch","--",*paths],check=True) if paths else None'
-          cp -a _dist/. .
-          git add -A -- . ':(exclude)_blog' ':(exclude)_gobog' ':(exclude)_bin' ':(exclude)_dist' ':(exclude)_data' ':(exclude)_gobog.toml'
-          if ! git diff --cached --quiet; then
-            git config user.name gobog-deploy
-            git config user.email gobog-deploy@users.noreply.github.com
-            git commit -m "deploy: theme=$THEME blog=$BLOG_SHA gobog=$GOBOG_SHA"
-            git push origin HEAD:master
-          fi
+          {
+            echo "Source: $BLOG_SHA"
+            echo "Renderer: $GOBOG_SHA"
+            echo "Theme: $THEME"
+          } >> "$GITHUB_STEP_SUMMARY"
   deploy:
     needs: build
     runs-on: ubuntu-latest
