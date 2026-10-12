@@ -90,7 +90,7 @@ jobs:
           # Remove only tracked generated output. Preserve source configuration.
           git ls-files -z | python3 -c 'import sys,subprocess; paths=[p.decode() for p in sys.stdin.buffer.read().split(b"\0") if p]; paths=[p for p in paths if not p.startswith((".github/","scripts/","docs/")) and p!="_gobog.json"]; subprocess.run(["git","rm","--ignore-unmatch","--",*paths],check=True) if paths else None'
           cp -a _dist/. .
-          git add -A -- . ':!_blog' ':!_gobog' ':!_bin' ':!_dist' ':!_data' ':!_gobog.toml'
+          git add -A -- . ':(exclude)_blog' ':(exclude)_gobog' ':(exclude)_bin' ':(exclude)_dist' ':(exclude)_data' ':(exclude)_gobog.toml'
           if ! git diff --cached --quiet; then
             git config user.name gobog-deploy
             git config user.email gobog-deploy@users.noreply.github.com
